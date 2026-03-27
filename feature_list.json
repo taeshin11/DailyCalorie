@@ -1,0 +1,32 @@
+[
+  {
+    "id": 1,
+    "milestone": "Milestone 1",
+    "feature": "Harness Setup & Boilerplate",
+    "status": "completed"
+  },
+  {
+    "id": 2,
+    "milestone": "Milestone 2",
+    "feature": "SEO, Ad Slots & Responsive UI Layout",
+    "status": "completed"
+  },
+  {
+    "id": 3,
+    "milestone": "Milestone 3",
+    "feature": "Core Calculator & Chart.js Integration",
+    "status": "completed"
+  },
+  {
+    "id": 4,
+    "milestone": "Milestone 4",
+    "feature": "Free Data Collection Engine",
+    "status": "completed"
+  },
+  {
+    "id": 5,
+    "milestone": "Milestone 5",
+    "feature": "QA Review & Final Polish",
+    "status": "completed"
+  }
+]

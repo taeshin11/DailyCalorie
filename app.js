@@ -1,7 +1,7 @@
 // ===== TDEE Calculator & Macro Dashboard =====
 
 // Google Sheets Webhook Placeholder
-const GOOGLE_SHEETS_WEBHOOK_URL = "";
+const GOOGLE_SHEETS_WEBHOOK_URL = "https://script.google.com/macros/s/AKfycbxgPKsI400PFBzPAoqqYeFYTsBGL4Pnwg_vynZu0VOu42PkK-JIoyw7lVOKIrHU2dPC/exec";
 
 // DOM Elements
 const form = document.getElementById("tdee-form");

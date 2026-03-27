@@ -266,6 +266,11 @@
         .custom-slider.protein-slider::-moz-range-thumb { background: #10b981; }
         .custom-slider.fat-slider::-moz-range-thumb { background: #a855f7; }
         .theme-toggle { transition: all 0.3s ease; cursor: pointer; }
+        .tip-card { border-left: 3px solid #6366f1; }
+        .food-row:hover { background: rgba(99,102,241,0.08); }
+        .food-row { cursor: pointer; transition: background 0.15s ease; border-radius: 8px; }
+        #back-to-top { display: none; }
+        #back-to-top.show { display: flex; }
         .activity-row-current {
             background: rgba(99, 102, 241, 0.15);
             border-radius: 8px;
@@ -713,15 +718,64 @@
                         </div>
                     </div>
 
+                    <!-- Personalized Tips -->
+                    <div class="glass rounded-2xl p-6 glow-border" id="tips-section">
+                        <h3 class="text-sm font-semibold text-indigo-200 uppercase tracking-wider mb-3">Personalized Tips</h3>
+                        <div id="tips-list" class="space-y-2"></div>
+                    </div>
+
+                    <!-- Food Database Search -->
+                    <div class="glass rounded-2xl p-6 md:p-8 glow-border">
+                        <h2 class="text-xl font-semibold text-indigo-200 mb-4">Food Lookup</h2>
+                        <div class="relative mb-3">
+                            <input type="text" id="food-search" placeholder="Search foods (e.g. chicken, rice, banana...)" autocomplete="off"
+                                class="w-full bg-white/5 border border-indigo-500/20 rounded-xl px-4 py-3 pl-10 text-white text-sm placeholder-white/30 focus:outline-none focus:border-indigo-500/50 focus:ring-1 focus:ring-indigo-500/30 transition">
+                            <svg class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-indigo-400/50" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+                        </div>
+                        <div id="food-results" class="space-y-1 max-h-[250px] overflow-y-auto"></div>
+                    </div>
+
+                    <!-- Daily Meal Log -->
+                    <div class="glass rounded-2xl p-6 md:p-8 glow-border">
+                        <div class="flex items-center justify-between mb-4">
+                            <h2 class="text-xl font-semibold text-indigo-200">Today's Meal Log</h2>
+                            <button type="button" onclick="clearMealLog()" class="text-xs text-red-400/60 hover:text-red-300 transition">Clear</button>
+                        </div>
+                        <!-- Add food form -->
+                        <div class="flex gap-2 mb-4">
+                            <input type="text" id="log-food-name" placeholder="Food name" class="flex-[2] bg-white/5 border border-indigo-500/20 rounded-xl px-3 py-2 text-white text-xs placeholder-white/30 focus:outline-none focus:border-indigo-500/50 transition">
+                            <input type="number" id="log-food-cal" placeholder="kcal" class="flex-1 bg-white/5 border border-indigo-500/20 rounded-xl px-3 py-2 text-white text-xs placeholder-white/30 focus:outline-none focus:border-indigo-500/50 transition">
+                            <button type="button" onclick="addToMealLog()" class="btn-glow rounded-xl px-4 py-2 text-xs font-medium">Add</button>
+                        </div>
+                        <!-- Progress bar -->
+                        <div class="mb-3">
+                            <div class="flex justify-between text-xs mb-1">
+                                <span class="text-indigo-300/60">Today's intake</span>
+                                <span class="text-indigo-200"><strong id="log-total">0</strong> / <span id="log-target">0</span> kcal</span>
+                            </div>
+                            <div class="w-full bg-white/5 rounded-full h-3 overflow-hidden">
+                                <div class="h-full rounded-full transition-all duration-500 bg-gradient-to-r from-indigo-500 to-purple-500" id="log-bar" style="width:0%"></div>
+                            </div>
+                            <p class="text-[10px] mt-1 text-right" id="log-remaining">-</p>
+                        </div>
+                        <!-- Logged items -->
+                        <div id="meal-log-list" class="space-y-1 max-h-[180px] overflow-y-auto">
+                            <p class="text-xs text-indigo-300/40 text-center py-2">No foods logged today</p>
+                        </div>
+                    </div>
+
                     <!-- Share Results -->
-                    <div class="flex gap-3">
-                        <button type="button" onclick="copyResults()" class="flex-1 glass rounded-xl py-3 text-sm text-indigo-200 hover:text-white hover:border-indigo-500/30 border border-transparent transition text-center">
+                    <div class="flex flex-wrap gap-3">
+                        <button type="button" onclick="copyResults()" class="flex-1 min-w-[100px] glass rounded-xl py-3 text-sm text-indigo-200 hover:text-white hover:border-indigo-500/30 border border-transparent transition text-center">
                             <span id="copy-btn-text">Copy Results</span>
                         </button>
-                        <button type="button" onclick="shareResults()" class="flex-1 glass rounded-xl py-3 text-sm text-indigo-200 hover:text-white hover:border-indigo-500/30 border border-transparent transition text-center">
+                        <button type="button" onclick="shareResults()" class="flex-1 min-w-[100px] glass rounded-xl py-3 text-sm text-indigo-200 hover:text-white hover:border-indigo-500/30 border border-transparent transition text-center">
                             <span id="share-btn-text">Share</span>
                         </button>
-                        <button type="button" onclick="printResults()" class="flex-1 glass rounded-xl py-3 text-sm text-indigo-200 hover:text-white hover:border-indigo-500/30 border border-transparent transition text-center">
+                        <button type="button" onclick="exportCSV()" class="flex-1 min-w-[100px] glass rounded-xl py-3 text-sm text-indigo-200 hover:text-white hover:border-indigo-500/30 border border-transparent transition text-center">
+                            Export CSV
+                        </button>
+                        <button type="button" onclick="printResults()" class="flex-1 min-w-[100px] glass rounded-xl py-3 text-sm text-indigo-200 hover:text-white hover:border-indigo-500/30 border border-transparent transition text-center">
                             Print
                         </button>
                     </div>
@@ -790,6 +844,14 @@
     <div class="ad-slot fixed bottom-0 left-0 w-full h-[50px] md:h-[60px] z-50" id="ad-sticky-bottom">
         <!-- Ad Placeholder: Sticky Bottom (320x50 / 728x90) -->
     </div>
+
+    <!-- Back to Top -->
+    <button id="back-to-top" onclick="window.scrollTo({top:0,behavior:'smooth'})" class="hidden fixed bottom-[65px] md:bottom-[75px] right-4 w-10 h-10 rounded-full glass border border-indigo-500/20 flex items-center justify-center z-40 hover:border-indigo-500/40 transition" aria-label="Back to top">
+        <svg class="w-4 h-4 text-indigo-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"/></svg>
+    </button>
+
+    <!-- Confetti Canvas -->
+    <canvas id="confetti-canvas" class="fixed inset-0 pointer-events-none z-[100]" style="display:none"></canvas>
 
     <script src="app.js"></script>
 </body>

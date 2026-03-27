@@ -156,9 +156,12 @@ function updateResults(bmr, tdee, activityMultiplier, macros, weightKg, heightCm
     updateBodyComposition(weightKg, heightCm, lastGender, lastAge);
     updateZigzag(tdee);
     updateEquivalents(tdee);
+    updateTips();
     resultsSection.classList.remove("hidden");
     renderChart(macros);
+    renderMealLog();
     staggerReveal();
+    showConfetti();
 }
 
 function updateMacroUI(macros, tdee) {
@@ -865,11 +868,308 @@ form.addEventListener("submit", function(e) {
     });
 });
 
+// ===== Food Database (per 100g) =====
+var FOOD_DB = [
+    { name: "Chicken Breast (grilled)", cal: 165, carbs: 0, protein: 31, fat: 3.6 },
+    { name: "Salmon (baked)", cal: 208, carbs: 0, protein: 20, fat: 13 },
+    { name: "White Rice (cooked)", cal: 130, carbs: 28, protein: 2.7, fat: 0.3 },
+    { name: "Brown Rice (cooked)", cal: 112, carbs: 24, protein: 2.3, fat: 0.8 },
+    { name: "Pasta (cooked)", cal: 131, carbs: 25, protein: 5, fat: 1.1 },
+    { name: "Whole Wheat Bread", cal: 247, carbs: 41, protein: 13, fat: 3.4 },
+    { name: "Egg (boiled)", cal: 155, carbs: 1.1, protein: 13, fat: 11 },
+    { name: "Banana", cal: 89, carbs: 23, protein: 1.1, fat: 0.3 },
+    { name: "Apple", cal: 52, carbs: 14, protein: 0.3, fat: 0.2 },
+    { name: "Avocado", cal: 160, carbs: 9, protein: 2, fat: 15 },
+    { name: "Sweet Potato", cal: 86, carbs: 20, protein: 1.6, fat: 0.1 },
+    { name: "Broccoli", cal: 34, carbs: 7, protein: 2.8, fat: 0.4 },
+    { name: "Spinach", cal: 23, carbs: 3.6, protein: 2.9, fat: 0.4 },
+    { name: "Greek Yogurt", cal: 59, carbs: 3.6, protein: 10, fat: 0.7 },
+    { name: "Oatmeal (cooked)", cal: 68, carbs: 12, protein: 2.4, fat: 1.4 },
+    { name: "Almonds", cal: 579, carbs: 22, protein: 21, fat: 50 },
+    { name: "Peanut Butter", cal: 588, carbs: 20, protein: 25, fat: 50 },
+    { name: "Beef Steak (lean)", cal: 271, carbs: 0, protein: 26, fat: 18 },
+    { name: "Ground Turkey", cal: 170, carbs: 0, protein: 21, fat: 9.4 },
+    { name: "Tuna (canned)", cal: 116, carbs: 0, protein: 26, fat: 0.8 },
+    { name: "Cottage Cheese", cal: 98, carbs: 3.4, protein: 11, fat: 4.3 },
+    { name: "Milk (whole)", cal: 61, carbs: 4.8, protein: 3.2, fat: 3.3 },
+    { name: "Milk (skim)", cal: 34, carbs: 5, protein: 3.4, fat: 0.1 },
+    { name: "Cheddar Cheese", cal: 403, carbs: 1.3, protein: 25, fat: 33 },
+    { name: "Tofu (firm)", cal: 76, carbs: 1.9, protein: 8, fat: 4.8 },
+    { name: "Lentils (cooked)", cal: 116, carbs: 20, protein: 9, fat: 0.4 },
+    { name: "Black Beans (cooked)", cal: 132, carbs: 24, protein: 8.9, fat: 0.5 },
+    { name: "Quinoa (cooked)", cal: 120, carbs: 21, protein: 4.4, fat: 1.9 },
+    { name: "Pizza Slice (cheese)", cal: 266, carbs: 33, protein: 11, fat: 10 },
+    { name: "Big Mac", cal: 257, carbs: 20, protein: 13, fat: 14 },
+    { name: "French Fries", cal: 312, carbs: 41, protein: 3.4, fat: 15 },
+    { name: "Ice Cream (vanilla)", cal: 207, carbs: 24, protein: 3.5, fat: 11 },
+    { name: "Chocolate (dark)", cal: 546, carbs: 60, protein: 5, fat: 31 },
+    { name: "Orange", cal: 47, carbs: 12, protein: 0.9, fat: 0.1 },
+    { name: "Strawberries", cal: 32, carbs: 7.7, protein: 0.7, fat: 0.3 },
+    { name: "Blueberries", cal: 57, carbs: 14, protein: 0.7, fat: 0.3 },
+    { name: "Olive Oil (1 tbsp)", cal: 884, carbs: 0, protein: 0, fat: 100 },
+    { name: "Honey (1 tbsp)", cal: 304, carbs: 82, protein: 0.3, fat: 0 },
+    { name: "Protein Shake", cal: 120, carbs: 3, protein: 24, fat: 1.5 },
+    { name: "Granola Bar", cal: 471, carbs: 64, protein: 10, fat: 20 },
+];
+
+// Food search
+var foodSearchEl = document.getElementById("food-search");
+if (foodSearchEl) {
+    foodSearchEl.addEventListener("input", function() {
+        var q = this.value.toLowerCase().trim();
+        var container = document.getElementById("food-results");
+        if (q.length < 2) { container.innerHTML = ""; return; }
+
+        var matches = FOOD_DB.filter(function(f) { return f.name.toLowerCase().indexOf(q) !== -1; }).slice(0, 8);
+        container.innerHTML = "";
+        if (matches.length === 0) {
+            container.innerHTML = '<p class="text-xs text-indigo-300/40 text-center py-2">No results found</p>';
+            return;
+        }
+        matches.forEach(function(food) {
+            var row = document.createElement("div");
+            row.className = "food-row flex items-center justify-between px-3 py-2";
+            row.innerHTML =
+                '<div>' +
+                    '<div class="text-xs text-indigo-100">' + food.name + '</div>' +
+                    '<div class="text-[10px] text-indigo-300/40">per 100g</div>' +
+                '</div>' +
+                '<div class="flex gap-3 text-[10px] items-center">' +
+                    '<span class="text-amber-300">C:' + food.carbs + 'g</span>' +
+                    '<span class="text-emerald-300">P:' + food.protein + 'g</span>' +
+                    '<span class="text-purple-300">F:' + food.fat + 'g</span>' +
+                    '<span class="text-white font-semibold text-xs ml-1">' + food.cal + '</span>' +
+                    '<button onclick="addFoodToLog(\'' + food.name.replace(/'/g, "\\'") + '\',' + food.cal + ')" class="text-indigo-400 hover:text-indigo-200 text-xs ml-1">+ Log</button>' +
+                '</div>';
+            container.appendChild(row);
+        });
+    });
+}
+
+// ===== Daily Meal Log =====
+function getMealLog() {
+    try {
+        var today = new Date().toISOString().slice(0, 10);
+        var raw = localStorage.getItem("tdee_meal_log_" + today);
+        return raw ? JSON.parse(raw) : [];
+    } catch(e) { return []; }
+}
+
+function saveMealLog(log) {
+    try {
+        var today = new Date().toISOString().slice(0, 10);
+        localStorage.setItem("tdee_meal_log_" + today, JSON.stringify(log));
+    } catch(e) {}
+}
+
+function addFoodToLog(name, cal) {
+    var log = getMealLog();
+    log.push({ name: name, cal: cal, time: new Date().toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'}) });
+    saveMealLog(log);
+    renderMealLog();
+}
+
+function addToMealLog() {
+    var name = document.getElementById("log-food-name").value.trim();
+    var cal = parseInt(document.getElementById("log-food-cal").value);
+    if (!name || !cal || cal <= 0) return;
+    addFoodToLog(name, cal);
+    document.getElementById("log-food-name").value = "";
+    document.getElementById("log-food-cal").value = "";
+}
+
+function removeMealLogItem(idx) {
+    var log = getMealLog();
+    log.splice(idx, 1);
+    saveMealLog(log);
+    renderMealLog();
+}
+
+function clearMealLog() {
+    var today = new Date().toISOString().slice(0, 10);
+    localStorage.removeItem("tdee_meal_log_" + today);
+    renderMealLog();
+}
+
+function renderMealLog() {
+    var log = getMealLog();
+    var list = document.getElementById("meal-log-list");
+    var target = lastTDEE || 2000;
+    document.getElementById("log-target").textContent = target.toLocaleString();
+
+    if (log.length === 0) {
+        list.innerHTML = '<p class="text-xs text-indigo-300/40 text-center py-2">No foods logged today</p>';
+        document.getElementById("log-total").textContent = "0";
+        document.getElementById("log-bar").style.width = "0%";
+        document.getElementById("log-remaining").innerHTML = '<span class="text-indigo-300/40">' + target.toLocaleString() + ' kcal remaining</span>';
+        return;
+    }
+
+    var total = log.reduce(function(s, i) { return s + i.cal; }, 0);
+    var pct = Math.min((total / target) * 100, 100);
+    document.getElementById("log-total").textContent = total.toLocaleString();
+    document.getElementById("log-bar").style.width = pct + "%";
+
+    var remaining = target - total;
+    if (remaining > 0) {
+        document.getElementById("log-remaining").innerHTML = '<span class="text-emerald-400">' + remaining.toLocaleString() + ' kcal remaining</span>';
+    } else {
+        document.getElementById("log-remaining").innerHTML = '<span class="text-red-400">' + Math.abs(remaining).toLocaleString() + ' kcal over target</span>';
+        document.getElementById("log-bar").classList.add("from-red-500", "to-red-400");
+        document.getElementById("log-bar").classList.remove("from-indigo-500", "to-purple-500");
+    }
+    if (remaining >= 0) {
+        document.getElementById("log-bar").classList.remove("from-red-500", "to-red-400");
+        document.getElementById("log-bar").classList.add("from-indigo-500", "to-purple-500");
+    }
+
+    list.innerHTML = "";
+    log.forEach(function(item, idx) {
+        var row = document.createElement("div");
+        row.className = "flex items-center justify-between px-3 py-1.5 rounded-lg hover:bg-white/5 transition text-xs";
+        row.innerHTML =
+            '<div class="flex items-center gap-2">' +
+                '<span class="text-indigo-300/40">' + item.time + '</span>' +
+                '<span class="text-indigo-100">' + item.name + '</span>' +
+            '</div>' +
+            '<div class="flex items-center gap-2">' +
+                '<span class="text-white font-semibold">' + item.cal + ' kcal</span>' +
+                '<button onclick="removeMealLogItem(' + idx + ')" class="text-red-400/40 hover:text-red-300 text-[10px]">x</button>' +
+            '</div>';
+        list.appendChild(row);
+    });
+}
+
+// ===== Personalized Tips =====
+function updateTips() {
+    var tips = [];
+    if (lastTDEE === 0) return;
+
+    var bmi = calculateBMI(lastWeightKg, lastHeightCm);
+    var bf = estimateBodyFat(bmi, lastAge, lastGender);
+    var activity = parseFloat(document.getElementById("activity").value);
+
+    if (bmi < 18.5) tips.push({ icon: "&#9888;&#65039;", text: "Your BMI indicates you're underweight. Consider a caloric surplus of 300-500 kcal above TDEE with strength training to build lean mass." });
+    if (bmi >= 25 && bmi < 30) tips.push({ icon: "&#128161;", text: "Your BMI is in the overweight range. A moderate deficit of 400-500 kcal below TDEE combined with regular exercise can help reach a healthy weight." });
+    if (bmi >= 30) tips.push({ icon: "&#9888;&#65039;", text: "Your BMI suggests obesity. Consult a healthcare provider for personalized guidance. Start with a 500 kcal deficit and focus on whole foods." });
+
+    if (activity <= 1.2) tips.push({ icon: "&#127939;", text: "Your activity level is sedentary. Even adding 30 minutes of walking daily can increase your TDEE by ~200 kcal and improve cardiovascular health." });
+    if (activity >= 1.725) tips.push({ icon: "&#128170;", text: "Great activity level! Make sure you're eating enough protein (1.6-2.0g per kg) to support muscle recovery and growth." });
+
+    var proteinG = calculateMacros(lastTDEE, currentDiet).protein.grams;
+    var proteinPerKg = proteinG / lastWeightKg;
+    if (proteinPerKg < 1.2 && activity >= 1.55) tips.push({ icon: "&#129385;", text: "Your protein intake (" + proteinPerKg.toFixed(1) + "g/kg) may be low for your activity level. Consider the High Protein diet preset or aim for 1.6g+ per kg." });
+
+    if (bf > 25 && lastGender === "male") tips.push({ icon: "&#128200;", text: "Estimated body fat is " + bf.toFixed(0) + "%. Combining resistance training with a moderate deficit is the most effective approach for fat loss." });
+    if (bf > 32 && lastGender === "female") tips.push({ icon: "&#128200;", text: "Estimated body fat is " + bf.toFixed(0) + "%. A combination of cardio and strength training with a caloric deficit can help improve body composition." });
+
+    tips.push({ icon: "&#128167;", text: "Aim for " + (lastWeightKg * 0.033).toFixed(1) + "L of water daily. Proper hydration boosts metabolism and helps control appetite." });
+
+    if (lastTDEE > 2500) tips.push({ icon: "&#127858;", text: "With a TDEE of " + lastTDEE.toLocaleString() + " kcal, consider splitting into 4-5 smaller meals to maintain energy levels and avoid blood sugar spikes." });
+
+    var container = document.getElementById("tips-list");
+    container.innerHTML = "";
+    tips.slice(0, 5).forEach(function(tip) {
+        var div = document.createElement("div");
+        div.className = "tip-card glass rounded-lg px-4 py-3 text-xs text-indigo-200/80 leading-relaxed";
+        div.innerHTML = '<span class="mr-1">' + tip.icon + '</span> ' + tip.text;
+        container.appendChild(div);
+    });
+}
+
+// ===== Export CSV =====
+function exportCSV() {
+    try {
+        var history = JSON.parse(localStorage.getItem("tdee_history") || "[]");
+        if (history.length === 0) return;
+        var csv = "Date,Time,TDEE,BMR,BMI,Weight_kg,Diet\n";
+        history.forEach(function(e) {
+            csv += e.date + "," + e.time + "," + e.tdee + "," + e.bmr + "," + e.bmi + "," + (e.weight || "") + "," + (e.diet || "") + "\n";
+        });
+        var blob = new Blob([csv], { type: "text/csv" });
+        var a = document.createElement("a");
+        a.href = URL.createObjectURL(blob);
+        a.download = "tdee_history.csv";
+        a.click();
+        URL.revokeObjectURL(a.href);
+    } catch(e) {}
+}
+
+// ===== Confetti =====
+var hasShownConfetti = false;
+function showConfetti() {
+    if (hasShownConfetti) return;
+    hasShownConfetti = true;
+    var canvas = document.getElementById("confetti-canvas");
+    canvas.style.display = "block";
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    var ctx = canvas.getContext("2d");
+    var particles = [];
+    var colors = ["#6366f1", "#8b5cf6", "#10b981", "#f59e0b", "#ef4444", "#ec4899"];
+
+    for (var i = 0; i < 120; i++) {
+        particles.push({
+            x: Math.random() * canvas.width,
+            y: Math.random() * canvas.height - canvas.height,
+            w: Math.random() * 8 + 4,
+            h: Math.random() * 6 + 2,
+            color: colors[Math.floor(Math.random() * colors.length)],
+            vy: Math.random() * 3 + 2,
+            vx: (Math.random() - 0.5) * 2,
+            rot: Math.random() * 360,
+            vr: (Math.random() - 0.5) * 10,
+        });
+    }
+
+    var frame = 0;
+    function animate() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        var alive = false;
+        particles.forEach(function(p) {
+            p.y += p.vy;
+            p.x += p.vx;
+            p.rot += p.vr;
+            p.vy += 0.05;
+            if (p.y < canvas.height + 20) alive = true;
+            ctx.save();
+            ctx.translate(p.x, p.y);
+            ctx.rotate(p.rot * Math.PI / 180);
+            ctx.fillStyle = p.color;
+            ctx.fillRect(-p.w / 2, -p.h / 2, p.w, p.h);
+            ctx.restore();
+        });
+        frame++;
+        if (alive && frame < 180) {
+            requestAnimationFrame(animate);
+        } else {
+            canvas.style.display = "none";
+        }
+    }
+    requestAnimationFrame(animate);
+}
+
+// ===== Back to Top =====
+window.addEventListener("scroll", function() {
+    var btn = document.getElementById("back-to-top");
+    if (window.scrollY > 400) { btn.classList.add("show"); }
+    else { btn.classList.remove("show"); }
+});
+
+// ===== Keyboard Shortcuts =====
+document.addEventListener("keydown", function(e) {
+    if ((e.ctrlKey || e.metaKey) && e.key === "Enter") {
+        e.preventDefault();
+        form.dispatchEvent(new Event("submit"));
+    }
+});
+
 // ===== Init =====
 loadFromLocalStorage();
 loadTheme();
 renderHistory();
 renderHistoryChart();
+renderMealLog();
 
 // Service Worker Registration
 if ("serviceWorker" in navigator) {

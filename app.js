@@ -11,7 +11,11 @@ const resultsSection = document.getElementById("results");
 let macroChart = null;
 let currentUnit = "metric";
 let currentDiet = "balanced";
+let currentMeals = 3;
 let lastTDEE = 0;
+let lastBMR = 0;
+let lastWeightKg = 0;
+let lastHeightCm = 0;
 
 // Diet plan presets: { carbs%, protein%, fat% }
 const DIET_PLANS = {
@@ -97,10 +101,22 @@ function animateValue(el, start, end, duration) {
     requestAnimationFrame(step);
 }
 
+// ===== Activity Level Data =====
+var ACTIVITY_LEVELS = [
+    { value: 1.2,   label: "Sedentary" },
+    { value: 1.375, label: "Lightly Active" },
+    { value: 1.55,  label: "Moderately Active" },
+    { value: 1.725, label: "Very Active" },
+    { value: 1.9,   label: "Extra Active" },
+];
+
 // ===== Update UI =====
 function updateResults(bmr, tdee, activityMultiplier, macros, weightKg, heightCm) {
-    const prevTDEE = lastTDEE;
+    var prevTDEE = lastTDEE;
     lastTDEE = tdee;
+    lastBMR = bmr;
+    lastWeightKg = weightKg;
+    lastHeightCm = heightCm;
 
     animateValue(document.getElementById("tdee-value"), prevTDEE, tdee, 600);
     document.getElementById("bmr-value").textContent = bmr.toLocaleString();
@@ -111,15 +127,28 @@ function updateResults(bmr, tdee, activityMultiplier, macros, weightKg, heightCm
     document.getElementById("bulk-value").textContent = (tdee + 500).toLocaleString();
 
     // BMI
-    const bmi = calculateBMI(weightKg, heightCm);
-    const bmiCat = getBMICategory(bmi);
+    var bmi = calculateBMI(weightKg, heightCm);
+    var bmiCat = getBMICategory(bmi);
     document.getElementById("bmi-value").textContent = bmi.toFixed(1);
     document.getElementById("bmi-value").className = "text-2xl font-bold " + bmiCat.color;
     document.getElementById("bmi-label").textContent = bmiCat.label;
     document.getElementById("bmi-label").className = "text-sm mb-3 " + bmiCat.color;
     document.getElementById("bmi-dot").style.left = bmiCat.pct + "%";
 
+    // Water intake: ~33ml per kg body weight
+    var waterLiters = (weightKg * 0.033).toFixed(1);
+    document.getElementById("water-value").textContent = waterLiters + "L";
+
+    // Minimum protein recommendation: 0.8g per kg (sedentary) to 1.6g (active)
+    var proteinPerKg = activityMultiplier >= 1.55 ? 1.6 : (activityMultiplier >= 1.375 ? 1.2 : 0.8);
+    document.getElementById("protein-rec-value").textContent = Math.round(weightKg * proteinPerKg) + "g";
+
+    // Goal weight label
+    document.getElementById("goal-weight-label").textContent = "Target Weight (" + (currentUnit === "imperial" ? "lbs" : "kg") + ")";
+
     updateMacroUI(macros, tdee);
+    updateActivityTable(bmr, activityMultiplier);
+    updateMealPlan(macros);
     resultsSection.classList.remove("hidden");
     renderChart(macros);
 }
@@ -310,6 +339,148 @@ function loadFromLocalStorage() {
         if (data.activity) document.getElementById("activity").value = data.activity;
         if (data.diet) selectDiet(data.diet);
     } catch(e) {}
+}
+
+// ===== Activity Level Comparison Table =====
+function updateActivityTable(bmr, currentMultiplier) {
+    var tbody = document.getElementById("activity-table-body");
+    tbody.innerHTML = "";
+    ACTIVITY_LEVELS.forEach(function(level) {
+        var cal = Math.round(bmr * level.value);
+        var diff = cal - Math.round(bmr * currentMultiplier);
+        var diffText = diff === 0 ? "-" : (diff > 0 ? "+" : "") + diff.toLocaleString();
+        var isCurrent = level.value === currentMultiplier;
+        var row = document.createElement("tr");
+        row.className = (isCurrent ? "activity-row-current " : "") + "border-b border-indigo-500/5";
+        row.innerHTML =
+            '<td class="py-2.5 pr-4 text-indigo-100' + (isCurrent ? ' font-semibold' : '') + '">' +
+                level.label + (isCurrent ? ' <span class="text-xs text-indigo-400">(current)</span>' : '') +
+            '</td>' +
+            '<td class="py-2.5 px-2 text-right font-mono' + (isCurrent ? ' text-emerald-300 font-semibold' : ' text-indigo-200') + '">' +
+                cal.toLocaleString() +
+            '</td>' +
+            '<td class="py-2.5 pl-2 text-right text-xs hidden sm:table-cell ' +
+                (diff > 0 ? 'text-blue-300' : diff < 0 ? 'text-red-300' : 'text-indigo-300/40') + '">' +
+                diffText +
+            '</td>';
+        tbody.appendChild(row);
+    });
+}
+
+// ===== Meal Planner =====
+function setMeals(n) {
+    currentMeals = n;
+    document.querySelectorAll(".meal-btn").forEach(function(btn) {
+        btn.classList.toggle("active", parseInt(btn.dataset.meals) === n);
+    });
+    if (lastTDEE > 0) {
+        var macros = calculateMacros(lastTDEE, currentDiet);
+        updateMealPlan(macros);
+    }
+}
+
+function updateMealPlan(macros) {
+    var grid = document.getElementById("meal-grid");
+    grid.innerHTML = "";
+    var mealNames3 = ["Breakfast", "Lunch", "Dinner"];
+    var mealNames4 = ["Breakfast", "Lunch", "Snack", "Dinner"];
+    var mealNames5 = ["Breakfast", "Snack", "Lunch", "Snack", "Dinner"];
+    var names = currentMeals === 3 ? mealNames3 : currentMeals === 4 ? mealNames4 : mealNames5;
+
+    // Adjust grid columns
+    grid.className = "grid grid-cols-1 gap-3";
+    if (currentMeals <= 3) grid.className += " sm:grid-cols-3";
+    else if (currentMeals === 4) grid.className += " sm:grid-cols-2 md:grid-cols-4";
+    else grid.className += " sm:grid-cols-3 md:grid-cols-5";
+
+    for (var i = 0; i < currentMeals; i++) {
+        var carbsG = Math.round(macros.carbs.grams / currentMeals);
+        var proteinG = Math.round(macros.protein.grams / currentMeals);
+        var fatG = Math.round(macros.fat.grams / currentMeals);
+        var totalCal = Math.round((macros.carbs.kcal + macros.protein.kcal + macros.fat.kcal) / currentMeals);
+
+        var card = document.createElement("div");
+        card.className = "glass rounded-xl p-4 text-center border border-indigo-500/10";
+        card.innerHTML =
+            '<p class="text-xs text-indigo-400/80 uppercase tracking-wider mb-2">' + names[i] + '</p>' +
+            '<p class="text-lg font-bold text-white mb-2">' + totalCal.toLocaleString() + ' <span class="text-xs text-indigo-300/40 font-normal">kcal</span></p>' +
+            '<div class="flex justify-center gap-3 text-[10px]">' +
+                '<span class="text-amber-300">C: ' + carbsG + 'g</span>' +
+                '<span class="text-emerald-300">P: ' + proteinG + 'g</span>' +
+                '<span class="text-purple-300">F: ' + fatG + 'g</span>' +
+            '</div>';
+        grid.appendChild(card);
+    }
+}
+
+// ===== Weight Goal Timeline =====
+function calculateGoalTimeline() {
+    if (lastTDEE === 0 || lastWeightKg === 0) return;
+
+    var goalWeightRaw = parseFloat(document.getElementById("goal-weight").value);
+    if (!goalWeightRaw || goalWeightRaw <= 0) {
+        document.getElementById("goal-result").classList.add("hidden");
+        return;
+    }
+
+    var goalWeightKg = currentUnit === "imperial" ? goalWeightRaw * 0.453592 : goalWeightRaw;
+    var ratePerWeek = parseFloat(document.getElementById("goal-rate").value);
+    var diff = lastWeightKg - goalWeightKg;
+    var isLosing = diff > 0;
+    var absDiff = Math.abs(diff);
+
+    if (absDiff < 0.1) {
+        document.getElementById("goal-result").classList.remove("hidden");
+        document.getElementById("goal-direction").textContent = "You're already there!";
+        document.getElementById("goal-weeks").textContent = "0 weeks";
+        document.getElementById("goal-detail").textContent = "Your current weight matches your goal.";
+        document.getElementById("goal-calories").textContent = "";
+        return;
+    }
+
+    var weeks = Math.ceil(absDiff / ratePerWeek);
+    var calAdjust = Math.round(ratePerWeek * 7700 / 7); // 7700 kcal per kg of body weight
+
+    document.getElementById("goal-result").classList.remove("hidden");
+    document.getElementById("goal-direction").textContent = isLosing ? "Weight Loss Goal" : "Weight Gain Goal";
+    document.getElementById("goal-weeks").textContent = weeks + (weeks === 1 ? " week" : " weeks");
+
+    var unit = currentUnit === "imperial" ? "lbs" : "kg";
+    var displayDiff = currentUnit === "imperial" ? (absDiff / 0.453592).toFixed(1) : absDiff.toFixed(1);
+    document.getElementById("goal-detail").textContent = displayDiff + " " + unit + " to " + (isLosing ? "lose" : "gain") + " (~" + Math.round(weeks / 4.33) + " months)";
+    document.getElementById("goal-calories").textContent = "Eat " + (isLosing ? (lastTDEE - calAdjust) : (lastTDEE + calAdjust)).toLocaleString() + " kcal/day (" + (isLosing ? "-" : "+") + calAdjust + " from TDEE)";
+}
+
+// ===== Copy Results =====
+function copyResults() {
+    if (lastTDEE === 0) return;
+    var macros = calculateMacros(lastTDEE, currentDiet);
+    var bmi = calculateBMI(lastWeightKg, lastHeightCm);
+    var text = "TDEE Calculator Results\n" +
+        "========================\n" +
+        "TDEE: " + lastTDEE.toLocaleString() + " kcal/day\n" +
+        "BMR: " + lastBMR.toLocaleString() + " kcal\n" +
+        "BMI: " + bmi.toFixed(1) + "\n\n" +
+        "Calorie Goals:\n" +
+        "  Lose: " + Math.max(1200, lastTDEE - 500).toLocaleString() + " kcal\n" +
+        "  Maintain: " + lastTDEE.toLocaleString() + " kcal\n" +
+        "  Gain: " + (lastTDEE + 500).toLocaleString() + " kcal\n\n" +
+        "Macros (" + DIET_PLANS[currentDiet].label + "):\n" +
+        "  Carbs: " + macros.carbs.grams + "g (" + macros.carbs.pct + "%)\n" +
+        "  Protein: " + macros.protein.grams + "g (" + macros.protein.pct + "%)\n" +
+        "  Fat: " + macros.fat.grams + "g (" + macros.fat.pct + "%)\n\n" +
+        "Calculated at dailycalorie.app";
+
+    navigator.clipboard.writeText(text).then(function() {
+        var btn = document.getElementById("copy-btn-text");
+        btn.textContent = "Copied!";
+        setTimeout(function() { btn.textContent = "Copy Results"; }, 2000);
+    });
+}
+
+// ===== Print =====
+function printResults() {
+    window.print();
 }
 
 // ===== FAQ Toggle =====

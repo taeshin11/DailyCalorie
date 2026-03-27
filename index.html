@@ -208,6 +208,27 @@
         .faq-toggle.open {
             transform: rotate(180deg);
         }
+        .meal-btn {
+            transition: all 0.2s ease;
+        }
+        .meal-btn.active {
+            background: rgba(99, 102, 241, 0.3);
+            border-color: #6366f1;
+            color: white;
+        }
+        .activity-row-current {
+            background: rgba(99, 102, 241, 0.15);
+            border-radius: 8px;
+        }
+        @media print {
+            .ad-slot, footer, .diet-btn, .toggle-btn, .meal-btn,
+            button[onclick], #ad-sticky-bottom, #ad-top-banner { display: none !important; }
+            body { background: white !important; color: black !important; padding: 0 !important; }
+            .glass, .result-card, .glow-border { background: #f8f8f8 !important; border: 1px solid #ddd !important; box-shadow: none !important; backdrop-filter: none !important; }
+            * { color: #222 !important; }
+            .hidden { display: block !important; }
+            aside { display: none !important; }
+        }
     </style>
 </head>
 <body class="text-white font-sans antialiased pb-[50px] md:pb-[60px]">
@@ -445,6 +466,94 @@
                                 </div>
                             </div>
                         </div>
+                    </div>
+                    <!-- Activity Level Comparison -->
+                    <div class="glass rounded-2xl p-6 md:p-8 glow-border">
+                        <h2 class="text-xl font-semibold text-indigo-200 mb-4">TDEE by Activity Level</h2>
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-sm" id="activity-table">
+                                <thead>
+                                    <tr class="text-indigo-300/60 text-xs uppercase tracking-wider">
+                                        <th class="text-left py-2 pr-4">Activity Level</th>
+                                        <th class="text-right py-2 px-2">Calories</th>
+                                        <th class="text-right py-2 pl-2 hidden sm:table-cell">Difference</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="activity-table-body">
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Meal Planner -->
+                    <div class="glass rounded-2xl p-6 md:p-8 glow-border">
+                        <div class="flex items-center justify-between mb-4">
+                            <h2 class="text-xl font-semibold text-indigo-200">Meal Planner</h2>
+                            <div class="flex rounded-lg overflow-hidden border border-indigo-500/20">
+                                <button type="button" class="meal-btn active text-xs px-3 py-1.5 text-indigo-300 border-r border-indigo-500/20" data-meals="3" onclick="setMeals(3)">3 meals</button>
+                                <button type="button" class="meal-btn text-xs px-3 py-1.5 text-indigo-300/50 border-r border-indigo-500/20" data-meals="4" onclick="setMeals(4)">4 meals</button>
+                                <button type="button" class="meal-btn text-xs px-3 py-1.5 text-indigo-300/50" data-meals="5" onclick="setMeals(5)">5 meals</button>
+                            </div>
+                        </div>
+                        <div id="meal-grid" class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                        </div>
+                    </div>
+
+                    <!-- Water Intake -->
+                    <div class="glass rounded-2xl p-6 glow-border">
+                        <h3 class="text-sm font-semibold text-indigo-200 uppercase tracking-wider mb-3">Daily Recommendations</h3>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div class="text-center">
+                                <p class="text-3xl font-bold text-cyan-300" id="water-value">0</p>
+                                <p class="text-xs text-indigo-300/50 mt-1">Liters of water / day</p>
+                            </div>
+                            <div class="text-center">
+                                <p class="text-3xl font-bold text-emerald-300" id="protein-rec-value">0</p>
+                                <p class="text-xs text-indigo-300/50 mt-1">g protein (min recommended)</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Weight Goal Timeline -->
+                    <div class="glass rounded-2xl p-6 md:p-8 glow-border">
+                        <h2 class="text-xl font-semibold text-indigo-200 mb-4">Weight Goal Timeline</h2>
+                        <div class="flex flex-col sm:flex-row gap-3 mb-4">
+                            <div class="flex-1">
+                                <label for="goal-weight" class="block text-xs text-indigo-300/60 mb-1" id="goal-weight-label">Target Weight (kg)</label>
+                                <input type="number" id="goal-weight" placeholder="65" step="0.1"
+                                    class="w-full bg-white/5 border border-indigo-500/20 rounded-xl px-4 py-2.5 text-white text-sm placeholder-white/30 focus:outline-none focus:border-indigo-500/50 focus:ring-1 focus:ring-indigo-500/30 transition">
+                            </div>
+                            <div class="flex-1">
+                                <label class="block text-xs text-indigo-300/60 mb-1">Rate</label>
+                                <select id="goal-rate"
+                                    class="w-full bg-white/5 border border-indigo-500/20 rounded-xl px-4 py-2.5 text-white text-sm focus:outline-none focus:border-indigo-500/50 focus:ring-1 focus:ring-indigo-500/30 transition appearance-none cursor-pointer"
+                                    style="background-image: url('data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%2212%22 height=%228%22 viewBox=%220 0 12 8%22><path d=%22M1 1l5 5 5-5%22 stroke=%22%236366f1%22 stroke-width=%221.5%22 fill=%22none%22/></svg>'); background-repeat: no-repeat; background-position: right 12px center;">
+                                    <option value="0.25" class="bg-surface">Slow (0.25 kg/week)</option>
+                                    <option value="0.5" class="bg-surface" selected>Normal (0.5 kg/week)</option>
+                                    <option value="0.75" class="bg-surface">Fast (0.75 kg/week)</option>
+                                    <option value="1" class="bg-surface">Aggressive (1 kg/week)</option>
+                                </select>
+                            </div>
+                            <div class="flex items-end">
+                                <button type="button" onclick="calculateGoalTimeline()" class="btn-glow rounded-xl px-5 py-2.5 text-sm font-medium whitespace-nowrap">Calculate</button>
+                            </div>
+                        </div>
+                        <div id="goal-result" class="hidden result-card rounded-xl p-4 text-center">
+                            <p class="text-indigo-300/80 text-xs uppercase tracking-wider mb-1" id="goal-direction">-</p>
+                            <p class="text-3xl font-bold text-white" id="goal-weeks">0</p>
+                            <p class="text-indigo-300/60 text-xs mt-1" id="goal-detail">-</p>
+                            <p class="text-indigo-300/40 text-xs mt-2" id="goal-calories">-</p>
+                        </div>
+                    </div>
+
+                    <!-- Share Results -->
+                    <div class="flex gap-3">
+                        <button type="button" onclick="copyResults()" class="flex-1 glass rounded-xl py-3 text-sm text-indigo-200 hover:text-white hover:border-indigo-500/30 border border-transparent transition text-center">
+                            <span id="copy-btn-text">Copy Results</span>
+                        </button>
+                        <button type="button" onclick="printResults()" class="flex-1 glass rounded-xl py-3 text-sm text-indigo-200 hover:text-white hover:border-indigo-500/30 border border-transparent transition text-center">
+                            Print Results
+                        </button>
                     </div>
                 </section>
 

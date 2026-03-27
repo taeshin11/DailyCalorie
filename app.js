@@ -1171,6 +1171,25 @@ renderHistory();
 renderHistoryChart();
 renderMealLog();
 
+// ===== Visitor Counter =====
+(function() {
+    try {
+        var key = "tdee_visitors";
+        var todayKey = "tdee_visited_" + new Date().toISOString().slice(0, 10);
+        var count = parseInt(localStorage.getItem(key) || "0");
+        if (!sessionStorage.getItem("tdee_session")) {
+            sessionStorage.setItem("tdee_session", "1");
+            if (!localStorage.getItem(todayKey)) {
+                localStorage.setItem(todayKey, "1");
+                count++;
+                localStorage.setItem(key, count.toString());
+            }
+        }
+        var el = document.getElementById("visitor-count");
+        if (el) el.textContent = count.toLocaleString();
+    } catch(e) {}
+})();
+
 // Service Worker Registration
 if ("serviceWorker" in navigator) {
     navigator.serviceWorker.register("sw.js").catch(function() {});

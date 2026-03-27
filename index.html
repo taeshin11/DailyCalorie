@@ -168,15 +168,15 @@
     const ADSTERRA_CONFIG = {
         publisherId: '5686718',
         // Banner ad unit keys (get these from Adsterra dashboard after creating ad units)
-        topBanner:    { key: '', width: 728, height: 90 },
-        sidebarLeft:  { key: '', width: 160, height: 600 },
-        sidebarRight: { key: '', width: 160, height: 600 },
-        inContent:    { key: '', width: 300, height: 250 },
-        stickyBottom: { key: '', width: 320, height: 50 },
+        topBanner:    { key: '20872191f6798743faca0ff1e6c583d0', width: 728, height: 90 },
+        sidebarLeft:  { key: '1883718d391f5a7f54b52de5d509b41e', width: 160, height: 600 },
+        sidebarRight: { key: '1883718d391f5a7f54b52de5d509b41e', width: 160, height: 600 },
+        inContent:    { key: '76b1e4e10ff543570147bb29f9ba7863', width: 300, height: 250 },
+        stickyBottom: { key: '4f475bea400417d46b6c21aac0049bae', width: 320, height: 50 },
         // Popunder key (optional - high CPM, set to '' to disable)
         popunder:     { key: '' },
         // Social Bar script URL (paste the full src URL from Adsterra Social Bar ad unit)
-        socialBarSrc: ''
+        socialBarSrc: 'https://pl28994612.profitablecpmratenetwork.com/23/2d/e9/232de9e224707af08d2eb51007d733b8.js'
     };
 
     // Auto-load Adsterra banner ads
@@ -191,7 +191,7 @@
         container.appendChild(optScript);
         const adScript = document.createElement('script');
         adScript.type = 'text/javascript';
-        adScript.src = '//www.topcreativeformat.com/' + config.key + '/invoke.js';
+        adScript.src = '//www.highperformanceformat.com/' + config.key + '/invoke.js';
         container.appendChild(adScript);
     }
 
@@ -534,6 +534,12 @@
                 <!-- In-Content Ad Slot -->
                 <div class="ad-slot w-full min-h-[100px] rounded-xl overflow-hidden" id="ad-in-content">
                     <span class="ad-placeholder-text">Advertisement</span>
+                </div>
+
+                <!-- Adsterra Native Banner -->
+                <div class="w-full rounded-xl overflow-hidden" id="ad-native-banner">
+                    <script async="async" data-cfasync="false" src="https://pl28994063.profitablecpmratenetwork.com/25a6b7663632d428954dd2ab4ff9d663/invoke.js"></script>
+                    <div id="container-25a6b7663632d428954dd2ab4ff9d663"></div>
                 </div>
 
                 <!-- Results Section (hidden until calculated) -->

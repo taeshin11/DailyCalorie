@@ -187,12 +187,50 @@ function selectDiet(dietKey) {
         btn.classList.toggle("active", btn.dataset.diet === dietKey);
     });
 
+    // Show/hide custom sliders
+    var sliders = document.getElementById("custom-sliders");
+    if (dietKey === "custom") {
+        sliders.classList.remove("hidden");
+    } else {
+        sliders.classList.add("hidden");
+    }
+
     if (lastTDEE > 0) {
         var macros = calculateMacros(lastTDEE, dietKey);
         updateMacroUI(macros, lastTDEE);
         renderChart(macros);
     }
 }
+
+// ===== Custom Macro Sliders =====
+function onCustomSlider() {
+    var c = parseInt(document.getElementById("slider-carbs").value);
+    var p = parseInt(document.getElementById("slider-protein").value);
+    var f = parseInt(document.getElementById("slider-fat").value);
+    var total = c + p + f;
+
+    document.getElementById("slider-carbs-val").textContent = c + "%";
+    document.getElementById("slider-protein-val").textContent = p + "%";
+    document.getElementById("slider-fat-val").textContent = f + "%";
+
+    var msgEl = document.getElementById("slider-total-msg");
+    if (total === 100) {
+        msgEl.innerHTML = '<span class="text-emerald-400">Total: 100%</span>';
+    } else {
+        msgEl.innerHTML = '<span class="text-red-400">Total: ' + total + '% (must equal 100%)</span>';
+    }
+
+    // Update custom diet plan
+    DIET_PLANS["custom"] = { carbs: c / 100, protein: p / 100, fat: f / 100, label: "Custom (" + c + "/" + p + "/" + f + ")" };
+
+    if (total === 100 && lastTDEE > 0) {
+        var macros = calculateMacros(lastTDEE, "custom");
+        updateMacroUI(macros, lastTDEE);
+        renderChart(macros);
+    }
+}
+// Init custom plan
+DIET_PLANS["custom"] = { carbs: 0.50, protein: 0.30, fat: 0.20, label: "Custom" };
 
 // ===== Chart.js Doughnut Chart =====
 function renderChart(macros) {
@@ -561,6 +599,7 @@ function saveToHistory(data) {
         if (history.length > 20) history = history.slice(0, 20);
         localStorage.setItem("tdee_history", JSON.stringify(history));
         renderHistory();
+        renderHistoryChart();
     } catch(e) {}
 }
 
@@ -655,6 +694,121 @@ function printResults() {
     window.print();
 }
 
+// ===== Exercise Calorie Burn =====
+function calcExercise() {
+    if (lastWeightKg === 0) return;
+    var met = parseFloat(document.getElementById("exercise-type").value);
+    var mins = parseFloat(document.getElementById("exercise-mins").value) || 30;
+    // Calories = MET × weight(kg) × duration(hrs)
+    var cal = Math.round(met * lastWeightKg * (mins / 60));
+    var foodEquiv = (cal / 285).toFixed(1); // pizza slices
+
+    document.getElementById("exercise-result").classList.remove("hidden");
+    document.getElementById("exercise-cal").textContent = cal.toLocaleString() + " kcal";
+    document.getElementById("exercise-detail").textContent = mins + " min = ~" + foodEquiv + " slices of pizza worth of energy";
+}
+
+// ===== Theme Toggle =====
+function toggleTheme() {
+    var isLight = document.body.classList.toggle("light");
+    document.getElementById("theme-icon-dark").classList.toggle("hidden", isLight);
+    document.getElementById("theme-icon-light").classList.toggle("hidden", !isLight);
+    try { localStorage.setItem("tdee_theme", isLight ? "light" : "dark"); } catch(e) {}
+}
+
+function loadTheme() {
+    try {
+        var theme = localStorage.getItem("tdee_theme");
+        if (theme === "light") {
+            document.body.classList.add("light");
+            document.getElementById("theme-icon-dark").classList.add("hidden");
+            document.getElementById("theme-icon-light").classList.remove("hidden");
+        }
+    } catch(e) {}
+}
+
+// ===== History Chart =====
+var historyChart = null;
+function renderHistoryChart() {
+    try {
+        var history = JSON.parse(localStorage.getItem("tdee_history") || "[]");
+        var section = document.getElementById("history-chart-section");
+        if (history.length < 2) {
+            section.classList.add("hidden");
+            return;
+        }
+        section.classList.remove("hidden");
+
+        var entries = history.slice(0, 10).reverse();
+        var labels = entries.map(function(e) { return e.date; });
+        var tdeeData = entries.map(function(e) { return e.tdee; });
+        var bmiData = entries.map(function(e) { return parseFloat(e.bmi); });
+
+        var ctx = document.getElementById("history-chart").getContext("2d");
+
+        if (historyChart) {
+            historyChart.data.labels = labels;
+            historyChart.data.datasets[0].data = tdeeData;
+            historyChart.data.datasets[1].data = bmiData;
+            historyChart.update();
+            return;
+        }
+
+        historyChart = new Chart(ctx, {
+            type: "line",
+            data: {
+                labels: labels,
+                datasets: [
+                    {
+                        label: "TDEE",
+                        data: tdeeData,
+                        borderColor: "#6366f1",
+                        backgroundColor: "rgba(99,102,241,0.1)",
+                        fill: true,
+                        tension: 0.4,
+                        pointRadius: 4,
+                        pointBackgroundColor: "#6366f1",
+                        yAxisID: "y",
+                    },
+                    {
+                        label: "BMI",
+                        data: bmiData,
+                        borderColor: "#10b981",
+                        backgroundColor: "rgba(16,185,129,0.1)",
+                        fill: false,
+                        tension: 0.4,
+                        pointRadius: 4,
+                        pointBackgroundColor: "#10b981",
+                        borderDash: [5, 5],
+                        yAxisID: "y1",
+                    }
+                ],
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                interaction: { intersect: false, mode: "index" },
+                plugins: {
+                    legend: { display: true, position: "top", labels: { color: "#a5b4fc", font: { size: 10 }, boxWidth: 12 } },
+                    tooltip: {
+                        backgroundColor: "rgba(15, 10, 46, 0.9)",
+                        titleColor: "#c7d2fe",
+                        bodyColor: "#e0e7ff",
+                        borderColor: "rgba(99,102,241,0.3)",
+                        borderWidth: 1,
+                        cornerRadius: 8,
+                    }
+                },
+                scales: {
+                    x: { grid: { color: "rgba(99,102,241,0.06)" }, ticks: { color: "#6366f180", font: { size: 9 } } },
+                    y: { position: "left", grid: { color: "rgba(99,102,241,0.06)" }, ticks: { color: "#6366f180", font: { size: 9 } } },
+                    y1: { position: "right", grid: { drawOnChartArea: false }, ticks: { color: "#10b98180", font: { size: 9 } } },
+                }
+            }
+        });
+    } catch(e) {}
+}
+
 // ===== FAQ Toggle =====
 function toggleFaq(btn) {
     var answer = btn.nextElementSibling;
@@ -713,4 +867,11 @@ form.addEventListener("submit", function(e) {
 
 // ===== Init =====
 loadFromLocalStorage();
+loadTheme();
 renderHistory();
+renderHistoryChart();
+
+// Service Worker Registration
+if ("serviceWorker" in navigator) {
+    navigator.serviceWorker.register("sw.js").catch(function() {});
+}

@@ -1,0 +1,22 @@
+{
+    "name": "TDEE Calculator & Macro Dashboard",
+    "short_name": "TDEE Calc",
+    "description": "Free TDEE Calculator with macronutrient breakdown, BMI, meal planner and more.",
+    "start_url": "/DailyCalorie/",
+    "display": "standalone",
+    "background_color": "#0f0a2e",
+    "theme_color": "#6366f1",
+    "orientation": "portrait-primary",
+    "icons": [
+        {
+            "src": "icons/icon-192.svg",
+            "sizes": "192x192",
+            "type": "image/svg+xml"
+        },
+        {
+            "src": "icons/icon-512.svg",
+            "sizes": "512x512",
+            "type": "image/svg+xml"
+        }
+    ]
+}

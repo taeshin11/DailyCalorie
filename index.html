@@ -106,11 +106,47 @@
     <!-- Chart.js via CDN -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
 
-    <!-- Google AdSense Placeholder -->
+    <!--
+    =============== AD NETWORK SETUP GUIDE ===============
+
+    OPTION A: Google AdSense (recommended long-term, slow approval)
+    1. Sign up at https://adsense.google.com
+    2. Uncomment the script below and replace ca-pub-XXXXXXXX with your publisher ID
+    3. Replace each ad slot's innerHTML with AdSense ad unit code
+
+    OPTION B: Adsterra (fast approval, good for new sites)
+    1. Sign up at https://www.adsterra.com
+    2. Create ad units for each slot type:
+       - Top Banner: 728x90 (Leaderboard)
+       - Sidebar: 160x600 (Wide Skyscraper)
+       - In-Content: 300x250 (Medium Rectangle)
+       - Sticky Bottom: 320x50 (Mobile Banner)
+    3. Paste the provided <script> tags inside each ad-slot div
+
+    OPTION C: Monetag (instant approval)
+    1. Sign up at https://monetag.com
+    2. Use their Smart Tag or specific ad formats
+
+    AD SLOT LOCATIONS (5 slots):
+    - #ad-top-banner     : Full-width top banner (728x90)
+    - #ad-sidebar-left   : Desktop left sidebar (160x600)
+    - #ad-sidebar-right  : Desktop right sidebar (160x600)
+    - #ad-in-content     : Between form and results (300x250 / responsive)
+    - #ad-sticky-bottom  : Mobile sticky footer (320x50)
+
+    REVENUE STRATEGY:
+    - Start with Adsterra/Monetag for immediate revenue
+    - Apply for AdSense once site has 30+ days of traffic
+    - Switch to AdSense once approved (higher RPM)
+    - Consider adding Ezoic after 10K monthly pageviews
+    ======================================================
+    -->
+
+    <!-- Google AdSense - Uncomment and add your publisher ID -->
     <!-- <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXX" crossorigin="anonymous"></script> -->
 
-    <!-- Adsterra / PropellerAds / Monetag Placeholder -->
-    <!-- <script async src="//alternative-ad-network.com/your-script.js"></script> -->
+    <!-- Adsterra - Uncomment and add your script URL after signup -->
+    <!-- <script async src="//www.topcreativeformat.com/YOUR_ADSTERRA_ID.js"></script> -->
 
     <style>
         * { box-sizing: border-box; }
@@ -288,9 +324,10 @@
 </head>
 <body class="text-white font-sans antialiased pb-[50px] md:pb-[60px]">
 
-    <!-- Top Banner Ad Slot -->
+    <!-- Top Banner Ad Slot (728x90 Leaderboard) -->
     <div class="ad-slot w-full h-[90px] md:h-[90px]" id="ad-top-banner">
-        <!-- Ad Placeholder: Top Banner (728x90 / Responsive) -->
+        <!-- Paste your ad network code here: 728x90 banner -->
+        <!-- Example for AdSense: <ins class="adsbygoogle" data-ad-client="ca-pub-XXX" data-ad-slot="XXX" data-ad-format="horizontal"></ins><script>(adsbygoogle = window.adsbygoogle || []).push({});</script> -->
     </div>
 
     <header class="text-center py-8 px-4 relative">

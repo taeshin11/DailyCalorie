@@ -7,10 +7,13 @@
     <!-- SEO Meta Tags -->
     <title>Free TDEE Calculator & Macro Dashboard | Calculate Your Daily Calories</title>
     <meta name="description" content="Free TDEE Calculator using the Mifflin-St Jeor equation. Calculate your Total Daily Energy Expenditure and get a personalized macronutrient breakdown with interactive charts.">
-    <meta name="keywords" content="TDEE Calculator, Macro Calculator, Daily Calorie Calculator, BMR Calculator, Macronutrient Calculator, Weight Loss Calculator, Calorie Counter, Free TDEE">
+    <meta name="keywords" content="TDEE Calculator, Macro Calculator, Daily Calorie Calculator, BMR Calculator, Macronutrient Calculator, Weight Loss Calculator, Calorie Counter, Free TDEE, BMI Calculator">
     <meta name="author" content="DailyCalorie">
     <meta name="robots" content="index, follow">
     <link rel="canonical" href="https://dailycalorie.app/">
+
+    <!-- Favicon (inline SVG) -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🔥</text></svg>">
 
     <!-- Open Graph Tags -->
     <meta property="og:title" content="Free TDEE Calculator & Macro Dashboard">
@@ -41,6 +44,40 @@
             "priceCurrency": "USD"
         },
         "browserRequirements": "Requires JavaScript"
+    }
+    </script>
+
+    <!-- FAQ Structured Data -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "mainEntity": [
+            {
+                "@type": "Question",
+                "name": "What is TDEE?",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "TDEE (Total Daily Energy Expenditure) is the total number of calories your body burns in a day, including your Basal Metabolic Rate (BMR) plus calories burned through physical activity and digestion."
+                }
+            },
+            {
+                "@type": "Question",
+                "name": "How is TDEE calculated?",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "TDEE is calculated using the Mifflin-St Jeor equation to determine your BMR, then multiplied by an activity factor. For men: BMR = (10 × weight in kg) + (6.25 × height in cm) - (5 × age) + 5. For women: BMR = (10 × weight in kg) + (6.25 × height in cm) - (5 × age) - 161."
+                }
+            },
+            {
+                "@type": "Question",
+                "name": "What are macronutrients?",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Macronutrients (macros) are the three main nutrients your body needs in large amounts: Carbohydrates (4 kcal/g), Protein (4 kcal/g), and Fat (9 kcal/g). The ratio of these macros affects body composition and energy levels."
+                }
+            }
+        ]
     }
     </script>
 
@@ -127,6 +164,22 @@
             outline: 2px solid #6366f1;
             outline-offset: 2px;
         }
+        .toggle-btn {
+            transition: all 0.2s ease;
+        }
+        .toggle-btn.active {
+            background: rgba(99, 102, 241, 0.3);
+            border-color: #6366f1;
+            color: white;
+        }
+        .diet-btn {
+            transition: all 0.2s ease;
+            cursor: pointer;
+        }
+        .diet-btn.active {
+            background: rgba(99, 102, 241, 0.3);
+            border-color: #6366f1;
+        }
         @keyframes fadeInUp {
             from { opacity: 0; transform: translateY(20px); }
             to { opacity: 1; transform: translateY(0); }
@@ -136,6 +189,24 @@
             height: 8px;
             border-radius: 4px;
             transition: width 0.8s ease;
+        }
+        .bmi-indicator {
+            transition: left 0.8s ease;
+        }
+        .faq-answer {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease, padding 0.3s ease;
+        }
+        .faq-answer.open {
+            max-height: 200px;
+            padding-top: 0.75rem;
+        }
+        .faq-toggle {
+            transition: transform 0.3s ease;
+        }
+        .faq-toggle.open {
+            transform: rotate(180deg);
         }
     </style>
 </head>
@@ -170,7 +241,14 @@
 
                 <!-- Calculator Form -->
                 <section class="glass rounded-2xl p-6 md:p-8 glow-border">
-                    <h2 class="text-xl font-semibold text-indigo-200 mb-6">Your Details</h2>
+                    <div class="flex items-center justify-between mb-6">
+                        <h2 class="text-xl font-semibold text-indigo-200">Your Details</h2>
+                        <!-- Unit Toggle -->
+                        <div class="flex rounded-lg overflow-hidden border border-indigo-500/20">
+                            <button type="button" class="toggle-btn active text-xs px-3 py-1.5 text-indigo-300 border-r border-indigo-500/20" id="btn-metric" onclick="setUnit('metric')">Metric</button>
+                            <button type="button" class="toggle-btn text-xs px-3 py-1.5 text-indigo-300/50" id="btn-imperial" onclick="setUnit('imperial')">Imperial</button>
+                        </div>
+                    </div>
                     <form id="tdee-form" class="space-y-5" novalidate>
 
                         <!-- Gender -->
@@ -197,16 +275,31 @@
 
                         <!-- Weight -->
                         <div>
-                            <label for="weight" class="block text-sm text-indigo-300/80 mb-1">Weight (kg)</label>
+                            <label for="weight" class="block text-sm text-indigo-300/80 mb-1" id="weight-label">Weight (kg)</label>
                             <input type="number" id="weight" name="weight" min="20" max="400" step="0.1" placeholder="70" required
                                 class="w-full bg-white/5 border border-indigo-500/20 rounded-xl px-4 py-3 text-white placeholder-white/30 focus:outline-none focus:border-indigo-500/50 focus:ring-1 focus:ring-indigo-500/30 transition">
                         </div>
 
-                        <!-- Height -->
-                        <div>
+                        <!-- Height (Metric) -->
+                        <div id="height-metric">
                             <label for="height" class="block text-sm text-indigo-300/80 mb-1">Height (cm)</label>
                             <input type="number" id="height" name="height" min="50" max="300" step="0.1" placeholder="175" required
                                 class="w-full bg-white/5 border border-indigo-500/20 rounded-xl px-4 py-3 text-white placeholder-white/30 focus:outline-none focus:border-indigo-500/50 focus:ring-1 focus:ring-indigo-500/30 transition">
+                        </div>
+
+                        <!-- Height (Imperial - hidden by default) -->
+                        <div id="height-imperial" class="hidden">
+                            <label class="block text-sm text-indigo-300/80 mb-1">Height</label>
+                            <div class="flex gap-3">
+                                <div class="flex-1">
+                                    <input type="number" id="height-ft" min="2" max="8" placeholder="5" class="w-full bg-white/5 border border-indigo-500/20 rounded-xl px-4 py-3 text-white placeholder-white/30 focus:outline-none focus:border-indigo-500/50 focus:ring-1 focus:ring-indigo-500/30 transition">
+                                    <span class="text-xs text-indigo-300/40 mt-0.5 block">feet</span>
+                                </div>
+                                <div class="flex-1">
+                                    <input type="number" id="height-in" min="0" max="11" placeholder="9" class="w-full bg-white/5 border border-indigo-500/20 rounded-xl px-4 py-3 text-white placeholder-white/30 focus:outline-none focus:border-indigo-500/50 focus:ring-1 focus:ring-indigo-500/30 transition">
+                                    <span class="text-xs text-indigo-300/40 mt-0.5 block">inches</span>
+                                </div>
+                            </div>
                         </div>
 
                         <!-- Activity Level -->
@@ -214,7 +307,7 @@
                             <label for="activity" class="block text-sm text-indigo-300/80 mb-1">Activity Level</label>
                             <select id="activity" name="activity" required
                                 class="w-full bg-white/5 border border-indigo-500/20 rounded-xl px-4 py-3 pr-10 text-white focus:outline-none focus:border-indigo-500/50 focus:ring-1 focus:ring-indigo-500/30 transition appearance-none cursor-pointer"
-                style="background-image: url('data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%2212%22 height=%228%22 viewBox=%220 0 12 8%22><path d=%22M1 1l5 5 5-5%22 stroke=%22%236366f1%22 stroke-width=%221.5%22 fill=%22none%22/></svg>'); background-repeat: no-repeat; background-position: right 12px center;">
+                                style="background-image: url('data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%2212%22 height=%228%22 viewBox=%220 0 12 8%22><path d=%22M1 1l5 5 5-5%22 stroke=%22%236366f1%22 stroke-width=%221.5%22 fill=%22none%22/></svg>'); background-repeat: no-repeat; background-position: right 12px center;">
                                 <option value="1.2" class="bg-surface">Sedentary (little or no exercise)</option>
                                 <option value="1.375" class="bg-surface">Lightly Active (1-3 days/week)</option>
                                 <option value="1.55" class="bg-surface" selected>Moderately Active (3-5 days/week)</option>
@@ -248,6 +341,31 @@
                         </div>
                     </div>
 
+                    <!-- BMI Card -->
+                    <div class="glass rounded-2xl p-6 glow-border">
+                        <div class="flex items-center justify-between mb-3">
+                            <h3 class="text-sm font-semibold text-indigo-200 uppercase tracking-wider">Body Mass Index (BMI)</h3>
+                            <span class="text-2xl font-bold" id="bmi-value">0</span>
+                        </div>
+                        <p class="text-sm mb-3" id="bmi-label">-</p>
+                        <!-- BMI Scale Bar -->
+                        <div class="relative h-3 rounded-full overflow-hidden">
+                            <div class="absolute inset-0 flex">
+                                <div class="h-full bg-blue-400" style="width:25%"></div>
+                                <div class="h-full bg-emerald-400" style="width:25%"></div>
+                                <div class="h-full bg-amber-400" style="width:25%"></div>
+                                <div class="h-full bg-red-400" style="width:25%"></div>
+                            </div>
+                            <div class="bmi-indicator absolute top-1/2 -translate-y-1/2 w-3 h-3 bg-white rounded-full shadow-lg border-2 border-dark" id="bmi-dot" style="left:0%"></div>
+                        </div>
+                        <div class="flex justify-between text-[10px] text-indigo-300/40 mt-1">
+                            <span>Underweight</span>
+                            <span>Normal</span>
+                            <span>Overweight</span>
+                            <span>Obese</span>
+                        </div>
+                    </div>
+
                     <!-- Calorie Goals -->
                     <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
                         <div class="glass rounded-xl p-4 text-center glow-border">
@@ -267,9 +385,16 @@
                         </div>
                     </div>
 
-                    <!-- Macros Dashboard -->
+                    <!-- Diet Plan Selector -->
                     <div class="glass rounded-2xl p-6 md:p-8 glow-border">
-                        <h2 class="text-xl font-semibold text-indigo-200 mb-6">Macronutrient Breakdown</h2>
+                        <h2 class="text-xl font-semibold text-indigo-200 mb-4">Macronutrient Breakdown</h2>
+                        <div class="flex flex-wrap gap-2 mb-6">
+                            <button class="diet-btn active glass rounded-lg px-3 py-1.5 text-xs border border-transparent" data-diet="balanced" onclick="selectDiet('balanced')">Balanced</button>
+                            <button class="diet-btn glass rounded-lg px-3 py-1.5 text-xs border border-transparent" data-diet="low-carb" onclick="selectDiet('low-carb')">Low Carb</button>
+                            <button class="diet-btn glass rounded-lg px-3 py-1.5 text-xs border border-transparent" data-diet="high-protein" onclick="selectDiet('high-protein')">High Protein</button>
+                            <button class="diet-btn glass rounded-lg px-3 py-1.5 text-xs border border-transparent" data-diet="keto" onclick="selectDiet('keto')">Keto</button>
+                        </div>
+
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
 
                             <!-- Chart -->
@@ -288,7 +413,7 @@
                                 <!-- Carbs -->
                                 <div>
                                     <div class="flex justify-between text-sm mb-1">
-                                        <span class="text-indigo-200">Carbs <span class="text-indigo-400/60">(50%)</span></span>
+                                        <span class="text-indigo-200">Carbs <span class="text-indigo-400/60" id="carbs-pct">(50%)</span></span>
                                         <span class="font-semibold text-amber-300" id="carbs-grams">0g</span>
                                     </div>
                                     <div class="w-full bg-white/5 rounded-full h-2">
@@ -299,7 +424,7 @@
                                 <!-- Protein -->
                                 <div>
                                     <div class="flex justify-between text-sm mb-1">
-                                        <span class="text-indigo-200">Protein <span class="text-indigo-400/60">(30%)</span></span>
+                                        <span class="text-indigo-200">Protein <span class="text-indigo-400/60" id="protein-pct">(30%)</span></span>
                                         <span class="font-semibold text-emerald-300" id="protein-grams">0g</span>
                                     </div>
                                     <div class="w-full bg-white/5 rounded-full h-2">
@@ -310,7 +435,7 @@
                                 <!-- Fat -->
                                 <div>
                                     <div class="flex justify-between text-sm mb-1">
-                                        <span class="text-indigo-200">Fat <span class="text-indigo-400/60">(20%)</span></span>
+                                        <span class="text-indigo-200">Fat <span class="text-indigo-400/60" id="fat-pct">(20%)</span></span>
                                         <span class="font-semibold text-purple-300" id="fat-grams">0g</span>
                                     </div>
                                     <div class="w-full bg-white/5 rounded-full h-2">
@@ -322,6 +447,51 @@
                         </div>
                     </div>
                 </section>
+
+                <!-- FAQ Section (SEO) -->
+                <article class="glass rounded-2xl p-6 md:p-8 glow-border space-y-0">
+                    <h2 class="text-xl font-semibold text-indigo-200 mb-5">Frequently Asked Questions</h2>
+
+                    <div class="border-b border-indigo-500/10">
+                        <button class="faq-question w-full flex items-center justify-between py-4 text-left text-sm text-indigo-100 hover:text-white transition" onclick="toggleFaq(this)">
+                            <span>What is TDEE and why does it matter?</span>
+                            <svg class="faq-toggle w-4 h-4 text-indigo-400 shrink-0 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                        </button>
+                        <div class="faq-answer text-xs text-indigo-300/60 leading-relaxed pb-4">
+                            TDEE (Total Daily Energy Expenditure) is the total number of calories your body burns each day. It includes your Basal Metabolic Rate (BMR) — the energy needed just to keep your body alive at rest — plus the calories burned through physical activity, exercise, and digesting food. Knowing your TDEE helps you plan your nutrition: eat below it to lose weight, at it to maintain, or above it to gain.
+                        </div>
+                    </div>
+
+                    <div class="border-b border-indigo-500/10">
+                        <button class="faq-question w-full flex items-center justify-between py-4 text-left text-sm text-indigo-100 hover:text-white transition" onclick="toggleFaq(this)">
+                            <span>What is the Mifflin-St Jeor equation?</span>
+                            <svg class="faq-toggle w-4 h-4 text-indigo-400 shrink-0 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                        </button>
+                        <div class="faq-answer text-xs text-indigo-300/60 leading-relaxed pb-4">
+                            The Mifflin-St Jeor equation is considered the most accurate formula for calculating BMR. For men: BMR = (10 x weight in kg) + (6.25 x height in cm) - (5 x age) + 5. For women: the same formula minus 161 instead of plus 5. This equation was published in 1990 and is recommended by the Academy of Nutrition and Dietetics.
+                        </div>
+                    </div>
+
+                    <div class="border-b border-indigo-500/10">
+                        <button class="faq-question w-full flex items-center justify-between py-4 text-left text-sm text-indigo-100 hover:text-white transition" onclick="toggleFaq(this)">
+                            <span>How should I split my macronutrients?</span>
+                            <svg class="faq-toggle w-4 h-4 text-indigo-400 shrink-0 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                        </button>
+                        <div class="faq-answer text-xs text-indigo-300/60 leading-relaxed pb-4">
+                            It depends on your goals. A <strong class="text-indigo-200">Balanced</strong> split (50/30/20) works for most people. <strong class="text-indigo-200">High Protein</strong> (30/40/30) is great for muscle building. <strong class="text-indigo-200">Low Carb</strong> (25/35/40) can help with fat loss. <strong class="text-indigo-200">Keto</strong> (5/25/70) is an extreme low-carb approach. Use the diet selector above to see how each plan changes your macros.
+                        </div>
+                    </div>
+
+                    <div>
+                        <button class="faq-question w-full flex items-center justify-between py-4 text-left text-sm text-indigo-100 hover:text-white transition" onclick="toggleFaq(this)">
+                            <span>How accurate is this calculator?</span>
+                            <svg class="faq-toggle w-4 h-4 text-indigo-400 shrink-0 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                        </button>
+                        <div class="faq-answer text-xs text-indigo-300/60 leading-relaxed pb-4">
+                            The Mifflin-St Jeor equation is accurate to within about 10% for most people. Individual variation exists due to genetics, body composition, and metabolic differences. Use your TDEE as a starting point and adjust based on real-world results over 2-3 weeks. If you're not seeing expected changes, try adjusting by 100-200 calories.
+                        </div>
+                    </div>
+                </article>
             </div>
 
             <!-- Right Sidebar Ad (Desktop only) -->

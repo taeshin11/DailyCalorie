@@ -16,6 +16,8 @@ let lastTDEE = 0;
 let lastBMR = 0;
 let lastWeightKg = 0;
 let lastHeightCm = 0;
+let lastGender = "male";
+let lastAge = 0;
 
 // Diet plan presets: { carbs%, protein%, fat% }
 const DIET_PLANS = {
@@ -117,6 +119,8 @@ function updateResults(bmr, tdee, activityMultiplier, macros, weightKg, heightCm
     lastBMR = bmr;
     lastWeightKg = weightKg;
     lastHeightCm = heightCm;
+    lastGender = document.querySelector('input[name="gender"]:checked').value;
+    lastAge = parseFloat(document.getElementById("age").value);
 
     animateValue(document.getElementById("tdee-value"), prevTDEE, tdee, 600);
     document.getElementById("bmr-value").textContent = bmr.toLocaleString();
@@ -149,8 +153,12 @@ function updateResults(bmr, tdee, activityMultiplier, macros, weightKg, heightCm
     updateMacroUI(macros, tdee);
     updateActivityTable(bmr, activityMultiplier);
     updateMealPlan(macros);
+    updateBodyComposition(weightKg, heightCm, lastGender, lastAge);
+    updateZigzag(tdee);
+    updateEquivalents(tdee);
     resultsSection.classList.remove("hidden");
     renderChart(macros);
+    staggerReveal();
 }
 
 function updateMacroUI(macros, tdee) {
@@ -451,6 +459,170 @@ function calculateGoalTimeline() {
     document.getElementById("goal-calories").textContent = "Eat " + (isLosing ? (lastTDEE - calAdjust) : (lastTDEE + calAdjust)).toLocaleString() + " kcal/day (" + (isLosing ? "-" : "+") + calAdjust + " from TDEE)";
 }
 
+// ===== Body Composition Estimate =====
+function estimateBodyFat(bmi, age, gender) {
+    // Deurenberg formula: BF% = 1.20 × BMI + 0.23 × Age - 10.8 × sex - 5.4 (sex: 1=male, 0=female)
+    var sex = gender === "male" ? 1 : 0;
+    var bf = (1.20 * bmi) + (0.23 * age) - (10.8 * sex) - 5.4;
+    return Math.max(3, Math.min(bf, 60));
+}
+
+function updateBodyComposition(weightKg, heightCm, gender, age) {
+    var bmi = calculateBMI(weightKg, heightCm);
+    var bf = estimateBodyFat(bmi, age, gender);
+    var leanMass = weightKg * (1 - bf / 100);
+    var heightM = heightCm / 100;
+    var idealLow = (18.5 * heightM * heightM).toFixed(0);
+    var idealHigh = (24.9 * heightM * heightM).toFixed(0);
+
+    document.getElementById("bodyfat-value").textContent = bf.toFixed(1) + "%";
+    var unit = currentUnit === "imperial" ? "lbs" : "kg";
+    var lm = currentUnit === "imperial" ? (leanMass / 0.453592).toFixed(0) : leanMass.toFixed(1);
+    document.getElementById("lean-mass-value").textContent = lm + " " + unit;
+
+    if (currentUnit === "imperial") {
+        idealLow = (idealLow / 0.453592).toFixed(0);
+        idealHigh = (idealHigh / 0.453592).toFixed(0);
+    }
+    document.getElementById("ideal-weight-value").textContent = idealLow + "-" + idealHigh + " " + unit;
+}
+
+// ===== Zigzag Calorie Cycling =====
+function updateZigzag(tdee) {
+    var grid = document.getElementById("zigzag-grid");
+    grid.innerHTML = "";
+    var days = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+    // Pattern: alternate high and low days, totaling 7 x tdee
+    var pattern = [1.0, 0.85, 1.1, 0.9, 1.15, 0.85, 1.15];
+    var total = 0;
+    var maxCal = tdee * 1.15;
+
+    for (var i = 0; i < 7; i++) {
+        var cal = Math.round(tdee * pattern[i]);
+        total += cal;
+        var barPct = Math.round((cal / maxCal) * 100);
+        var isHigh = pattern[i] >= 1.0;
+
+        var col = document.createElement("div");
+        col.className = "flex flex-col items-center";
+        col.innerHTML =
+            '<div class="text-[10px] font-mono mb-1 ' + (isHigh ? 'text-emerald-300' : 'text-amber-300') + '">' + cal.toLocaleString() + '</div>' +
+            '<div class="w-full bg-white/5 rounded-full overflow-hidden" style="height:60px">' +
+                '<div class="zigzag-day w-full rounded-full ' + (isHigh ? 'bg-gradient-to-t from-emerald-500/60 to-emerald-400/30' : 'bg-gradient-to-t from-amber-500/60 to-amber-400/30') + '" style="height:' + barPct + '%;margin-top:' + (100 - barPct) + '%"></div>' +
+            '</div>' +
+            '<div class="text-[10px] text-indigo-300/40 mt-1">' + days[i] + '</div>';
+        grid.appendChild(col);
+    }
+
+    document.getElementById("zigzag-weekly").textContent = total.toLocaleString();
+    document.getElementById("zigzag-avg").textContent = Math.round(total / 7).toLocaleString();
+}
+
+// ===== Calorie Equivalents =====
+function updateEquivalents(tdee) {
+    var grid = document.getElementById("equivalents-grid");
+    grid.innerHTML = "";
+    var items = [
+        { emoji: "&#127829;", name: "Slices of Pizza", cal: 285 },
+        { emoji: "&#127828;", name: "Big Macs", cal: 550 },
+        { emoji: "&#129385;", name: "Chicken Breasts", cal: 165 },
+        { emoji: "&#127834;", name: "Bowls of Rice", cal: 206 },
+        { emoji: "&#127822;", name: "Apples", cal: 95 },
+        { emoji: "&#129371;", name: "Avocados", cal: 240 },
+        { emoji: "&#127846;", name: "Scoops Ice Cream", cal: 137 },
+        { emoji: "&#129382;", name: "Eggs", cal: 78 },
+    ];
+
+    items.forEach(function(item) {
+        var count = (tdee / item.cal).toFixed(1);
+        var card = document.createElement("div");
+        card.className = "equiv-card glass rounded-xl p-3 text-center border border-indigo-500/10";
+        card.innerHTML =
+            '<div class="text-2xl mb-1">' + item.emoji + '</div>' +
+            '<div class="text-lg font-bold text-white">' + count + '</div>' +
+            '<div class="text-[10px] text-indigo-300/50">' + item.name + '</div>';
+        grid.appendChild(card);
+    });
+}
+
+// ===== History Tracker =====
+function saveToHistory(data) {
+    try {
+        var history = JSON.parse(localStorage.getItem("tdee_history") || "[]");
+        history.unshift({
+            date: new Date().toLocaleDateString(),
+            time: new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}),
+            tdee: data.tdee,
+            bmr: data.bmr,
+            bmi: calculateBMI(data.weightKg, data.heightCm).toFixed(1),
+            weight: data.weightKg,
+            diet: currentDiet,
+        });
+        if (history.length > 20) history = history.slice(0, 20);
+        localStorage.setItem("tdee_history", JSON.stringify(history));
+        renderHistory();
+    } catch(e) {}
+}
+
+function renderHistory() {
+    try {
+        var history = JSON.parse(localStorage.getItem("tdee_history") || "[]");
+        var list = document.getElementById("history-list");
+        if (history.length === 0) {
+            list.innerHTML = '<p class="text-xs text-indigo-300/40 text-center py-2">No calculations yet</p>';
+            return;
+        }
+        list.innerHTML = "";
+        history.forEach(function(entry) {
+            var unit = currentUnit === "imperial" ? "lbs" : "kg";
+            var w = currentUnit === "imperial" ? (entry.weight / 0.453592).toFixed(0) : entry.weight.toFixed(1);
+            var row = document.createElement("div");
+            row.className = "flex items-center justify-between py-2 px-3 rounded-lg hover:bg-white/5 transition text-xs";
+            row.innerHTML =
+                '<div class="text-indigo-300/60">' + entry.date + ' ' + entry.time + '</div>' +
+                '<div class="flex gap-4">' +
+                    '<span class="text-indigo-200">' + w + ' ' + unit + '</span>' +
+                    '<span class="text-emerald-300 font-semibold">' + entry.tdee.toLocaleString() + ' kcal</span>' +
+                    '<span class="text-indigo-300/40">BMI ' + entry.bmi + '</span>' +
+                '</div>';
+            list.appendChild(row);
+        });
+    } catch(e) {}
+}
+
+function clearHistory() {
+    localStorage.removeItem("tdee_history");
+    renderHistory();
+}
+
+// ===== Share (Web Share API) =====
+function shareResults() {
+    if (lastTDEE === 0) return;
+    var macros = calculateMacros(lastTDEE, currentDiet);
+    var text = "My TDEE: " + lastTDEE.toLocaleString() + " kcal/day | " +
+        "Macros (" + DIET_PLANS[currentDiet].label + "): " +
+        macros.carbs.grams + "g carbs, " + macros.protein.grams + "g protein, " + macros.fat.grams + "g fat";
+
+    if (navigator.share) {
+        navigator.share({ title: "My TDEE Results", text: text, url: window.location.href }).catch(function(){});
+    } else {
+        navigator.clipboard.writeText(text).then(function() {
+            var btn = document.getElementById("share-btn-text");
+            btn.textContent = "Link copied!";
+            setTimeout(function() { btn.textContent = "Share"; }, 2000);
+        });
+    }
+}
+
+// ===== Staggered Reveal Animation =====
+function staggerReveal() {
+    var sections = resultsSection.querySelectorAll(".glass, .result-card, .grid");
+    sections.forEach(function(el) { el.classList.add("reveal"); });
+    sections.forEach(function(el, i) {
+        setTimeout(function() { el.classList.add("visible"); }, i * 80);
+    });
+}
+
 // ===== Copy Results =====
 function copyResults() {
     if (lastTDEE === 0) return;
@@ -518,6 +690,13 @@ form.addEventListener("submit", function(e) {
 
     saveToLocalStorage();
 
+    saveToHistory({
+        tdee: result.tdee,
+        bmr: result.bmr,
+        weightKg: weightKg,
+        heightCm: heightCm,
+    });
+
     sendToGoogleSheets({
         gender: gender,
         age: age,
@@ -534,3 +713,4 @@ form.addEventListener("submit", function(e) {
 
 // ===== Init =====
 loadFromLocalStorage();
+renderHistory();

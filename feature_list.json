@@ -28,5 +28,17 @@
     "milestone": "Milestone 5",
     "feature": "QA Review & Final Polish",
     "status": "completed"
+  },
+  {
+    "id": 6,
+    "milestone": "Milestone 6",
+    "feature": "Adsterra Ad Network Integration",
+    "status": "completed"
+  },
+  {
+    "id": 7,
+    "milestone": "Milestone 6",
+    "feature": "Today/Total Visitor Counter",
+    "status": "completed"
   }
 ]

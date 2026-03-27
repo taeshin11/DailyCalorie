@@ -1171,22 +1171,37 @@ renderHistory();
 renderHistoryChart();
 renderMealLog();
 
-// ===== Visitor Counter =====
+// ===== Visitor Counter (Today + Total) =====
 (function() {
     try {
-        var key = "tdee_visitors";
-        var todayKey = "tdee_visited_" + new Date().toISOString().slice(0, 10);
-        var count = parseInt(localStorage.getItem(key) || "0");
+        var totalKey = "tdee_visitors";
+        var today = new Date().toISOString().slice(0, 10);
+        var todayKey = "tdee_visited_" + today;
+        var todayCountKey = "tdee_today_count_" + today;
+        var lastDateKey = "tdee_last_date";
+
+        // Reset today's count if it's a new day
+        var lastDate = localStorage.getItem(lastDateKey);
+        if (lastDate !== today) {
+            localStorage.setItem(lastDateKey, today);
+            localStorage.setItem(todayCountKey, "0");
+        }
+
+        var totalCount = parseInt(localStorage.getItem(totalKey) || "0");
+        var todayCount = parseInt(localStorage.getItem(todayCountKey) || "0");
+
         if (!sessionStorage.getItem("tdee_session")) {
             sessionStorage.setItem("tdee_session", "1");
-            if (!localStorage.getItem(todayKey)) {
-                localStorage.setItem(todayKey, "1");
-                count++;
-                localStorage.setItem(key, count.toString());
-            }
+            totalCount++;
+            todayCount++;
+            localStorage.setItem(totalKey, totalCount.toString());
+            localStorage.setItem(todayCountKey, todayCount.toString());
         }
-        var el = document.getElementById("visitor-count");
-        if (el) el.textContent = count.toLocaleString();
+
+        var totalEl = document.getElementById("visitor-count");
+        var todayEl = document.getElementById("visitor-today");
+        if (totalEl) totalEl.textContent = totalCount.toLocaleString();
+        if (todayEl) todayEl.textContent = todayCount.toLocaleString();
     } catch(e) {}
 })();
 

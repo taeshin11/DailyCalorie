@@ -142,11 +142,92 @@
     ======================================================
     -->
 
-    <!-- Google AdSense - Uncomment and add your publisher ID -->
+    <!-- Google AdSense - Uncomment and add your publisher ID when approved -->
     <!-- <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXX" crossorigin="anonymous"></script> -->
 
-    <!-- Adsterra - Uncomment and add your script URL after signup -->
-    <!-- <script async src="//www.topcreativeformat.com/YOUR_ADSTERRA_ID.js"></script> -->
+    <!--
+    =============== ADSTERRA INTEGRATION (Publisher ID: 5686718) ===============
+    HOW TO ACTIVATE ADS:
+    1. Log into https://publishers.adsterra.com
+    2. Add your website and get it approved
+    3. Create ad units for each format below
+    4. Copy each ad unit's KEY and paste it into the ADSTERRA_CONFIG below
+    5. Deploy - ads will auto-load!
+
+    Ad formats to create in Adsterra dashboard:
+    - Social Bar (In-Page Push) → Paste full script in socialBarScript below
+    - Banner 728x90 (Leaderboard) → Get key for topBanner
+    - Banner 160x600 (Wide Skyscraper) x2 → Get keys for sidebarLeft & sidebarRight
+    - Banner 300x250 (Medium Rectangle) → Get key for inContent
+    - Banner 320x50 (Mobile Banner) → Get key for stickyBottom
+    - Popunder (optional, high CPM) → Get key for popunder
+    ============================================================================
+    -->
+    <script>
+    // Adsterra Ad Configuration - Replace empty strings with your ad unit keys from Adsterra dashboard
+    const ADSTERRA_CONFIG = {
+        publisherId: '5686718',
+        // Banner ad unit keys (get these from Adsterra dashboard after creating ad units)
+        topBanner:    { key: '', width: 728, height: 90 },
+        sidebarLeft:  { key: '', width: 160, height: 600 },
+        sidebarRight: { key: '', width: 160, height: 600 },
+        inContent:    { key: '', width: 300, height: 250 },
+        stickyBottom: { key: '', width: 320, height: 50 },
+        // Popunder key (optional - high CPM, set to '' to disable)
+        popunder:     { key: '' },
+        // Social Bar script URL (paste the full src URL from Adsterra Social Bar ad unit)
+        socialBarSrc: ''
+    };
+
+    // Auto-load Adsterra banner ads
+    function loadAdsterraBanner(containerId, config) {
+        if (!config.key) return;
+        const container = document.getElementById(containerId);
+        if (!container) return;
+        container.innerHTML = '';
+        const optScript = document.createElement('script');
+        optScript.type = 'text/javascript';
+        optScript.text = "atOptions = { 'key': '" + config.key + "', 'format': 'iframe', 'height': " + config.height + ", 'width': " + config.width + ", 'params': {} };";
+        container.appendChild(optScript);
+        const adScript = document.createElement('script');
+        adScript.type = 'text/javascript';
+        adScript.src = '//www.topcreativeformat.com/' + config.key + '/invoke.js';
+        container.appendChild(adScript);
+    }
+
+    // Auto-load Social Bar
+    function loadAdsterraSocialBar() {
+        if (!ADSTERRA_CONFIG.socialBarSrc) return;
+        const s = document.createElement('script');
+        s.type = 'text/javascript';
+        s.src = ADSTERRA_CONFIG.socialBarSrc;
+        s.async = true;
+        s.setAttribute('data-cfasync', 'false');
+        document.head.appendChild(s);
+    }
+
+    // Auto-load Popunder
+    function loadAdsterraPopunder() {
+        if (!ADSTERRA_CONFIG.popunder.key) return;
+        const s = document.createElement('script');
+        s.type = 'text/javascript';
+        s.src = '//www.topcreativeformat.com/' + ADSTERRA_CONFIG.popunder.key + '/invoke.js';
+        s.async = true;
+        s.setAttribute('data-cfasync', 'false');
+        document.head.appendChild(s);
+    }
+
+    // Initialize all ads on page load
+    window.addEventListener('DOMContentLoaded', function() {
+        loadAdsterraBanner('ad-top-banner', ADSTERRA_CONFIG.topBanner);
+        loadAdsterraBanner('ad-sidebar-left', ADSTERRA_CONFIG.sidebarLeft);
+        loadAdsterraBanner('ad-sidebar-right', ADSTERRA_CONFIG.sidebarRight);
+        loadAdsterraBanner('ad-in-content', ADSTERRA_CONFIG.inContent);
+        loadAdsterraBanner('ad-sticky-bottom', ADSTERRA_CONFIG.stickyBottom);
+        loadAdsterraSocialBar();
+        loadAdsterraPopunder();
+    });
+    </script>
 
     <style>
         * { box-sizing: border-box; }
@@ -209,13 +290,24 @@
             border: 1px solid rgba(99,102,241,0.2);
         }
         .ad-slot {
-            background: rgba(255,255,255,0.03);
-            border: 1px dashed rgba(99,102,241,0.2);
+            background: rgba(255,255,255,0.02);
+            border: 1px solid rgba(99,102,241,0.08);
             display: flex;
             align-items: center;
             justify-content: center;
-            color: rgba(255,255,255,0.15);
-            font-size: 0.75rem;
+            color: rgba(255,255,255,0.1);
+            font-size: 0.65rem;
+            border-radius: 4px;
+            position: relative;
+        }
+        .ad-slot .ad-placeholder-text {
+            opacity: 0.3;
+            font-size: 0.6rem;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+        }
+        .ad-slot iframe, .ad-slot ins, .ad-slot > script + * {
+            z-index: 1;
         }
         input[type="number"] {
             -moz-appearance: textfield;
@@ -325,9 +417,8 @@
 <body class="text-white font-sans antialiased pb-[50px] md:pb-[60px]">
 
     <!-- Top Banner Ad Slot (728x90 Leaderboard) -->
-    <div class="ad-slot w-full h-[90px] md:h-[90px]" id="ad-top-banner">
-        <!-- Paste your ad network code here: 728x90 banner -->
-        <!-- Example for AdSense: <ins class="adsbygoogle" data-ad-client="ca-pub-XXX" data-ad-slot="XXX" data-ad-format="horizontal"></ins><script>(adsbygoogle = window.adsbygoogle || []).push({});</script> -->
+    <div class="ad-slot w-full h-[90px] md:h-[90px] overflow-hidden" id="ad-top-banner">
+        <span class="ad-placeholder-text">Advertisement</span>
     </div>
 
     <header class="text-center py-8 px-4 relative">
@@ -349,8 +440,8 @@
 
             <!-- Left Sidebar Ad (Desktop only) -->
             <aside class="hidden lg:block lg:col-span-2">
-                <div class="ad-slot w-full h-[600px] rounded-xl sticky top-4" id="ad-sidebar-left">
-                    <!-- Ad Placeholder: Sidebar (160x600) -->
+                <div class="ad-slot w-full h-[600px] rounded-xl sticky top-4 overflow-hidden" id="ad-sidebar-left">
+                    <span class="ad-placeholder-text">Ad</span>
                 </div>
             </aside>
 
@@ -441,8 +532,8 @@
                 </section>
 
                 <!-- In-Content Ad Slot -->
-                <div class="ad-slot w-full h-[100px] rounded-xl" id="ad-in-content">
-                    <!-- Ad Placeholder: In-Content (Responsive) -->
+                <div class="ad-slot w-full min-h-[100px] rounded-xl overflow-hidden" id="ad-in-content">
+                    <span class="ad-placeholder-text">Advertisement</span>
                 </div>
 
                 <!-- Results Section (hidden until calculated) -->
@@ -866,8 +957,8 @@
 
             <!-- Right Sidebar Ad (Desktop only) -->
             <aside class="hidden lg:block lg:col-span-2">
-                <div class="ad-slot w-full h-[600px] rounded-xl sticky top-4" id="ad-sidebar-right">
-                    <!-- Ad Placeholder: Sidebar (160x600) -->
+                <div class="ad-slot w-full h-[600px] rounded-xl sticky top-4 overflow-hidden" id="ad-sidebar-right">
+                    <span class="ad-placeholder-text">Ad</span>
                 </div>
             </aside>
         </div>
@@ -875,15 +966,21 @@
 
     <footer class="text-center py-8 text-indigo-300/40 text-xs border-t border-indigo-500/10">
         <p>&copy; 2026 DailyCalorie. Free TDEE Calculator &amp; Macro Dashboard. All rights reserved.</p>
-        <p class="mt-2 flex items-center justify-center gap-1">
-            <svg class="w-3 h-3 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
-            <span id="visitor-count">-</span> visitors
+        <p class="mt-2 flex items-center justify-center gap-4">
+            <span class="flex items-center gap-1" title="Today's visitors">
+                <svg class="w-3 h-3 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                Today: <span id="visitor-today">-</span>
+            </span>
+            <span class="flex items-center gap-1" title="Total visitors">
+                <svg class="w-3 h-3 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+                Total: <span id="visitor-count">-</span>
+            </span>
         </p>
     </footer>
 
     <!-- Sticky Bottom Ad Slot (Mobile) -->
-    <div class="ad-slot fixed bottom-0 left-0 w-full h-[50px] md:h-[60px] z-50" id="ad-sticky-bottom">
-        <!-- Ad Placeholder: Sticky Bottom (320x50 / 728x90) -->
+    <div class="ad-slot fixed bottom-0 left-0 w-full h-[50px] md:h-[60px] z-50 overflow-hidden" id="ad-sticky-bottom">
+        <span class="ad-placeholder-text">Advertisement</span>
     </div>
 
     <!-- Back to Top -->

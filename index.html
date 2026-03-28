@@ -342,7 +342,7 @@
         }
         @media print {
             .ad-slot, footer, .diet-btn, .toggle-btn, .meal-btn,
-            button[onclick], #ad-sticky-bottom, #ad-top-banner { display: none !important; }
+            button[onclick], #ad-top-banner { display: none !important; }
             body { background: white !important; color: black !important; padding: 0 !important; }
             .glass, .result-card, .glow-border { background: #f8f8f8 !important; border: 1px solid #ddd !important; box-shadow: none !important; backdrop-filter: none !important; }
             * { color: #222 !important; }
@@ -351,7 +351,7 @@
         }
     </style>
 </head>
-<body class="text-white font-sans antialiased pb-[50px] md:pb-[60px]">
+<body class="text-white font-sans antialiased">
 
     <!-- Top Banner Ad Slot (728x90 Leaderboard) -->
     <div class="ad-slot w-full h-[90px] md:h-[90px] overflow-hidden" id="ad-top-banner">
@@ -378,18 +378,8 @@
     <main class="max-w-5xl mx-auto px-4 pb-16">
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
 
-            <!-- Left Sidebar Ad (Desktop only) -->
-            <aside class="hidden lg:block lg:col-span-2">
-                <div class="ad-slot w-full h-[600px] rounded-xl sticky top-4 overflow-hidden" id="ad-sidebar-left">
-                    <script type="text/javascript">
-                      atOptions = { 'key' : '1883718d391f5a7f54b52de5d509b41e', 'format' : 'iframe', 'height' : 600, 'width' : 160, 'params' : {} };
-                    </script>
-                    <script type="text/javascript" src="https://www.highperformanceformat.com/1883718d391f5a7f54b52de5d509b41e/invoke.js"></script>
-                </div>
-            </aside>
-
             <!-- Main Content -->
-            <div class="lg:col-span-8 space-y-6">
+            <div class="lg:col-span-12 space-y-6">
 
                 <!-- Calculator Form -->
                 <section class="glass rounded-2xl p-6 md:p-8 glow-border">
@@ -907,15 +897,6 @@
                 </article>
             </div>
 
-            <!-- Right Sidebar Ad (Desktop only) -->
-            <aside class="hidden lg:block lg:col-span-2">
-                <div class="ad-slot w-full h-[600px] rounded-xl sticky top-4 overflow-hidden" id="ad-sidebar-right">
-                    <script type="text/javascript">
-                      atOptions = { 'key' : '1883718d391f5a7f54b52de5d509b41e', 'format' : 'iframe', 'height' : 600, 'width' : 160, 'params' : {} };
-                    </script>
-                    <script type="text/javascript" src="https://www.highperformanceformat.com/1883718d391f5a7f54b52de5d509b41e/invoke.js"></script>
-                </div>
-            </aside>
         </div>
     </main>
 
@@ -933,16 +914,9 @@
         </p>
     </footer>
 
-    <!-- Sticky Bottom Ad Slot (Mobile) -->
-    <div class="ad-slot fixed bottom-0 left-0 w-full h-[50px] md:h-[60px] z-50 overflow-hidden" id="ad-sticky-bottom">
-        <script type="text/javascript">
-          atOptions = { 'key' : '4f475bea400417d46b6c21aac0049bae', 'format' : 'iframe', 'height' : 50, 'width' : 320, 'params' : {} };
-        </script>
-        <script type="text/javascript" src="https://www.highperformanceformat.com/4f475bea400417d46b6c21aac0049bae/invoke.js"></script>
-    </div>
 
     <!-- Back to Top -->
-    <button id="back-to-top" onclick="window.scrollTo({top:0,behavior:'smooth'})" class="hidden fixed bottom-[65px] md:bottom-[75px] right-4 w-10 h-10 rounded-full glass border border-indigo-500/20 flex items-center justify-center z-40 hover:border-indigo-500/40 transition" aria-label="Back to top">
+    <button id="back-to-top" onclick="window.scrollTo({top:0,behavior:'smooth'})" class="hidden fixed bottom-6 right-4 w-10 h-10 rounded-full glass border border-indigo-500/20 flex items-center justify-center z-40 hover:border-indigo-500/40 transition" aria-label="Back to top">
         <svg class="w-4 h-4 text-indigo-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"/></svg>
     </button>
 

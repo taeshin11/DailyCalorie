@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- SEO Meta Tags -->
+    <title>How to Use & FAQ | DailyCalorie - TDEE Calculator</title>
+    <meta name="description" content="Learn how to use DailyCalorie's free TDEE Calculator and Macro Dashboard. Step-by-step guide, frequently asked questions about TDEE, BMR, macronutrients, and diet planning.">
+    <meta name="keywords" content="how to use TDEE calculator, TDEE FAQ, macro calculator guide, daily calorie calculator help, BMR explained, macronutrient guide, Mifflin-St Jeor equation, activity level guide">
+    <meta name="author" content="DailyCalorie">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://dailycalorie-app.vercel.app/how-to-use.html">
+
+    <!-- Favicon & PWA -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🔥</text></svg>">
+    <meta name="theme-color" content="#6366f1">
+
+    <!-- Open Graph Tags -->
+    <meta property="og:title" content="How to Use & FAQ | DailyCalorie - TDEE Calculator">
+    <meta property="og:description" content="Step-by-step guide to calculating your TDEE and macros. Detailed FAQ covering everything you need to know about daily calorie estimation.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://dailycalorie-app.vercel.app/how-to-use.html">
+    <meta property="og:image" content="https://dailycalorie-app.vercel.app/og-image.png">
+
+    <!-- Twitter Card Tags -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="How to Use & FAQ | DailyCalorie - TDEE Calculator">
+    <meta name="twitter:description" content="Step-by-step guide to calculating your TDEE and macros with DailyCalorie's free dashboard.">
+    <meta name="twitter:image" content="https://dailycalorie-app.vercel.app/og-image.png">
+
+    <!-- JSON-LD Structured Data -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "mainEntity": [
+            {
+                "@type": "Question",
+                "name": "What is TDEE?",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "TDEE stands for Total Daily Energy Expenditure. It represents the total number of calories your body burns in a 24-hour period, combining your Basal Metabolic Rate (BMR) with calories burned through physical activity, the thermic effect of food, and non-exercise activity thermogenesis (NEAT)."
+                }
+            },
+            {
+                "@type": "Question",
+                "name": "What is the Mifflin-St Jeor equation?",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "The Mifflin-St Jeor equation is a formula developed in 1990 that calculates your Basal Metabolic Rate. For men: BMR = (10 x weight in kg) + (6.25 x height in cm) - (5 x age in years) + 5. For women: BMR = (10 x weight in kg) + (6.25 x height in cm) - (5 x age in years) - 161. It is considered the most accurate BMR formula for most people."
+                }
+            },
+            {
+                "@type": "Question",
+                "name": "How accurate is this calculator?",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "The Mifflin-St Jeor equation is accurate to within approximately 10% of your actual metabolic rate for most individuals. Factors such as muscle mass, genetics, hormonal conditions, and medications can cause individual variation. Use your calculated TDEE as a starting point, then adjust based on real-world results over 2-4 weeks."
+                }
+            },
+            {
+                "@type": "Question",
+                "name": "What activity level should I choose?",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Choose Sedentary if you have a desk job and do little to no exercise. Lightly Active if you exercise 1-3 days per week. Moderately Active if you exercise 3-5 days per week. Very Active if you exercise 6-7 days per week or have a physically demanding job. Extra Active if you train twice daily or have an extremely physical occupation."
+                }
+            },
+            {
+                "@type": "Question",
+                "name": "How do I use TDEE for weight loss or gain?",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "For weight loss, eat 300-500 calories below your TDEE to lose approximately 0.25-0.5 kg per week safely. For weight gain, eat 250-500 calories above your TDEE. Never go below 1200 calories (women) or 1500 calories (men) without medical supervision."
+                }
+            },
+            {
+                "@type": "Question",
+                "name": "What are macronutrients and why do they matter?",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Macronutrients are the three main nutrients your body needs in large amounts: Protein (4 kcal/g), Carbohydrates (4 kcal/g), and Fat (9 kcal/g). The ratio in which you consume these affects body composition, energy levels, hormone production, and overall health outcomes."
+                }
+            },
+            {
+                "@type": "Question",
+                "name": "Can I customize my macro ratios?",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "DailyCalorie offers four preset diet plans: Balanced (50/25/25 carbs/protein/fat), Low Carb (25/35/40), High Protein (40/35/25), and Keto (5/25/70). Each plan adjusts the macro split to align with your dietary goals while keeping your total calorie target the same."
+                }
+            }
+        ]
+    }
+    </script>
+
+    <!-- Tailwind CSS via CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#6366f1',
+                        'primary-dark': '#4f46e5',
+                        accent: '#10b981',
+                        surface: '#1e1b4b',
+                        'surface-light': '#312e81',
+                        dark: '#0f0a2e',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        * { box-sizing: border-box; }
+        body {
+            background: linear-gradient(135deg, #0f0b1a 0%, #1a1145 50%, #0d1b2a 100%);
+            background-size: 400% 400%;
+            animation: gradientShift 20s ease infinite;
+            min-height: 100vh;
+        }
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        .glass {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+        }
+        .glow-border {
+            box-shadow: 0 0 20px rgba(99, 102, 241, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+        }
+        .faq-answer {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.35s ease, padding 0.35s ease;
+        }
+        .faq-answer.open {
+            max-height: 600px;
+        }
+        .faq-chevron {
+            transition: transform 0.3s ease;
+        }
+        .faq-chevron.open {
+            transform: rotate(180deg);
+        }
+        .step-number {
+            background: linear-gradient(135deg, #6366f1, #8b5cf6);
+            box-shadow: 0 4px 20px rgba(99, 102, 241, 0.4);
+        }
+        a.nav-link:hover {
+            color: #a5b4fc;
+        }
+    </style>
+</head>
+<body class="text-white antialiased">
+
+    <!-- Navigation -->
+    <nav class="glass glow-border sticky top-0 z-50">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 py-4 flex items-center justify-between">
+            <a href="index.html" class="flex items-center gap-2 text-xl font-bold tracking-tight">
+                <span class="text-2xl">🔥</span>
+                <span class="bg-gradient-to-r from-indigo-400 to-purple-400 bg-clip-text text-transparent">DailyCalorie</span>
+            </a>
+            <div class="hidden sm:flex items-center gap-6 text-sm text-indigo-200/80">
+                <a href="index.html" class="nav-link hover:text-white transition-colors">Home</a>
+                <a href="about.html" class="nav-link hover:text-white transition-colors">About</a>
+                <a href="how-to-use.html" class="text-white font-semibold border-b-2 border-indigo-400 pb-0.5">How to Use</a>
+                <a href="privacy.html" class="nav-link hover:text-white transition-colors">Privacy</a>
+                <a href="terms.html" class="nav-link hover:text-white transition-colors">Terms</a>
+            </div>
+            <!-- Mobile menu button -->
+            <button id="mobileMenuBtn" class="sm:hidden text-indigo-200 hover:text-white transition-colors" aria-label="Open menu">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+                </svg>
+            </button>
+        </div>
+        <!-- Mobile menu -->
+        <div id="mobileMenu" class="hidden sm:hidden px-4 pb-4 space-y-2 text-sm text-indigo-200/80">
+            <a href="index.html" class="block py-2 hover:text-white transition-colors">Home</a>
+            <a href="about.html" class="block py-2 hover:text-white transition-colors">About</a>
+            <a href="how-to-use.html" class="block py-2 text-white font-semibold">How to Use</a>
+            <a href="privacy.html" class="block py-2 hover:text-white transition-colors">Privacy</a>
+            <a href="terms.html" class="block py-2 hover:text-white transition-colors">Terms</a>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="max-w-4xl mx-auto px-4 sm:px-6 py-12 space-y-16">
+
+        <!-- Page Header -->
+        <header class="text-center space-y-4">
+            <h1 class="text-4xl sm:text-5xl font-extrabold tracking-tight">
+                <span class="bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">How to Use DailyCalorie</span>
+            </h1>
+            <p class="text-indigo-200/70 text-lg max-w-2xl mx-auto leading-relaxed">
+                Get the most out of your free TDEE Calculator and Macro Dashboard with our step-by-step guide. Plus, find answers to the most common questions about daily calorie estimation, macronutrient planning, and the science behind the numbers.
+            </p>
+        </header>
+
+        <!-- 3-Step Guide -->
+        <section class="space-y-8">
+            <h2 class="text-2xl sm:text-3xl font-bold text-center text-white">3 Simple Steps to Your Personalized Plan</h2>
+
+            <!-- Step 1 -->
+            <div class="glass glow-border rounded-2xl p-6 sm:p-8 flex gap-5 items-start">
+                <div class="step-number flex-shrink-0 w-12 h-12 rounded-full flex items-center justify-center text-xl font-bold text-white">1</div>
+                <div class="space-y-3">
+                    <h3 class="text-xl font-semibold text-indigo-100">Enter Your Details</h3>
+                    <p class="text-indigo-200/70 leading-relaxed">
+                        Start by filling in your personal information on the calculator form. You will need to provide your <strong class="text-indigo-300">age</strong>, <strong class="text-indigo-300">gender</strong> (male or female), <strong class="text-indigo-300">weight</strong> (in kilograms or pounds), and <strong class="text-indigo-300">height</strong> (in centimeters or feet/inches). Then select your <strong class="text-indigo-300">activity level</strong> from the dropdown menu. Your activity level is a multiplier applied to your base metabolic rate, so choose the option that best reflects your typical week. If you are unsure, it is generally better to start with a lower activity level and adjust upward later based on your real-world results. The calculator supports both metric and imperial units, and you can toggle between them at any time without losing your data.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Step 2 -->
+            <div class="glass glow-border rounded-2xl p-6 sm:p-8 flex gap-5 items-start">
+                <div class="step-number flex-shrink-0 w-12 h-12 rounded-full flex items-center justify-center text-xl font-bold text-white">2</div>
+                <div class="space-y-3">
+                    <h3 class="text-xl font-semibold text-indigo-100">Choose Your Diet Plan</h3>
+                    <p class="text-indigo-200/70 leading-relaxed">
+                        After entering your details, pick a diet plan that matches your nutritional goals. DailyCalorie offers four research-backed presets: <strong class="text-indigo-300">Balanced</strong> (50% carbs, 25% protein, 25% fat) is ideal for general health and maintenance. <strong class="text-indigo-300">Low Carb</strong> (25% carbs, 35% protein, 40% fat) helps with appetite control and blood sugar management. <strong class="text-indigo-300">High Protein</strong> (40% carbs, 35% protein, 25% fat) supports muscle building and athletic recovery. <strong class="text-indigo-300">Keto</strong> (5% carbs, 25% protein, 70% fat) is a very low-carbohydrate approach designed to promote ketosis. Each plan keeps your total calorie target the same while redistributing the proportion of macronutrients to suit your dietary strategy.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Step 3 -->
+            <div class="glass glow-border rounded-2xl p-6 sm:p-8 flex gap-5 items-start">
+                <div class="step-number flex-shrink-0 w-12 h-12 rounded-full flex items-center justify-center text-xl font-bold text-white">3</div>
+                <div class="space-y-3">
+                    <h3 class="text-xl font-semibold text-indigo-100">Review Your Results</h3>
+                    <p class="text-indigo-200/70 leading-relaxed">
+                        Once you click calculate, the dashboard instantly displays your <strong class="text-indigo-300">TDEE</strong> (Total Daily Energy Expenditure), <strong class="text-indigo-300">BMR</strong> (Basal Metabolic Rate), and <strong class="text-indigo-300">BMI</strong> (Body Mass Index). Below these headline numbers you will find an interactive doughnut chart showing your macronutrient breakdown in grams and percentages for protein, carbohydrates, and fat. The results also include recommended calorie targets for weight loss (a 500 kcal deficit) and weight gain (a 500 kcal surplus). You can switch between diet plans and watch the chart update in real time. For convenience, you can export your results as a CSV file or log meals against your daily target using the built-in meal tracker.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- FAQ Section -->
+        <section class="space-y-6">
+            <h2 class="text-2xl sm:text-3xl font-bold text-center text-white">Frequently Asked Questions</h2>
+            <p class="text-center text-indigo-200/60 max-w-xl mx-auto">Click any question below to expand the answer.</p>
+
+            <div class="space-y-3" id="faqContainer">
+
+                <!-- FAQ 1 -->
+                <div class="glass glow-border rounded-xl overflow-hidden">
+                    <button class="faq-toggle w-full text-left px-6 py-5 flex items-center justify-between gap-4 hover:bg-white/[0.02] transition-colors" aria-expanded="false">
+                        <span class="font-semibold text-indigo-100">What is TDEE?</span>
+                        <svg class="faq-chevron w-5 h-5 text-indigo-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                        </svg>
+                    </button>
+                    <div class="faq-answer px-6 text-indigo-200/70 leading-relaxed">
+                        <div class="pb-5">
+                            TDEE stands for <strong class="text-indigo-300">Total Daily Energy Expenditure</strong>. It is the total number of calories your body burns over the course of a full day. TDEE is made up of several components: your Basal Metabolic Rate (BMR), which accounts for roughly 60-70% of daily calorie burn and covers basic life-sustaining functions like breathing and circulation; the Thermic Effect of Food (TEF), which is the energy used to digest and absorb nutrients (approximately 10% of intake); physical activity, including both structured exercise and general daily movement; and Non-Exercise Activity Thermogenesis (NEAT), which covers fidgeting, walking around the house, and other non-exercise movements. Knowing your TDEE is the foundation of any evidence-based nutrition plan because it tells you exactly how many calories you need to maintain your current weight.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- FAQ 2 -->
+                <div class="glass glow-border rounded-xl overflow-hidden">
+                    <button class="faq-toggle w-full text-left px-6 py-5 flex items-center justify-between gap-4 hover:bg-white/[0.02] transition-colors" aria-expanded="false">
+                        <span class="font-semibold text-indigo-100">What is the Mifflin-St Jeor equation?</span>
+                        <svg class="faq-chevron w-5 h-5 text-indigo-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                        </svg>
+                    </button>
+                    <div class="faq-answer px-6 text-indigo-200/70 leading-relaxed">
+                        <div class="pb-5">
+                            The Mifflin-St Jeor equation is a formula published in 1990 by researchers M.D. Mifflin and S.T. St Jeor. It is widely regarded by dietitians and the American Dietetic Association as the most reliable method for estimating Basal Metabolic Rate in healthy adults. The formulas are: <strong class="text-indigo-300">For men:</strong> BMR = (10 x weight in kg) + (6.25 x height in cm) - (5 x age in years) + 5. <strong class="text-indigo-300">For women:</strong> BMR = (10 x weight in kg) + (6.25 x height in cm) - (5 x age in years) - 161. DailyCalorie uses this equation because it has been validated across numerous studies and consistently outperforms older formulas like Harris-Benedict in terms of predictive accuracy for the general population.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- FAQ 3 -->
+                <div class="glass glow-border rounded-xl overflow-hidden">
+                    <button class="faq-toggle w-full text-left px-6 py-5 flex items-center justify-between gap-4 hover:bg-white/[0.02] transition-colors" aria-expanded="false">
+                        <span class="font-semibold text-indigo-100">How accurate is this calculator?</span>
+                        <svg class="faq-chevron w-5 h-5 text-indigo-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                        </svg>
+                    </button>
+                    <div class="faq-answer px-6 text-indigo-200/70 leading-relaxed">
+                        <div class="pb-5">
+                            The Mifflin-St Jeor equation is accurate to within approximately <strong class="text-indigo-300">plus or minus 10%</strong> for most healthy adults. However, individual variation exists due to differences in lean muscle mass, genetics, hormonal status, medications, and metabolic adaptations. People with significantly more or less muscle than average for their weight may find the estimate slightly off. For the best results, use the calculator's output as a starting point and track your weight over 2-4 weeks. If your weight is not changing as expected, adjust your intake by 100-200 calories and re-evaluate. This iterative approach, combining the scientific estimate with real-world feedback, is the gold standard method recommended by nutrition professionals.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- FAQ 4 -->
+                <div class="glass glow-border rounded-xl overflow-hidden">
+                    <button class="faq-toggle w-full text-left px-6 py-5 flex items-center justify-between gap-4 hover:bg-white/[0.02] transition-colors" aria-expanded="false">
+                        <span class="font-semibold text-indigo-100">What activity level should I choose?</span>
+                        <svg class="faq-chevron w-5 h-5 text-indigo-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                        </svg>
+                    </button>
+                    <div class="faq-answer px-6 text-indigo-200/70 leading-relaxed">
+                        <div class="pb-5">
+                            Choosing the right activity level is one of the most important steps for an accurate estimate. Here is a guide to help you decide:
+                            <strong class="text-indigo-300">Sedentary (x1.2):</strong> You have a desk job or spend most of the day sitting with little or no formal exercise.
+                            <strong class="text-indigo-300">Lightly Active (x1.375):</strong> You do light exercise or sports 1-3 days per week, such as casual walking, yoga, or light gym sessions.
+                            <strong class="text-indigo-300">Moderately Active (x1.55):</strong> You exercise at moderate intensity 3-5 days per week, for example jogging, swimming, or cycling for 30-60 minutes per session.
+                            <strong class="text-indigo-300">Very Active (x1.725):</strong> You train hard 6-7 days per week or have a physically demanding job such as construction or warehouse work.
+                            <strong class="text-indigo-300">Extra Active (x1.9):</strong> You are a competitive athlete training twice daily, or you combine intense exercise with a very physical occupation.
+                            When in doubt, choose one level lower than you think. It is easier to add calories later than to undo overeating.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- FAQ 5 -->
+                <div class="glass glow-border rounded-xl overflow-hidden">
+                    <button class="faq-toggle w-full text-left px-6 py-5 flex items-center justify-between gap-4 hover:bg-white/[0.02] transition-colors" aria-expanded="false">
+                        <span class="font-semibold text-indigo-100">How do I use TDEE for weight loss or weight gain?</span>
+                        <svg class="faq-chevron w-5 h-5 text-indigo-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                        </svg>
+                    </button>
+                    <div class="faq-answer px-6 text-indigo-200/70 leading-relaxed">
+                        <div class="pb-5">
+                            Your TDEE is the number of calories needed to maintain your current weight. To change your weight, you create a calorie surplus or deficit relative to this number.
+                            <strong class="text-indigo-300">For weight loss:</strong> Eat 300-500 calories below your TDEE each day. This creates a weekly deficit of 2,100-3,500 calories, which translates to roughly 0.25-0.5 kg (0.5-1 lb) of fat loss per week. Avoid cutting more than 500-750 calories below TDEE, as aggressive deficits can lead to muscle loss, nutrient deficiencies, and metabolic slowdown.
+                            <strong class="text-indigo-300">For weight gain:</strong> Eat 250-500 calories above your TDEE each day. A moderate surplus promotes lean muscle gain when combined with resistance training while minimizing unnecessary fat gain.
+                            <strong class="text-indigo-300">For maintenance:</strong> Eat at or very close to your TDEE. This is also useful during body recomposition phases where you aim to build muscle and lose fat simultaneously.
+                            As a safety guideline, women should not consume fewer than 1,200 calories per day and men should not go below 1,500 calories per day without medical supervision.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- FAQ 6 -->
+                <div class="glass glow-border rounded-xl overflow-hidden">
+                    <button class="faq-toggle w-full text-left px-6 py-5 flex items-center justify-between gap-4 hover:bg-white/[0.02] transition-colors" aria-expanded="false">
+                        <span class="font-semibold text-indigo-100">What are macronutrients and why do they matter?</span>
+                        <svg class="faq-chevron w-5 h-5 text-indigo-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                        </svg>
+                    </button>
+                    <div class="faq-answer px-6 text-indigo-200/70 leading-relaxed">
+                        <div class="pb-5">
+                            Macronutrients, or "macros," are the three primary nutrients your body requires in large quantities to function properly:
+                            <strong class="text-indigo-300">Protein (4 kcal per gram):</strong> Essential for building and repairing muscle tissue, producing enzymes and hormones, and supporting immune function. Good sources include chicken, fish, eggs, dairy, legumes, and tofu. A minimum intake of 1.6 g per kg of body weight is recommended for active individuals.
+                            <strong class="text-indigo-300">Carbohydrates (4 kcal per gram):</strong> Your body's preferred energy source, especially during high-intensity exercise. Found in grains, fruits, vegetables, and legumes. Carbohydrates also fuel brain function and replenish glycogen stores in muscles.
+                            <strong class="text-indigo-300">Fat (9 kcal per gram):</strong> Necessary for hormone production, nutrient absorption (vitamins A, D, E, K are fat-soluble), cell membrane integrity, and long-duration energy. Healthy sources include olive oil, avocados, nuts, seeds, and fatty fish.
+                            Tracking macros, rather than just total calories, helps you optimize body composition, maintain energy levels throughout the day, and ensure your diet supports your specific health and fitness goals.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- FAQ 7 -->
+                <div class="glass glow-border rounded-xl overflow-hidden">
+                    <button class="faq-toggle w-full text-left px-6 py-5 flex items-center justify-between gap-4 hover:bg-white/[0.02] transition-colors" aria-expanded="false">
+                        <span class="font-semibold text-indigo-100">Can I customize my macro ratios?</span>
+                        <svg class="faq-chevron w-5 h-5 text-indigo-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                        </svg>
+                    </button>
+                    <div class="faq-answer px-6 text-indigo-200/70 leading-relaxed">
+                        <div class="pb-5">
+                            DailyCalorie currently provides four scientifically informed preset diet plans, each designed for a specific nutritional strategy:
+                            <strong class="text-indigo-300">Balanced (50/25/25):</strong> Follows mainstream dietary guidelines and suits most people looking for a well-rounded approach to nutrition.
+                            <strong class="text-indigo-300">Low Carb (25/35/40):</strong> Reduces carbohydrate intake to help manage blood sugar levels and promote satiety with higher fat and protein.
+                            <strong class="text-indigo-300">High Protein (40/35/25):</strong> Maximizes protein intake for people focused on muscle growth, athletic performance, or preserving lean mass during a cut.
+                            <strong class="text-indigo-300">Keto (5/25/70):</strong> Minimizes carbohydrates to approximately 20-50 g per day to induce ketosis, a metabolic state where the body primarily burns fat for fuel.
+                            While fully custom ratios are not available yet, the four presets cover the most evidence-based dietary approaches. Simply select a plan on the calculator and watch the macro chart update in real time to see exactly how many grams of each nutrient you should aim for each day.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- FAQ 8 -->
+                <div class="glass glow-border rounded-xl overflow-hidden">
+                    <button class="faq-toggle w-full text-left px-6 py-5 flex items-center justify-between gap-4 hover:bg-white/[0.02] transition-colors" aria-expanded="false">
+                        <span class="font-semibold text-indigo-100">Is DailyCalorie free to use?</span>
+                        <svg class="faq-chevron w-5 h-5 text-indigo-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                        </svg>
+                    </button>
+                    <div class="faq-answer px-6 text-indigo-200/70 leading-relaxed">
+                        <div class="pb-5">
+                            Yes, DailyCalorie is completely free to use with no sign-up required. There are no premium tiers, no paywalls, and no hidden costs. All features including the TDEE calculator, BMI calculation, macro breakdown charts, diet plan presets, meal logging, and CSV export are available to every visitor at no charge. The tool runs entirely in your browser, so your personal data stays on your device and is never sent to external servers. We believe that access to quality nutrition tools should not be restricted by cost, and we are committed to keeping DailyCalorie free and accessible for everyone.
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- CTA -->
+        <section class="text-center space-y-4">
+            <div class="glass glow-border rounded-2xl p-8 sm:p-10">
+                <h2 class="text-2xl font-bold text-white mb-3">Ready to Calculate Your TDEE?</h2>
+                <p class="text-indigo-200/70 mb-6 max-w-lg mx-auto">Head to the calculator, enter your details, and get your personalized calorie and macro targets in seconds.</p>
+                <a href="index.html" class="inline-block px-8 py-3 rounded-xl font-semibold text-white bg-gradient-to-r from-indigo-500 to-purple-500 shadow-lg shadow-indigo-500/30 hover:shadow-indigo-500/50 hover:scale-105 transition-all duration-200">
+                    Open the Calculator
+                </a>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="border-t border-white/[0.06] mt-16">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 py-8">
+            <div class="flex flex-col sm:flex-row items-center justify-between gap-4">
+                <div class="flex items-center gap-2 text-sm text-indigo-200/50">
+                    <span class="text-lg">🔥</span>
+                    <span>&copy; 2025 DailyCalorie. All rights reserved.</span>
+                </div>
+                <nav class="flex flex-wrap justify-center gap-4 text-sm text-indigo-200/50">
+                    <a href="index.html" class="hover:text-indigo-300 transition-colors">Home</a>
+                    <a href="about.html" class="hover:text-indigo-300 transition-colors">About</a>
+                    <a href="how-to-use.html" class="text-indigo-300 font-medium">How to Use</a>
+                    <a href="privacy.html" class="hover:text-indigo-300 transition-colors">Privacy Policy</a>
+                    <a href="terms.html" class="hover:text-indigo-300 transition-colors">Terms of Service</a>
+                </nav>
+            </div>
+        </div>
+    </footer>
+
+    <!-- FAQ Accordion Script -->
+    <script>
+        // FAQ accordion toggle
+        document.querySelectorAll('.faq-toggle').forEach(function(button) {
+            button.addEventListener('click', function() {
+                var answer = this.nextElementSibling;
+                var chevron = this.querySelector('.faq-chevron');
+                var isOpen = answer.classList.contains('open');
+
+                // Close all other answers
+                document.querySelectorAll('.faq-answer.open').forEach(function(openAnswer) {
+                    openAnswer.classList.remove('open');
+                    openAnswer.previousElementSibling.setAttribute('aria-expanded', 'false');
+                    openAnswer.previousElementSibling.querySelector('.faq-chevron').classList.remove('open');
+                });
+
+                // Toggle current
+                if (!isOpen) {
+                    answer.classList.add('open');
+                    chevron.classList.add('open');
+                    this.setAttribute('aria-expanded', 'true');
+                }
+            });
+        });
+
+        // Mobile menu toggle
+        document.getElementById('mobileMenuBtn').addEventListener('click', function() {
+            var menu = document.getElementById('mobileMenu');
+            menu.classList.toggle('hidden');
+        });
+    </script>
+
+</body>
+</html>

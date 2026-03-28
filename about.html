@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- SEO Meta Tags -->
+    <title>About Us | DailyCalorie - Free TDEE Calculator</title>
+    <meta name="description" content="Learn about DailyCalorie, the free TDEE calculator and macro dashboard built on the Mifflin-St Jeor equation. Discover how we help fitness enthusiasts, dieters, and athletes reach their nutrition goals.">
+    <meta name="keywords" content="About DailyCalorie, TDEE Calculator, Macro Dashboard, Mifflin-St Jeor, BMR Calculator, Free Calorie Calculator, Nutrition Tool, Fitness Calculator">
+    <meta name="author" content="DailyCalorie">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://dailycalorie-app.vercel.app/about.html">
+
+    <!-- Favicon & PWA -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🔥</text></svg>">
+    <meta name="theme-color" content="#6366f1">
+
+    <!-- Open Graph Tags -->
+    <meta property="og:title" content="About Us | DailyCalorie - Free TDEE Calculator">
+    <meta property="og:description" content="Learn about DailyCalorie, the free TDEE calculator and macro dashboard. Built on proven science, designed for everyone.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://dailycalorie-app.vercel.app/about.html">
+    <meta property="og:image" content="https://dailycalorie-app.vercel.app/og-image.png">
+
+    <!-- Twitter Card Tags -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="About Us | DailyCalorie - Free TDEE Calculator">
+    <meta name="twitter:description" content="Learn about DailyCalorie, the free TDEE calculator and macro dashboard built on proven science.">
+    <meta name="twitter:image" content="https://dailycalorie-app.vercel.app/og-image.png">
+
+    <!-- Tailwind CSS via CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#6366f1',
+                        'primary-dark': '#4f46e5',
+                        accent: '#10b981',
+                        surface: '#1e1b4b',
+                        'surface-light': '#312e81',
+                        dark: '#0f0a2e',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            background: linear-gradient(135deg, #0f0b1a 0%, #1a1145 50%, #0d1b2a 100%);
+            min-height: 100vh;
+        }
+
+        .glass {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+        }
+
+        .glow-border {
+            box-shadow: 0 0 15px rgba(99, 102, 241, 0.15), inset 0 0 15px rgba(99, 102, 241, 0.05);
+        }
+
+        .glow-border-accent {
+            box-shadow: 0 0 15px rgba(16, 185, 129, 0.15), inset 0 0 15px rgba(16, 185, 129, 0.05);
+        }
+
+        .text-gradient {
+            background: linear-gradient(135deg, #818cf8, #6366f1, #a78bfa);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .prose-content h2 {
+            color: #c7d2fe;
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-top: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .prose-content h3 {
+            color: #a5b4fc;
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-top: 2rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .prose-content p {
+            color: #c7d2fe;
+            line-height: 1.8;
+            margin-bottom: 1.25rem;
+        }
+
+        .prose-content ul {
+            color: #c7d2fe;
+            list-style-type: disc;
+            padding-left: 1.5rem;
+            margin-bottom: 1.25rem;
+        }
+
+        .prose-content ul li {
+            margin-bottom: 0.5rem;
+            line-height: 1.7;
+        }
+
+        .prose-content strong {
+            color: #e0e7ff;
+        }
+    </style>
+</head>
+<body class="text-white font-sans antialiased">
+
+    <!-- Navigation -->
+    <nav class="glass sticky top-0 z-50 border-b border-white/5">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <a href="index.html" class="flex items-center gap-2 text-xl font-bold">
+                    <span class="text-2xl">🔥</span>
+                    <span class="text-gradient">DailyCalorie</span>
+                </a>
+                <div class="hidden md:flex items-center gap-6 text-sm">
+                    <a href="index.html" class="text-indigo-300 hover:text-white transition-colors">Home</a>
+                    <a href="about.html" class="text-white font-semibold border-b-2 border-primary pb-0.5">About</a>
+                    <a href="how-to-use.html" class="text-indigo-300 hover:text-white transition-colors">How to Use</a>
+                    <a href="privacy.html" class="text-indigo-300 hover:text-white transition-colors">Privacy Policy</a>
+                    <a href="terms.html" class="text-indigo-300 hover:text-white transition-colors">Terms of Service</a>
+                </div>
+                <button id="mobile-menu-btn" class="md:hidden text-indigo-300 hover:text-white">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+                    </svg>
+                </button>
+            </div>
+            <!-- Mobile Menu -->
+            <div id="mobile-menu" class="hidden md:hidden pb-4 space-y-2">
+                <a href="index.html" class="block text-indigo-300 hover:text-white transition-colors py-1">Home</a>
+                <a href="about.html" class="block text-white font-semibold py-1">About</a>
+                <a href="how-to-use.html" class="block text-indigo-300 hover:text-white transition-colors py-1">How to Use</a>
+                <a href="privacy.html" class="block text-indigo-300 hover:text-white transition-colors py-1">Privacy Policy</a>
+                <a href="terms.html" class="block text-indigo-300 hover:text-white transition-colors py-1">Terms of Service</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <header class="py-16 sm:py-24 text-center px-4">
+        <h1 class="text-4xl sm:text-5xl font-extrabold mb-4">
+            About <span class="text-gradient">DailyCalorie</span>
+        </h1>
+        <p class="text-indigo-300 text-lg sm:text-xl max-w-2xl mx-auto leading-relaxed">
+            Your free, science-backed TDEE calculator and macro dashboard — built to help you take control of your nutrition with clarity and confidence.
+        </p>
+    </header>
+
+    <!-- Main Content -->
+    <main class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pb-24">
+
+        <!-- What Is DailyCalorie -->
+        <section class="glass glow-border rounded-2xl p-8 sm:p-10 mb-8">
+            <div class="prose-content">
+                <h2>What Is DailyCalorie?</h2>
+                <p>
+                    DailyCalorie is a free, browser-based Total Daily Energy Expenditure (TDEE) calculator and macronutrient dashboard designed to give you an accurate, personalized picture of your daily calorie needs. Whether you are trying to lose weight, build muscle, or simply maintain a healthy lifestyle, understanding how many calories your body requires each day is the essential first step. DailyCalorie was created to make that step as simple, transparent, and accessible as possible.
+                </p>
+                <p>
+                    Unlike many nutrition tools that hide their best features behind paywalls or require you to create an account before seeing any results, DailyCalorie delivers a complete breakdown of your energy expenditure and macronutrient targets the moment you press "Calculate." There are no subscriptions, no mandatory sign-ups, and no hidden costs. You open the page, enter your information, and receive actionable data within seconds.
+                </p>
+                <p>
+                    The tool calculates your Basal Metabolic Rate (BMR), multiplies it by an activity factor to determine your TDEE, and then provides a tailored macronutrient split — showing exactly how many grams of protein, carbohydrates, and fat you should aim for based on your personal goals. The results are presented through clean, interactive charts that make it easy to visualize your nutritional targets at a glance.
+                </p>
+            </div>
+        </section>
+
+        <!-- Who Is It For -->
+        <section class="glass glow-border rounded-2xl p-8 sm:p-10 mb-8">
+            <div class="prose-content">
+                <h2>Who Is DailyCalorie For?</h2>
+                <p>
+                    DailyCalorie is built for anyone who wants to understand their body's energy needs — from complete beginners exploring nutrition for the first time to seasoned athletes fine-tuning their diet for peak performance. Our users include:
+                </p>
+                <ul>
+                    <li><strong>Fitness enthusiasts</strong> who want to optimize their training by aligning their calorie intake with their workout intensity and recovery needs. Whether you follow a strength training program, run marathons, or practice CrossFit, knowing your TDEE ensures that your nutrition supports your effort in the gym.</li>
+                    <li><strong>Dieters and weight-loss seekers</strong> who need a reliable starting point for creating a caloric deficit. Crash diets and guesswork lead to frustration and yo-yo weight patterns. DailyCalorie gives you a clear, evidence-based calorie target so you can lose weight at a sustainable pace without sacrificing muscle mass or energy.</li>
+                    <li><strong>Athletes and bodybuilders</strong> who cycle between bulking and cutting phases. Precision matters when you are trying to add lean mass or shed body fat while preserving hard-earned muscle. Our macro breakdown helps you dial in the right protein, carb, and fat ratios for each phase of your training cycle.</li>
+                    <li><strong>Health-conscious individuals</strong> who simply want to eat better and live longer. You do not need a six-pack goal to benefit from understanding your energy balance. Knowing your TDEE can help you maintain a healthy weight, improve your energy levels, and make more informed food choices every day.</li>
+                    <li><strong>Nutrition coaches and personal trainers</strong> who need a quick, trustworthy tool to estimate their clients' calorie needs during consultations. DailyCalorie provides a solid baseline that professionals can adjust based on their expertise and their client's unique circumstances.</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- The Science Behind It -->
+        <section class="glass glow-border rounded-2xl p-8 sm:p-10 mb-8">
+            <div class="prose-content">
+                <h2>The Science Behind DailyCalorie</h2>
+                <p>
+                    The foundation of every calculation on DailyCalorie is the <strong>Mifflin-St Jeor equation</strong>, which is widely regarded by researchers and clinical nutritionists as the most accurate predictive formula for estimating Basal Metabolic Rate in healthy adults. Published in 1990 by Dr. M.D. Mifflin and Dr. S.T. St Jeor, this equation has been validated in numerous peer-reviewed studies and is recommended by the Academy of Nutrition and Dietetics as the preferred method for BMR estimation.
+                </p>
+
+                <h3>Basal Metabolic Rate (BMR)</h3>
+                <p>
+                    Your BMR represents the number of calories your body burns at complete rest — the energy required to keep your heart beating, your lungs breathing, your brain functioning, and your cells repairing themselves. It accounts for roughly 60 to 75 percent of your total daily calorie expenditure, making it the single most important number in your energy equation.
+                </p>
+                <p>
+                    The Mifflin-St Jeor equation calculates BMR using four variables: weight, height, age, and biological sex. For men, the formula is <strong>BMR = (10 x weight in kg) + (6.25 x height in cm) - (5 x age in years) + 5</strong>. For women, the formula is <strong>BMR = (10 x weight in kg) + (6.25 x height in cm) - (5 x age in years) - 161</strong>. These formulas reflect the metabolic differences between sexes and the natural decline in metabolism that occurs with aging.
+                </p>
+
+                <h3>Total Daily Energy Expenditure (TDEE)</h3>
+                <p>
+                    While your BMR tells you what your body needs at rest, your TDEE accounts for all the additional energy you burn through daily activities and exercise. DailyCalorie multiplies your BMR by a carefully calibrated activity factor based on your lifestyle. Sedentary individuals (desk jobs, minimal exercise) use a multiplier of 1.2, lightly active people (light exercise one to three days per week) use 1.375, moderately active people (moderate exercise three to five days per week) use 1.55, very active people (hard exercise six to seven days per week) use 1.725, and extremely active individuals (very hard exercise, physical job, or training twice per day) use 1.9.
+                </p>
+                <p>
+                    Your TDEE is the calorie intake at which your weight remains stable. To lose weight, you eat below your TDEE, creating a caloric deficit. To gain weight or build muscle, you eat above your TDEE, creating a caloric surplus. DailyCalorie presents both options alongside your maintenance level so you can choose the path that aligns with your goals.
+                </p>
+
+                <h3>Macronutrient Calculations</h3>
+                <p>
+                    Calories alone do not tell the whole story. The composition of those calories — how they are distributed among protein, carbohydrates, and fat — has a profound impact on your body composition, athletic performance, satiety, and overall health. DailyCalorie calculates your macro targets based on established nutritional science:
+                </p>
+                <ul>
+                    <li><strong>Protein (4 calories per gram):</strong> Essential for muscle repair, immune function, and enzyme production. DailyCalorie recommends a protein intake that supports lean mass retention whether you are in a deficit or surplus.</li>
+                    <li><strong>Carbohydrates (4 calories per gram):</strong> Your body's preferred fuel source for high-intensity exercise and brain function. Adequate carbohydrate intake ensures you have the energy to train hard and think clearly.</li>
+                    <li><strong>Fat (9 calories per gram):</strong> Critical for hormone production, vitamin absorption, and cell membrane integrity. Dietary fat should never be eliminated entirely, and DailyCalorie ensures your fat target stays within a healthy range.</li>
+                </ul>
+                <p>
+                    The interactive charts on the dashboard visualize these macro splits so you can immediately see the balance among the three macronutrients. This visual approach makes it far easier to plan meals and track your intake throughout the day.
+                </p>
+            </div>
+        </section>
+
+        <!-- Why Free & Different -->
+        <section class="glass glow-border rounded-2xl p-8 sm:p-10 mb-8">
+            <div class="prose-content">
+                <h2>Why Is DailyCalorie Free?</h2>
+                <p>
+                    We believe that access to basic nutritional information should not be gated behind a subscription fee. Understanding your calorie needs is a fundamental part of taking care of your health, and no one should have to pay for a calculation that takes a few seconds to perform. DailyCalorie is and will remain completely free to use — no premium tiers, no feature restrictions, and no bait-and-switch tactics.
+                </p>
+                <p>
+                    The tool runs entirely in your browser. There is no server processing your data, no database storing your personal information, and no account required. Your privacy is preserved by design, not by policy. When you close the tab, your data exists only on your device — nowhere else.
+                </p>
+
+                <h2>What Makes DailyCalorie Different?</h2>
+                <p>
+                    The internet is full of calorie calculators. Many of them work, but most of them suffer from one or more of the same problems: they require you to create an account before showing results, they bury the actual science behind vague labels, they push you toward paid plans, or they present results in a way that is confusing and hard to act on. DailyCalorie takes a different approach:
+                </p>
+                <ul>
+                    <li><strong>Instant results with zero friction.</strong> Enter your details and get your TDEE, BMR, and macro breakdown immediately. No email required, no account creation, no waiting.</li>
+                    <li><strong>Transparent methodology.</strong> We tell you exactly which equation we use and how every number is derived. You can verify the math yourself. There are no proprietary algorithms or black-box calculations.</li>
+                    <li><strong>Beautiful, interactive visualization.</strong> Results are displayed through responsive charts that make it easy to understand your nutritional profile at a glance. Numbers alone can be overwhelming; visual context makes them meaningful.</li>
+                    <li><strong>Privacy-first architecture.</strong> No tracking cookies for ad profiling, no third-party analytics harvesting your health data, and no server-side storage of your inputs. Your body metrics stay on your device.</li>
+                    <li><strong>Mobile-optimized experience.</strong> DailyCalorie works flawlessly on phones, tablets, and desktops. The glassmorphism interface adapts to any screen size, so you can calculate your macros at home, in the gym, or on the go.</li>
+                    <li><strong>Meal logging and food database.</strong> Beyond just calculating your targets, DailyCalorie includes a built-in food database and meal log so you can track what you eat throughout the day and see how your actual intake compares to your goals.</li>
+                </ul>
+                <p>
+                    At its core, DailyCalorie exists because we believe that good nutrition tools should be open, honest, and available to everyone. Whether you are just starting your fitness journey or you have been tracking macros for years, we hope this tool makes your daily planning a little easier and a lot more informed.
+                </p>
+            </div>
+        </section>
+
+        <!-- Call to Action -->
+        <section class="glass glow-border-accent rounded-2xl p-8 sm:p-10 text-center">
+            <h2 class="text-2xl font-bold text-white mb-4">Ready to Calculate Your TDEE?</h2>
+            <p class="text-indigo-300 mb-6 max-w-xl mx-auto">
+                Head back to the calculator, enter your details, and get your personalized calorie and macro targets in seconds. It is completely free and always will be.
+            </p>
+            <a href="index.html" class="inline-block bg-primary hover:bg-primary-dark text-white font-semibold px-8 py-3 rounded-xl transition-all duration-200 shadow-lg shadow-indigo-500/25 hover:shadow-indigo-500/40">
+                Go to Calculator
+            </a>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="glass border-t border-white/5 py-10">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col md:flex-row items-center justify-between gap-6">
+                <div class="flex items-center gap-2 text-lg font-bold">
+                    <span class="text-xl">🔥</span>
+                    <span class="text-gradient">DailyCalorie</span>
+                </div>
+                <nav class="flex flex-wrap justify-center gap-6 text-sm">
+                    <a href="index.html" class="text-indigo-300 hover:text-white transition-colors">Home</a>
+                    <a href="about.html" class="text-indigo-300 hover:text-white transition-colors">About</a>
+                    <a href="how-to-use.html" class="text-indigo-300 hover:text-white transition-colors">How to Use</a>
+                    <a href="privacy.html" class="text-indigo-300 hover:text-white transition-colors">Privacy Policy</a>
+                    <a href="terms.html" class="text-indigo-300 hover:text-white transition-colors">Terms of Service</a>
+                </nav>
+            </div>
+            <div class="text-center mt-6 text-indigo-400 text-xs">
+                &copy; 2026 DailyCalorie. All rights reserved. Free TDEE Calculator &amp; Macro Dashboard.
+            </div>
+        </div>
+    </footer>
+
+    <!-- Mobile Menu Toggle -->
+    <script>
+        document.getElementById('mobile-menu-btn').addEventListener('click', function () {
+            document.getElementById('mobile-menu').classList.toggle('hidden');
+        });
+    </script>
+
+</body>
+</html>

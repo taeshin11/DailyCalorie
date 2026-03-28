@@ -163,71 +163,8 @@
     - Popunder (optional, high CPM) → Get key for popunder
     ============================================================================
     -->
-    <script>
-    // Adsterra Ad Configuration - Replace empty strings with your ad unit keys from Adsterra dashboard
-    const ADSTERRA_CONFIG = {
-        publisherId: '5686718',
-        // Banner ad unit keys (get these from Adsterra dashboard after creating ad units)
-        topBanner:    { key: '20872191f6798743faca0ff1e6c583d0', width: 728, height: 90 },
-        sidebarLeft:  { key: '1883718d391f5a7f54b52de5d509b41e', width: 160, height: 600 },
-        sidebarRight: { key: '1883718d391f5a7f54b52de5d509b41e', width: 160, height: 600 },
-        inContent:    { key: '76b1e4e10ff543570147bb29f9ba7863', width: 300, height: 250 },
-        stickyBottom: { key: '4f475bea400417d46b6c21aac0049bae', width: 320, height: 50 },
-        // Popunder key (optional - high CPM, set to '' to disable)
-        popunder:     { key: '' },
-        // Social Bar script URL (paste the full src URL from Adsterra Social Bar ad unit)
-        socialBarSrc: 'https://pl28994612.profitablecpmratenetwork.com/23/2d/e9/232de9e224707af08d2eb51007d733b8.js'
-    };
-
-    // Auto-load Adsterra banner ads
-    function loadAdsterraBanner(containerId, config) {
-        if (!config.key) return;
-        const container = document.getElementById(containerId);
-        if (!container) return;
-        container.innerHTML = '';
-        const optScript = document.createElement('script');
-        optScript.type = 'text/javascript';
-        optScript.text = "atOptions = { 'key': '" + config.key + "', 'format': 'iframe', 'height': " + config.height + ", 'width': " + config.width + ", 'params': {} };";
-        container.appendChild(optScript);
-        const adScript = document.createElement('script');
-        adScript.type = 'text/javascript';
-        adScript.src = '//www.highperformanceformat.com/' + config.key + '/invoke.js';
-        container.appendChild(adScript);
-    }
-
-    // Auto-load Social Bar
-    function loadAdsterraSocialBar() {
-        if (!ADSTERRA_CONFIG.socialBarSrc) return;
-        const s = document.createElement('script');
-        s.type = 'text/javascript';
-        s.src = ADSTERRA_CONFIG.socialBarSrc;
-        s.async = true;
-        s.setAttribute('data-cfasync', 'false');
-        document.head.appendChild(s);
-    }
-
-    // Auto-load Popunder
-    function loadAdsterraPopunder() {
-        if (!ADSTERRA_CONFIG.popunder.key) return;
-        const s = document.createElement('script');
-        s.type = 'text/javascript';
-        s.src = '//www.topcreativeformat.com/' + ADSTERRA_CONFIG.popunder.key + '/invoke.js';
-        s.async = true;
-        s.setAttribute('data-cfasync', 'false');
-        document.head.appendChild(s);
-    }
-
-    // Initialize all ads on page load
-    window.addEventListener('DOMContentLoaded', function() {
-        loadAdsterraBanner('ad-top-banner', ADSTERRA_CONFIG.topBanner);
-        loadAdsterraBanner('ad-sidebar-left', ADSTERRA_CONFIG.sidebarLeft);
-        loadAdsterraBanner('ad-sidebar-right', ADSTERRA_CONFIG.sidebarRight);
-        loadAdsterraBanner('ad-in-content', ADSTERRA_CONFIG.inContent);
-        loadAdsterraBanner('ad-sticky-bottom', ADSTERRA_CONFIG.stickyBottom);
-        loadAdsterraSocialBar();
-        loadAdsterraPopunder();
-    });
-    </script>
+    <!-- Adsterra Social Bar -->
+    <script type="text/javascript" src="https://pl28994612.profitablecpmratenetwork.com/23/2d/e9/232de9e224707af08d2eb51007d733b8.js"></script>
 
     <style>
         * { box-sizing: border-box; }
@@ -418,7 +355,10 @@
 
     <!-- Top Banner Ad Slot (728x90 Leaderboard) -->
     <div class="ad-slot w-full h-[90px] md:h-[90px] overflow-hidden" id="ad-top-banner">
-        <span class="ad-placeholder-text">Advertisement</span>
+        <script type="text/javascript">
+          atOptions = { 'key' : '20872191f6798743faca0ff1e6c583d0', 'format' : 'iframe', 'height' : 90, 'width' : 728, 'params' : {} };
+        </script>
+        <script type="text/javascript" src="https://www.highperformanceformat.com/20872191f6798743faca0ff1e6c583d0/invoke.js"></script>
     </div>
 
     <header class="text-center py-8 px-4 relative">
@@ -441,7 +381,10 @@
             <!-- Left Sidebar Ad (Desktop only) -->
             <aside class="hidden lg:block lg:col-span-2">
                 <div class="ad-slot w-full h-[600px] rounded-xl sticky top-4 overflow-hidden" id="ad-sidebar-left">
-                    <span class="ad-placeholder-text">Ad</span>
+                    <script type="text/javascript">
+                      atOptions = { 'key' : '1883718d391f5a7f54b52de5d509b41e', 'format' : 'iframe', 'height' : 600, 'width' : 160, 'params' : {} };
+                    </script>
+                    <script type="text/javascript" src="https://www.highperformanceformat.com/1883718d391f5a7f54b52de5d509b41e/invoke.js"></script>
                 </div>
             </aside>
 
@@ -533,13 +476,10 @@
 
                 <!-- In-Content Ad Slot -->
                 <div class="ad-slot w-full min-h-[100px] rounded-xl overflow-hidden" id="ad-in-content">
-                    <span class="ad-placeholder-text">Advertisement</span>
-                </div>
-
-                <!-- Adsterra Native Banner -->
-                <div class="w-full rounded-xl overflow-hidden" id="ad-native-banner">
-                    <script async="async" data-cfasync="false" src="https://pl28994063.profitablecpmratenetwork.com/25a6b7663632d428954dd2ab4ff9d663/invoke.js"></script>
-                    <div id="container-25a6b7663632d428954dd2ab4ff9d663"></div>
+                    <script type="text/javascript">
+                      atOptions = { 'key' : '76b1e4e10ff543570147bb29f9ba7863', 'format' : 'iframe', 'height' : 250, 'width' : 300, 'params' : {} };
+                    </script>
+                    <script type="text/javascript" src="https://www.highperformanceformat.com/76b1e4e10ff543570147bb29f9ba7863/invoke.js"></script>
                 </div>
 
                 <!-- Results Section (hidden until calculated) -->
@@ -915,6 +855,12 @@
                     </div>
                 </section>
 
+                <!-- Adsterra Native Banner (after results) -->
+                <div class="w-full rounded-xl overflow-hidden" id="ad-native-banner">
+                    <script async="async" data-cfasync="false" src="https://pl28994063.profitablecpmratenetwork.com/25a6b7663632d428954dd2ab4ff9d663/invoke.js"></script>
+                    <div id="container-25a6b7663632d428954dd2ab4ff9d663"></div>
+                </div>
+
                 <!-- FAQ Section (SEO) -->
                 <article class="glass rounded-2xl p-6 md:p-8 glow-border space-y-0">
                     <h2 class="text-xl font-semibold text-indigo-200 mb-5">Frequently Asked Questions</h2>
@@ -964,7 +910,10 @@
             <!-- Right Sidebar Ad (Desktop only) -->
             <aside class="hidden lg:block lg:col-span-2">
                 <div class="ad-slot w-full h-[600px] rounded-xl sticky top-4 overflow-hidden" id="ad-sidebar-right">
-                    <span class="ad-placeholder-text">Ad</span>
+                    <script type="text/javascript">
+                      atOptions = { 'key' : '1883718d391f5a7f54b52de5d509b41e', 'format' : 'iframe', 'height' : 600, 'width' : 160, 'params' : {} };
+                    </script>
+                    <script type="text/javascript" src="https://www.highperformanceformat.com/1883718d391f5a7f54b52de5d509b41e/invoke.js"></script>
                 </div>
             </aside>
         </div>
@@ -986,7 +935,10 @@
 
     <!-- Sticky Bottom Ad Slot (Mobile) -->
     <div class="ad-slot fixed bottom-0 left-0 w-full h-[50px] md:h-[60px] z-50 overflow-hidden" id="ad-sticky-bottom">
-        <span class="ad-placeholder-text">Advertisement</span>
+        <script type="text/javascript">
+          atOptions = { 'key' : '4f475bea400417d46b6c21aac0049bae', 'format' : 'iframe', 'height' : 50, 'width' : 320, 'params' : {} };
+        </script>
+        <script type="text/javascript" src="https://www.highperformanceformat.com/4f475bea400417d46b6c21aac0049bae/invoke.js"></script>
     </div>
 
     <!-- Back to Top -->

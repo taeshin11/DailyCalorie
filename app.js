@@ -121,6 +121,36 @@ function animateValue(el, start, end, duration) {
     requestAnimationFrame(step);
 }
 
+// ===== Show/Hide Math Breakdown =====
+function toggleMath() {
+    var el = document.getElementById("math-breakdown");
+    var btn = document.getElementById("math-toggle-btn");
+    if (el.classList.contains("hidden")) {
+        el.classList.remove("hidden");
+        btn.textContent = "Hide calculation";
+    } else {
+        el.classList.add("hidden");
+        btn.textContent = "Show calculation";
+    }
+}
+
+function updateMathBreakdown(gender, age, weightKg, heightCm, activityMultiplier, bmr, tdee) {
+    var el = document.getElementById("math-breakdown");
+    var genderOffset = gender === "male" ? "+ 5" : "- 161";
+    var formula = gender === "male"
+        ? "BMR = (10 x " + weightKg.toFixed(1) + ") + (6.25 x " + heightCm.toFixed(1) + ") - (5 x " + age + ") + 5"
+        : "BMR = (10 x " + weightKg.toFixed(1) + ") + (6.25 x " + heightCm.toFixed(1) + ") - (5 x " + age + ") - 161";
+
+    el.innerHTML =
+        '<p class="text-indigo-400/80 mb-1 font-sans text-[10px] uppercase tracking-wider">Mifflin-St Jeor Equation (' + gender + ')</p>' +
+        '<p>' + formula + '</p>' +
+        '<p>BMR = ' + (10 * weightKg).toFixed(0) + ' + ' + (6.25 * heightCm).toFixed(0) + ' - ' + (5 * age) + ' ' + genderOffset + '</p>' +
+        '<p class="text-indigo-200">BMR = <strong>' + bmr.toLocaleString() + ' kcal</strong></p>' +
+        '<p class="mt-2">TDEE = BMR x Activity Multiplier</p>' +
+        '<p>TDEE = ' + bmr.toLocaleString() + ' x ' + activityMultiplier + '</p>' +
+        '<p class="text-emerald-300">TDEE = <strong>' + tdee.toLocaleString() + ' kcal/day</strong></p>';
+}
+
 // ===== Activity Level Data =====
 var ACTIVITY_LEVELS = [
     { value: 1.2,   label: "Sedentary" },
@@ -857,6 +887,7 @@ form.addEventListener("submit", function(e) {
 
     var weightKg = getWeightKg(rawWeight);
     var result = calculateTDEE(gender, age, weightKg, heightCm, activityMultiplier);
+    updateMathBreakdown(gender, age, weightKg, heightCm, activityMultiplier, result.bmr, result.tdee);
     var macros = calculateMacros(result.tdee, currentDiet);
 
     updateResults(result.bmr, result.tdee, activityMultiplier, macros, weightKg, heightCm);
@@ -1222,6 +1253,32 @@ renderMealLog();
         if (todayEl) todayEl.textContent = todayCount.toLocaleString();
     } catch(e) {}
 })();
+
+// ===== Email Results =====
+function emailResults() {
+    if (lastTDEE === 0) return;
+    var macros = calculateMacros(lastTDEE, currentDiet);
+    var bmi = calculateBMI(lastWeightKg, lastHeightCm);
+    var subject = encodeURIComponent("My TDEE Results - " + lastTDEE + " kcal/day");
+    var body = encodeURIComponent(
+        "TDEE Calculator Results\n" +
+        "========================\n\n" +
+        "TDEE: " + lastTDEE.toLocaleString() + " kcal/day\n" +
+        "BMR: " + lastBMR.toLocaleString() + " kcal\n" +
+        "BMI: " + bmi.toFixed(1) + "\n\n" +
+        "Calorie Goals:\n" +
+        "  Lose weight: " + Math.max(1200, lastTDEE - 500).toLocaleString() + " kcal (-500)\n" +
+        "  Maintain: " + lastTDEE.toLocaleString() + " kcal\n" +
+        "  Gain weight: " + (lastTDEE + 500).toLocaleString() + " kcal (+500)\n\n" +
+        "Macros (" + DIET_PLANS[currentDiet].label + "):\n" +
+        "  Carbs: " + macros.carbs.grams + "g (" + macros.carbs.pct + "%)\n" +
+        "  Protein: " + macros.protein.grams + "g (" + macros.protein.pct + "%)\n" +
+        "  Fat: " + macros.fat.grams + "g (" + macros.fat.pct + "%)\n\n" +
+        "Water: " + (lastWeightKg * 0.033).toFixed(1) + "L/day\n\n" +
+        "Calculated at https://dailycalorie-app.vercel.app/"
+    );
+    window.location.href = "mailto:?subject=" + subject + "&body=" + body;
+}
 
 // ===== Social Share Functions =====
 var SHARE_URL = "https://dailycalorie-app.vercel.app/";

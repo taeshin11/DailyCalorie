@@ -90,6 +90,18 @@
     }
     </script>
 
+    <!-- Breadcrumb Structured Data -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+            { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://dailycalorie-app.vercel.app/" },
+            { "@type": "ListItem", "position": 2, "name": "TDEE Calculator", "item": "https://dailycalorie-app.vercel.app/" }
+        ]
+    }
+    </script>
+
     <!-- Tailwind CSS via CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
@@ -148,8 +160,7 @@
     ======================================================
     -->
 
-    <!-- Google AdSense - Uncomment and add your publisher ID when approved -->
-    <!-- <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7098271335538021" crossorigin="anonymous"></script> -->
+    <!-- Google AdSense already loaded in <head> with publisher ID ca-pub-7098271335538021 -->
 
     <!--
     =============== ADSTERRA INTEGRATION (Publisher ID: 5686718) ===============
@@ -208,6 +219,8 @@
         body.light .radio-label:has(input:checked) { background: rgba(99,102,241,0.12); }
         body.light .toggle-btn.active, body.light .diet-btn.active, body.light .meal-btn.active { background: rgba(99,102,241,0.12); }
         body.light .activity-row-current { background: rgba(99,102,241,0.08); }
+        body.light nav.glass { background: rgba(255,255,255,0.85); border-color: rgba(99,102,241,0.1); }
+        body.light #cookie-consent.glass { background: rgba(255,255,255,0.95); }
         .glass {
             background: rgba(30, 27, 75, 0.6);
             backdrop-filter: blur(16px);
@@ -365,12 +378,25 @@
         <script type="text/javascript" src="https://www.highperformanceformat.com/20872191f6798743faca0ff1e6c583d0/invoke.js"></script>
     </div>
 
+    <!-- Navigation Bar -->
+    <nav class="glass border-b border-indigo-500/10 sticky top-0 z-50">
+        <div class="max-w-5xl mx-auto px-4 flex items-center justify-between h-12">
+            <a href="/" class="flex items-center gap-2 text-indigo-200 hover:text-white transition font-semibold text-sm">
+                <span class="text-lg">🔥</span> DailyCalorie
+            </a>
+            <div class="flex items-center gap-1">
+                <a href="about.html" class="text-xs text-indigo-300/60 hover:text-indigo-200 transition px-2 py-1 rounded-lg hover:bg-white/5">About</a>
+                <a href="how-to-use.html" class="text-xs text-indigo-300/60 hover:text-indigo-200 transition px-2 py-1 rounded-lg hover:bg-white/5">Guide</a>
+                <a href="privacy.html" class="text-xs text-indigo-300/60 hover:text-indigo-200 transition px-2 py-1 rounded-lg hover:bg-white/5 hidden sm:inline-block">Privacy</a>
+                <button onclick="toggleTheme()" class="theme-toggle ml-2 w-8 h-8 rounded-full flex items-center justify-center hover:bg-white/5 transition" title="Toggle theme" aria-label="Toggle light/dark theme">
+                    <svg id="theme-icon-dark" class="w-4 h-4 text-indigo-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/></svg>
+                    <svg id="theme-icon-light" class="w-4 h-4 text-amber-400 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
+                </button>
+            </div>
+        </div>
+    </nav>
+
     <header class="text-center py-8 px-4 relative">
-        <!-- Theme Toggle -->
-        <button onclick="toggleTheme()" class="theme-toggle absolute top-4 right-4 w-10 h-10 rounded-full glass flex items-center justify-center hover:border-indigo-500/30 border border-transparent" title="Toggle theme" aria-label="Toggle light/dark theme">
-            <svg id="theme-icon-dark" class="w-5 h-5 text-indigo-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/></svg>
-            <svg id="theme-icon-light" class="w-5 h-5 text-amber-400 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
-        </button>
         <h1 class="text-3xl md:text-5xl font-bold bg-gradient-to-r from-indigo-400 via-purple-400 to-emerald-400 bg-clip-text text-transparent">
             TDEE Calculator
         </h1>
@@ -761,7 +787,7 @@
                     </div>
 
                     <!-- History Chart -->
-                    <div class="glass rounded-2xl p-6 glow-border" id="history-chart-section">
+                    <div class="glass rounded-2xl p-6 glow-border hidden" id="history-chart-section">
                         <h3 class="text-sm font-semibold text-indigo-200 uppercase tracking-wider mb-3">TDEE History Trend</h3>
                         <div class="relative h-[200px]">
                             <canvas id="history-chart"></canvas>
@@ -929,12 +955,26 @@
 
 
     <!-- Back to Top -->
-    <button id="back-to-top" onclick="window.scrollTo({top:0,behavior:'smooth'})" class="hidden fixed bottom-6 right-4 w-10 h-10 rounded-full glass border border-indigo-500/20 flex items-center justify-center z-40 hover:border-indigo-500/40 transition" aria-label="Back to top">
+    <button id="back-to-top" onclick="window.scrollTo({top:0,behavior:'smooth'})" class="fixed bottom-6 right-4 w-10 h-10 rounded-full glass border border-indigo-500/20 items-center justify-center z-40 hover:border-indigo-500/40 transition" aria-label="Back to top">
         <svg class="w-4 h-4 text-indigo-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"/></svg>
     </button>
 
     <!-- Confetti Canvas -->
     <canvas id="confetti-canvas" class="fixed inset-0 pointer-events-none z-[100]" style="display:none"></canvas>
+
+    <!-- Cookie Consent Banner -->
+    <div id="cookie-consent" class="fixed bottom-0 left-0 right-0 z-50 glass border-t border-indigo-500/20 p-4 transition-transform duration-300" style="display:none">
+        <div class="max-w-5xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-3">
+            <p class="text-xs text-indigo-200/70 text-center sm:text-left">
+                We use cookies and collect anonymous usage data to improve this calculator. By continuing, you agree to our
+                <a href="privacy.html" class="text-indigo-300 hover:text-indigo-200 underline">Privacy Policy</a>.
+            </p>
+            <div class="flex gap-2 shrink-0">
+                <button onclick="acceptCookies()" class="btn-glow rounded-lg px-4 py-1.5 text-xs font-medium">Accept</button>
+                <button onclick="declineCookies()" class="glass rounded-lg px-4 py-1.5 text-xs text-indigo-300 hover:text-white border border-indigo-500/20 transition">Decline</button>
+            </div>
+        </div>
+    </div>
 
     <script src="app.js"></script>
 </body>

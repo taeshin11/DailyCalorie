@@ -3,6 +3,24 @@
 // Google Sheets Webhook Placeholder
 const GOOGLE_SHEETS_WEBHOOK_URL = "https://script.google.com/macros/s/AKfycbxgPKsI400PFBzPAoqqYeFYTsBGL4Pnwg_vynZu0VOu42PkK-JIoyw7lVOKIrHU2dPC/exec";
 
+// ===== Cookie Consent =====
+function hasConsentChoice() { return localStorage.getItem("tdee_consent") !== null; }
+function hasConsented() { return localStorage.getItem("tdee_consent") === "true"; }
+function acceptCookies() {
+    localStorage.setItem("tdee_consent", "true");
+    document.getElementById("cookie-consent").style.display = "none";
+}
+function declineCookies() {
+    localStorage.setItem("tdee_consent", "false");
+    document.getElementById("cookie-consent").style.display = "none";
+}
+(function showConsentBanner() {
+    if (!hasConsentChoice()) {
+        var banner = document.getElementById("cookie-consent");
+        if (banner) banner.style.display = "block";
+    }
+})();
+
 // DOM Elements
 const form = document.getElementById("tdee-form");
 const resultsSection = document.getElementById("results");
@@ -294,7 +312,7 @@ function renderChart(macros) {
 
 // ===== Data Collection (Google Sheets) =====
 function sendToGoogleSheets(data) {
-    if (!GOOGLE_SHEETS_WEBHOOK_URL) return;
+    if (!GOOGLE_SHEETS_WEBHOOK_URL || !hasConsented()) return;
 
     fetch(GOOGLE_SHEETS_WEBHOOK_URL, {
         method: "POST",

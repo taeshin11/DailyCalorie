@@ -66,16 +66,22 @@ function setUnit(unit) {
     saveToLocalStorage();
 }
 
-// ===== TDEE Calculation (Mifflin-St Jeor) =====
-function calculateTDEE(gender, age, weightKg, heightCm, activityMultiplier) {
+// ===== TDEE Calculation (Mifflin-St Jeor / Katch-McArdle) =====
+function calculateTDEE(gender, age, weightKg, heightCm, activityMultiplier, bodyFatPct) {
     let bmr;
-    if (gender === "male") {
+    let formula = "mifflin";
+    if (bodyFatPct && bodyFatPct > 0) {
+        // Katch-McArdle (more accurate when body fat is known)
+        var leanMass = weightKg * (1 - bodyFatPct / 100);
+        bmr = 370 + (21.6 * leanMass);
+        formula = "katch";
+    } else if (gender === "male") {
         bmr = (10 * weightKg) + (6.25 * heightCm) - (5 * age) + 5;
     } else {
         bmr = (10 * weightKg) + (6.25 * heightCm) - (5 * age) - 161;
     }
     const tdee = bmr * activityMultiplier;
-    return { bmr: Math.round(bmr), tdee: Math.round(tdee) };
+    return { bmr: Math.round(bmr), tdee: Math.round(tdee), formula: formula };
 }
 
 // ===== BMI Calculation =====
@@ -121,6 +127,18 @@ function animateValue(el, start, end, duration) {
     requestAnimationFrame(step);
 }
 
+// ===== Try Example (Demo) =====
+function tryExample() {
+    setUnit("metric");
+    var maleRadio = document.querySelector('input[name="gender"][value="male"]');
+    if (maleRadio) maleRadio.checked = true;
+    document.getElementById("age").value = "25";
+    document.getElementById("weight").value = "70";
+    document.getElementById("height").value = "175";
+    document.getElementById("activity").value = "1.55";
+    form.dispatchEvent(new Event("submit"));
+}
+
 // ===== Show/Hide Math Breakdown =====
 function toggleMath() {
     var el = document.getElementById("math-breakdown");
@@ -134,21 +152,32 @@ function toggleMath() {
     }
 }
 
-function updateMathBreakdown(gender, age, weightKg, heightCm, activityMultiplier, bmr, tdee) {
+function updateMathBreakdown(gender, age, weightKg, heightCm, activityMultiplier, bmr, tdee, formulaType, bodyFatPct) {
     var el = document.getElementById("math-breakdown");
-    var genderOffset = gender === "male" ? "+ 5" : "- 161";
-    var formula = gender === "male"
-        ? "BMR = (10 x " + weightKg.toFixed(1) + ") + (6.25 x " + heightCm.toFixed(1) + ") - (5 x " + age + ") + 5"
-        : "BMR = (10 x " + weightKg.toFixed(1) + ") + (6.25 x " + heightCm.toFixed(1) + ") - (5 x " + age + ") - 161";
+    var html = "";
 
-    el.innerHTML =
-        '<p class="text-indigo-400/80 mb-1 font-sans text-[10px] uppercase tracking-wider">Mifflin-St Jeor Equation (' + gender + ')</p>' +
-        '<p>' + formula + '</p>' +
-        '<p>BMR = ' + (10 * weightKg).toFixed(0) + ' + ' + (6.25 * heightCm).toFixed(0) + ' - ' + (5 * age) + ' ' + genderOffset + '</p>' +
-        '<p class="text-indigo-200">BMR = <strong>' + bmr.toLocaleString() + ' kcal</strong></p>' +
+    if (formulaType === "katch" && bodyFatPct > 0) {
+        var leanMass = (weightKg * (1 - bodyFatPct / 100)).toFixed(1);
+        html =
+            '<p class="text-indigo-400/80 mb-1 font-sans text-[10px] uppercase tracking-wider">Katch-McArdle Formula (body fat known)</p>' +
+            '<p>Lean Mass = ' + weightKg.toFixed(1) + ' x (1 - ' + bodyFatPct + '%) = ' + leanMass + ' kg</p>' +
+            '<p>BMR = 370 + (21.6 x ' + leanMass + ')</p>' +
+            '<p class="text-indigo-200">BMR = <strong>' + bmr.toLocaleString() + ' kcal</strong></p>';
+    } else {
+        var genderOffset = gender === "male" ? "+ 5" : "- 161";
+        html =
+            '<p class="text-indigo-400/80 mb-1 font-sans text-[10px] uppercase tracking-wider">Mifflin-St Jeor Equation (' + gender + ')</p>' +
+            '<p>BMR = (10 x ' + weightKg.toFixed(1) + ') + (6.25 x ' + heightCm.toFixed(1) + ') - (5 x ' + age + ') ' + genderOffset + '</p>' +
+            '<p>BMR = ' + (10 * weightKg).toFixed(0) + ' + ' + (6.25 * heightCm).toFixed(0) + ' - ' + (5 * age) + ' ' + genderOffset + '</p>' +
+            '<p class="text-indigo-200">BMR = <strong>' + bmr.toLocaleString() + ' kcal</strong></p>';
+    }
+
+    html +=
         '<p class="mt-2">TDEE = BMR x Activity Multiplier</p>' +
         '<p>TDEE = ' + bmr.toLocaleString() + ' x ' + activityMultiplier + '</p>' +
         '<p class="text-emerald-300">TDEE = <strong>' + tdee.toLocaleString() + ' kcal/day</strong></p>';
+
+    el.innerHTML = html;
 }
 
 // ===== Activity Level Data =====
@@ -886,8 +915,9 @@ form.addEventListener("submit", function(e) {
     }
 
     var weightKg = getWeightKg(rawWeight);
-    var result = calculateTDEE(gender, age, weightKg, heightCm, activityMultiplier);
-    updateMathBreakdown(gender, age, weightKg, heightCm, activityMultiplier, result.bmr, result.tdee);
+    var bodyFatInput = parseFloat(document.getElementById("bodyfat-input").value) || 0;
+    var result = calculateTDEE(gender, age, weightKg, heightCm, activityMultiplier, bodyFatInput);
+    updateMathBreakdown(gender, age, weightKg, heightCm, activityMultiplier, result.bmr, result.tdee, result.formula, bodyFatInput);
     var macros = calculateMacros(result.tdee, currentDiet);
 
     updateResults(result.bmr, result.tdee, activityMultiplier, macros, weightKg, heightCm);

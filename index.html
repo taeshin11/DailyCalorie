@@ -562,6 +562,15 @@
                             </div>
                         </div>
 
+                        <!-- Body Fat % (Optional Advanced) -->
+                        <div>
+                            <label for="bodyfat-input" class="block text-sm text-indigo-300/80 mb-1">
+                                Body Fat % <span class="text-indigo-400/40 text-xs">(optional, for more accurate results)</span>
+                            </label>
+                            <input type="number" id="bodyfat-input" min="3" max="60" step="0.1" placeholder="e.g. 20" aria-label="Your body fat percentage (optional)"
+                                class="w-full bg-white/5 border border-indigo-500/20 rounded-xl px-4 py-3 text-white placeholder-white/30 focus:outline-none focus:border-indigo-500/50 focus:ring-1 focus:ring-indigo-500/30 transition">
+                        </div>
+
                         <!-- Activity Level -->
                         <div>
                             <label for="activity" class="block text-sm text-indigo-300/80 mb-1">Activity Level</label>
@@ -578,6 +587,9 @@
 
                         <button type="submit" class="btn-glow w-full rounded-xl py-3.5 text-white font-semibold text-base tracking-wide" aria-label="Calculate your TDEE">
                             Calculate TDEE
+                        </button>
+                        <button type="button" onclick="tryExample()" class="w-full mt-2 text-xs text-indigo-400/60 hover:text-indigo-300 transition py-2 underline">
+                            Try with example data (25yr male, 70kg, 175cm)
                         </button>
                     </form>
                 </section>
@@ -1108,6 +1120,11 @@
                         </ul>
                     </div>
                 </article>
+
+                <!-- Health Disclaimer -->
+                <div class="rounded-xl border border-amber-500/10 bg-amber-500/5 p-4 text-[10px] text-amber-200/50 leading-relaxed">
+                    <p><strong class="text-amber-300/60">Disclaimer:</strong> This calculator provides estimates based on the Mifflin-St Jeor equation for educational purposes only. Results are not a substitute for professional medical advice. Individual calorie needs vary based on genetics, body composition, medical conditions, and medications. Consult a healthcare provider or registered dietitian before making significant changes to your diet or exercise routine. If you have a medical condition, eating disorder, or are pregnant/nursing, seek professional guidance.</p>
+                </div>
 
                 <!-- Social Share Section -->
                 <div class="glass rounded-2xl p-5 glow-border text-center">

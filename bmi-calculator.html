@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Free BMI Calculator 2026 | Check Your Body Mass Index Instantly</title>
+    <meta name="description" content="Free BMI Calculator - check your Body Mass Index instantly. Find out if you're underweight, normal, overweight, or obese. Includes BMI chart, healthy weight range, and personalized recommendations.">
+    <meta name="keywords" content="BMI calculator, body mass index calculator, BMI check, am I overweight, healthy weight calculator, BMI chart, BMI scale, BMI for women, BMI for men, ideal weight calculator, 체질량지수 계산기, BMI 계산기">
+    <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large">
+    <link rel="canonical" href="https://dailycalorie-app.vercel.app/bmi-calculator.html">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🔥</text></svg>">
+    <meta property="og:title" content="Free BMI Calculator - Check Your Body Mass Index">
+    <meta property="og:description" content="Calculate your BMI instantly and find your healthy weight range. Free, no signup required.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://dailycalorie-app.vercel.app/bmi-calculator.html">
+    <meta property="og:image" content="https://dailycalorie-app.vercel.app/og-image.svg">
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "BMI Calculator",
+        "description": "Free BMI Calculator to check your Body Mass Index instantly with healthy weight range.",
+        "url": "https://dailycalorie-app.vercel.app/bmi-calculator.html",
+        "applicationCategory": "HealthApplication",
+        "operatingSystem": "All",
+        "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" }
+    }
+    </script>
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "mainEntity": [
+            {
+                "@type": "Question",
+                "name": "What is BMI?",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "BMI (Body Mass Index) is a simple measure using your weight and height to estimate body fatness. It is calculated as weight in kilograms divided by height in meters squared. BMI categories: Under 18.5 = Underweight, 18.5-24.9 = Normal, 25-29.9 = Overweight, 30+ = Obese."
+                }
+            },
+            {
+                "@type": "Question",
+                "name": "What is a healthy BMI?",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "A healthy BMI is between 18.5 and 24.9. This range is associated with the lowest risk of weight-related health problems. However, BMI doesn't account for muscle mass, bone density, or body composition — a muscular person may have a high BMI but low body fat."
+                }
+            },
+            {
+                "@type": "Question",
+                "name": "How do I calculate my BMI?",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "BMI = weight (kg) ÷ height (m)². For example, if you weigh 70 kg and are 1.75 m tall: BMI = 70 ÷ (1.75 × 1.75) = 70 ÷ 3.0625 = 22.9 (Normal weight). Use our free calculator above for instant results."
+                }
+            }
+        ]
+    }
+    </script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = { theme: { extend: { colors: { primary: '#6366f1', surface: '#1e1b4b', dark: '#0f0a2e' } } } }
+    </script>
+    <style>
+        body { background: linear-gradient(135deg, #0f0a2e 0%, #1a1145 50%, #0f0a2e 100%); min-height: 100vh; }
+        .glass { background: rgba(30, 27, 75, 0.6); backdrop-filter: blur(16px); border: 1px solid rgba(99, 102, 241, 0.15); }
+        .glow-border { box-shadow: 0 0 20px rgba(99, 102, 241, 0.15); }
+        .btn-glow { background: linear-gradient(135deg, #6366f1, #8b5cf6); box-shadow: 0 4px 20px rgba(99, 102, 241, 0.4); transition: all 0.3s ease; }
+        .btn-glow:hover { box-shadow: 0 6px 30px rgba(99, 102, 241, 0.6); transform: translateY(-2px); }
+    </style>
+</head>
+<body class="text-white font-sans antialiased">
+    <nav class="glass border-b border-indigo-500/10 sticky top-0 z-50">
+        <div class="max-w-4xl mx-auto px-4 flex items-center justify-between h-12">
+            <a href="/" class="flex items-center gap-2 text-indigo-200 hover:text-white transition font-semibold text-sm">
+                <span class="text-lg">🔥</span> DailyCalorie
+            </a>
+            <div class="flex items-center gap-1">
+                <a href="/" class="text-xs text-indigo-300/60 hover:text-indigo-200 transition px-2 py-1 rounded-lg hover:bg-white/5">TDEE Calculator</a>
+                <a href="calorie-deficit-calculator.html" class="text-xs text-indigo-300/60 hover:text-indigo-200 transition px-2 py-1 rounded-lg hover:bg-white/5">Deficit Calc</a>
+                <a href="how-to-use.html" class="text-xs text-indigo-300/60 hover:text-indigo-200 transition px-2 py-1 rounded-lg hover:bg-white/5">Guide</a>
+            </div>
+        </div>
+    </nav>
+
+    <main class="max-w-4xl mx-auto px-4 py-12">
+        <header class="text-center mb-10">
+            <h1 class="text-3xl md:text-5xl font-bold bg-gradient-to-r from-emerald-400 via-cyan-400 to-blue-400 bg-clip-text text-transparent mb-3">
+                BMI Calculator
+            </h1>
+            <p class="text-indigo-200/70 text-sm md:text-base max-w-2xl mx-auto">
+                Check your Body Mass Index and find your healthy weight range instantly
+            </p>
+        </header>
+
+        <!-- Inline BMI Calculator -->
+        <section class="glass rounded-2xl p-6 md:p-8 glow-border mb-8">
+            <h2 class="text-lg font-semibold text-indigo-200 mb-4">Quick BMI Check</h2>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
+                <div>
+                    <label class="block text-xs text-indigo-300/60 mb-1">Weight (kg)</label>
+                    <input type="number" id="bmi-weight" placeholder="70" min="20" max="400" step="0.1"
+                        class="w-full bg-white/5 border border-indigo-500/20 rounded-xl px-4 py-3 text-white placeholder-white/30 focus:outline-none focus:border-indigo-500/50 transition">
+                </div>
+                <div>
+                    <label class="block text-xs text-indigo-300/60 mb-1">Height (cm)</label>
+                    <input type="number" id="bmi-height" placeholder="175" min="50" max="300" step="0.1"
+                        class="w-full bg-white/5 border border-indigo-500/20 rounded-xl px-4 py-3 text-white placeholder-white/30 focus:outline-none focus:border-indigo-500/50 transition">
+                </div>
+            </div>
+            <button onclick="calcBMI()" class="btn-glow w-full rounded-xl py-3 text-white font-semibold">Calculate BMI</button>
+            <div id="bmi-result" class="hidden mt-4 text-center glass rounded-xl p-6">
+                <p class="text-4xl font-bold" id="bmi-result-value">0</p>
+                <p class="text-sm mt-1" id="bmi-result-label">-</p>
+                <p class="text-xs text-indigo-300/50 mt-2" id="bmi-result-range">-</p>
+                <!-- BMI Scale -->
+                <div class="relative h-3 rounded-full overflow-hidden mt-4">
+                    <div class="absolute inset-0 flex">
+                        <div class="h-full bg-blue-400" style="width:25%"></div>
+                        <div class="h-full bg-emerald-400" style="width:25%"></div>
+                        <div class="h-full bg-amber-400" style="width:25%"></div>
+                        <div class="h-full bg-red-400" style="width:25%"></div>
+                    </div>
+                    <div class="absolute top-1/2 -translate-y-1/2 w-3 h-3 bg-white rounded-full shadow-lg border-2 border-dark transition-all duration-500" id="bmi-result-dot" style="left:0%"></div>
+                </div>
+                <div class="flex justify-between text-[10px] text-indigo-300/40 mt-1">
+                    <span>Underweight</span><span>Normal</span><span>Overweight</span><span>Obese</span>
+                </div>
+            </div>
+        </section>
+
+        <section class="text-center mb-8">
+            <p class="text-sm text-indigo-300/60 mb-3">Want a complete analysis with TDEE, macros, and meal plans?</p>
+            <a href="/" class="btn-glow inline-block rounded-xl px-8 py-4 text-white font-semibold text-lg">
+                Full TDEE & Macro Calculator
+            </a>
+        </section>
+
+        <!-- BMI Chart -->
+        <section class="glass rounded-2xl p-6 md:p-8 glow-border mb-8">
+            <h2 class="text-xl font-semibold text-indigo-200 mb-4">BMI Categories Chart</h2>
+            <div class="overflow-x-auto">
+                <table class="w-full text-sm">
+                    <thead>
+                        <tr class="text-indigo-300/60 text-xs uppercase tracking-wider border-b border-indigo-500/10">
+                            <th class="text-left py-2">Category</th>
+                            <th class="text-right py-2">BMI Range</th>
+                            <th class="text-right py-2">Health Risk</th>
+                        </tr>
+                    </thead>
+                    <tbody class="text-indigo-200">
+                        <tr class="border-b border-indigo-500/5"><td class="py-2.5 text-blue-300">Underweight</td><td class="text-right font-mono">< 18.5</td><td class="text-right text-xs text-blue-300/70">Moderate</td></tr>
+                        <tr class="border-b border-indigo-500/5 bg-emerald-500/5"><td class="py-2.5 text-emerald-300 font-semibold">Normal weight</td><td class="text-right font-mono">18.5 - 24.9</td><td class="text-right text-xs text-emerald-300/70">Low</td></tr>
+                        <tr class="border-b border-indigo-500/5"><td class="py-2.5 text-amber-300">Overweight</td><td class="text-right font-mono">25.0 - 29.9</td><td class="text-right text-xs text-amber-300/70">Increased</td></tr>
+                        <tr class="border-b border-indigo-500/5"><td class="py-2.5 text-orange-300">Obese Class I</td><td class="text-right font-mono">30.0 - 34.9</td><td class="text-right text-xs text-orange-300/70">High</td></tr>
+                        <tr class="border-b border-indigo-500/5"><td class="py-2.5 text-red-300">Obese Class II</td><td class="text-right font-mono">35.0 - 39.9</td><td class="text-right text-xs text-red-300/70">Very High</td></tr>
+                        <tr><td class="py-2.5 text-red-400">Obese Class III</td><td class="text-right font-mono">≥ 40.0</td><td class="text-right text-xs text-red-400/70">Extremely High</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <section class="glass rounded-2xl p-6 md:p-8 glow-border mb-8">
+            <h2 class="text-xl font-semibold text-indigo-200 mb-4">Understanding BMI</h2>
+            <div class="text-sm text-indigo-300/70 leading-relaxed space-y-3">
+                <p><strong class="text-indigo-200">Body Mass Index (BMI)</strong> is a widely used screening tool that estimates body fatness based on weight and height. While not perfect, it's a useful starting point for assessing health risks related to weight.</p>
+                <h3 class="text-sm font-semibold text-indigo-200 mt-4">Limitations of BMI</h3>
+                <ul class="list-disc list-inside space-y-1 ml-2">
+                    <li>Doesn't distinguish between muscle and fat — athletes may show "overweight" BMI</li>
+                    <li>Doesn't account for body fat distribution (belly fat is more dangerous)</li>
+                    <li>Less accurate for elderly people, pregnant women, and children</li>
+                    <li>Different ethnic groups may have different risk thresholds</li>
+                </ul>
+                <p class="mt-3">For a more complete picture, use our <a href="/" class="text-indigo-400 hover:text-indigo-300 underline">TDEE Calculator</a> which includes body composition estimates, body fat percentage, and lean mass calculations alongside BMI.</p>
+            </div>
+        </section>
+
+        <section class="glass rounded-2xl p-6 glow-border mb-8">
+            <h2 class="text-lg font-semibold text-indigo-200 mb-4">Related Calculators</h2>
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                <a href="/" class="glass rounded-xl p-4 text-center hover:border-indigo-500/30 border border-transparent transition block">
+                    <p class="text-2xl mb-1">🔥</p>
+                    <p class="text-sm font-semibold text-indigo-200">TDEE Calculator</p>
+                    <p class="text-[10px] text-indigo-300/40">Total daily calories</p>
+                </a>
+                <a href="calorie-deficit-calculator.html" class="glass rounded-xl p-4 text-center hover:border-indigo-500/30 border border-transparent transition block">
+                    <p class="text-2xl mb-1">📉</p>
+                    <p class="text-sm font-semibold text-indigo-200">Deficit Calculator</p>
+                    <p class="text-[10px] text-indigo-300/40">Weight loss calories</p>
+                </a>
+                <a href="how-to-use.html" class="glass rounded-xl p-4 text-center hover:border-indigo-500/30 border border-transparent transition block">
+                    <p class="text-2xl mb-1">📖</p>
+                    <p class="text-sm font-semibold text-indigo-200">Complete Guide</p>
+                    <p class="text-[10px] text-indigo-300/40">Step-by-step help</p>
+                </a>
+            </div>
+        </section>
+    </main>
+
+    <footer class="text-center py-6 text-indigo-300/40 text-xs border-t border-indigo-500/10">
+        <nav class="flex items-center justify-center flex-wrap gap-3 mb-3 text-indigo-300/60">
+            <a href="/" class="hover:text-indigo-300 transition">Home</a> |
+            <a href="about.html" class="hover:text-indigo-300 transition">About</a> |
+            <a href="privacy.html" class="hover:text-indigo-300 transition">Privacy</a> |
+            <a href="terms.html" class="hover:text-indigo-300 transition">Terms</a> |
+            <a href="mailto:taeshinkim11@gmail.com?subject=DailyCalorie%20Feedback" class="hover:text-indigo-300 transition">Suggest Improvement</a>
+        </nav>
+        <p>&copy; 2026 DailyCalorie. Free BMI Calculator.</p>
+    </footer>
+
+    <script>
+    function calcBMI() {
+        var w = parseFloat(document.getElementById("bmi-weight").value);
+        var h = parseFloat(document.getElementById("bmi-height").value);
+        if (!w || !h || w < 20 || h < 50) return;
+        var hm = h / 100;
+        var bmi = w / (hm * hm);
+        var cat, color, pct;
+        if (bmi < 18.5) { cat = "Underweight"; color = "text-blue-300"; }
+        else if (bmi < 25) { cat = "Normal weight"; color = "text-emerald-300"; }
+        else if (bmi < 30) { cat = "Overweight"; color = "text-amber-300"; }
+        else { cat = "Obese"; color = "text-red-300"; }
+        pct = Math.min((bmi / 40) * 100, 98);
+        var idealLow = (18.5 * hm * hm).toFixed(1);
+        var idealHigh = (24.9 * hm * hm).toFixed(1);
+
+        document.getElementById("bmi-result").classList.remove("hidden");
+        document.getElementById("bmi-result-value").textContent = bmi.toFixed(1);
+        document.getElementById("bmi-result-value").className = "text-4xl font-bold " + color;
+        document.getElementById("bmi-result-label").textContent = cat;
+        document.getElementById("bmi-result-label").className = "text-sm mt-1 " + color;
+        document.getElementById("bmi-result-range").textContent = "Healthy weight for your height: " + idealLow + " - " + idealHigh + " kg";
+        document.getElementById("bmi-result-dot").style.left = pct + "%";
+    }
+    </script>
+</body>
+</html>

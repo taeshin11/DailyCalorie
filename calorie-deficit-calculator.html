@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Free Calorie Deficit Calculator 2026 | How Many Calories to Lose Weight</title>
+    <meta name="description" content="Calculate your exact calorie deficit for weight loss. Free calorie deficit calculator using the Mifflin-St Jeor equation. Find out how many calories you need to eat to lose weight safely.">
+    <meta name="keywords" content="calorie deficit calculator, how many calories to lose weight, weight loss calculator, calorie deficit for weight loss, calorie calculator to lose weight, cut calories calculator, 500 calorie deficit, safe calorie deficit">
+    <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large">
+    <link rel="canonical" href="https://dailycalorie-app.vercel.app/calorie-deficit-calculator.html">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🔥</text></svg>">
+    <meta property="og:title" content="Free Calorie Deficit Calculator - Lose Weight Safely">
+    <meta property="og:description" content="Find your exact calorie deficit for weight loss. Science-based calculator using the Mifflin-St Jeor equation.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://dailycalorie-app.vercel.app/calorie-deficit-calculator.html">
+    <meta property="og:image" content="https://dailycalorie-app.vercel.app/og-image.svg">
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "Calorie Deficit Calculator",
+        "description": "Free calorie deficit calculator for weight loss using the Mifflin-St Jeor equation.",
+        "url": "https://dailycalorie-app.vercel.app/calorie-deficit-calculator.html",
+        "applicationCategory": "HealthApplication",
+        "operatingSystem": "All",
+        "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" }
+    }
+    </script>
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "mainEntity": [
+            {
+                "@type": "Question",
+                "name": "What is a calorie deficit?",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "A calorie deficit occurs when you consume fewer calories than your body burns (TDEE). For example, if your TDEE is 2,200 calories and you eat 1,700, you have a 500-calorie deficit, which leads to about 0.5 kg (1 lb) of weight loss per week."
+                }
+            },
+            {
+                "@type": "Question",
+                "name": "What is a safe calorie deficit for weight loss?",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "A safe calorie deficit is 300-500 calories below your TDEE. This results in steady weight loss of 0.25-0.5 kg per week without triggering metabolic slowdown. Never eat below 1,200 calories (women) or 1,500 calories (men) without medical supervision."
+                }
+            },
+            {
+                "@type": "Question",
+                "name": "How long does it take to lose 10 kg with a calorie deficit?",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "With a 500-calorie daily deficit (losing ~0.5 kg per week), it takes approximately 20 weeks (5 months) to lose 10 kg. A more aggressive 750-calorie deficit could reduce this to about 13 weeks, but may be harder to sustain."
+                }
+            }
+        ]
+    }
+    </script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = { theme: { extend: { colors: { primary: '#6366f1', surface: '#1e1b4b', dark: '#0f0a2e' } } } }
+    </script>
+    <style>
+        body { background: linear-gradient(135deg, #0f0a2e 0%, #1a1145 50%, #0f0a2e 100%); min-height: 100vh; }
+        .glass { background: rgba(30, 27, 75, 0.6); backdrop-filter: blur(16px); border: 1px solid rgba(99, 102, 241, 0.15); }
+        .glow-border { box-shadow: 0 0 20px rgba(99, 102, 241, 0.15); }
+        .btn-glow { background: linear-gradient(135deg, #6366f1, #8b5cf6); box-shadow: 0 4px 20px rgba(99, 102, 241, 0.4); transition: all 0.3s ease; }
+        .btn-glow:hover { box-shadow: 0 6px 30px rgba(99, 102, 241, 0.6); transform: translateY(-2px); }
+    </style>
+</head>
+<body class="text-white font-sans antialiased">
+    <nav class="glass border-b border-indigo-500/10 sticky top-0 z-50">
+        <div class="max-w-4xl mx-auto px-4 flex items-center justify-between h-12">
+            <a href="/" class="flex items-center gap-2 text-indigo-200 hover:text-white transition font-semibold text-sm">
+                <span class="text-lg">🔥</span> DailyCalorie
+            </a>
+            <div class="flex items-center gap-1">
+                <a href="/" class="text-xs text-indigo-300/60 hover:text-indigo-200 transition px-2 py-1 rounded-lg hover:bg-white/5">TDEE Calculator</a>
+                <a href="bmi-calculator.html" class="text-xs text-indigo-300/60 hover:text-indigo-200 transition px-2 py-1 rounded-lg hover:bg-white/5">BMI Calculator</a>
+                <a href="how-to-use.html" class="text-xs text-indigo-300/60 hover:text-indigo-200 transition px-2 py-1 rounded-lg hover:bg-white/5">Guide</a>
+            </div>
+        </div>
+    </nav>
+
+    <main class="max-w-4xl mx-auto px-4 py-12">
+        <header class="text-center mb-10">
+            <h1 class="text-3xl md:text-5xl font-bold bg-gradient-to-r from-red-400 via-orange-400 to-amber-400 bg-clip-text text-transparent mb-3">
+                Calorie Deficit Calculator
+            </h1>
+            <p class="text-indigo-200/70 text-sm md:text-base max-w-2xl mx-auto">
+                Find out exactly how many calories you need to eat to lose weight safely and effectively
+            </p>
+        </header>
+
+        <section class="glass rounded-2xl p-6 md:p-8 glow-border mb-8">
+            <h2 class="text-xl font-semibold text-indigo-200 mb-4">What is a Calorie Deficit?</h2>
+            <div class="text-sm text-indigo-300/70 leading-relaxed space-y-3">
+                <p>A <strong class="text-indigo-200">calorie deficit</strong> means eating fewer calories than your body burns each day (your TDEE). This is the <em>only</em> scientifically proven way to lose weight.</p>
+                <p>The math is simple: <strong class="text-indigo-200">1 kg of body fat = ~7,700 calories</strong>. So a daily deficit of 500 calories leads to about 0.5 kg (1 lb) of weight loss per week. A 1,000 calorie deficit = ~1 kg per week.</p>
+                <div class="glass rounded-xl p-4 mt-4">
+                    <h3 class="text-sm font-semibold text-indigo-200 mb-2">Recommended Deficit Levels:</h3>
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 text-center text-xs">
+                        <div class="p-3 rounded-lg bg-emerald-500/10 border border-emerald-500/20">
+                            <p class="font-bold text-emerald-300 text-lg">-300</p>
+                            <p class="text-emerald-300/70">kcal/day</p>
+                            <p class="text-indigo-300/50 mt-1">Slow & sustainable</p>
+                        </div>
+                        <div class="p-3 rounded-lg bg-amber-500/10 border border-amber-500/20">
+                            <p class="font-bold text-amber-300 text-lg">-500</p>
+                            <p class="text-amber-300/70">kcal/day</p>
+                            <p class="text-indigo-300/50 mt-1">Recommended</p>
+                        </div>
+                        <div class="p-3 rounded-lg bg-red-500/10 border border-red-500/20">
+                            <p class="font-bold text-red-300 text-lg">-750</p>
+                            <p class="text-red-300/70">kcal/day</p>
+                            <p class="text-indigo-300/50 mt-1">Aggressive</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="text-center mb-8">
+            <a href="/" class="btn-glow inline-block rounded-xl px-8 py-4 text-white font-semibold text-lg">
+                Calculate My Calorie Deficit Now
+            </a>
+            <p class="text-xs text-indigo-300/40 mt-2">Free, no signup required. Results in seconds.</p>
+        </section>
+
+        <section class="glass rounded-2xl p-6 md:p-8 glow-border mb-8">
+            <h2 class="text-xl font-semibold text-indigo-200 mb-4">How to Calculate Your Calorie Deficit</h2>
+            <div class="text-sm text-indigo-300/70 leading-relaxed space-y-3">
+                <ol class="list-decimal list-inside space-y-2 ml-2">
+                    <li><strong class="text-indigo-200">Calculate your TDEE</strong> — Use our <a href="/" class="text-indigo-400 hover:text-indigo-300 underline">TDEE Calculator</a> to find how many calories you burn daily</li>
+                    <li><strong class="text-indigo-200">Choose your deficit</strong> — Subtract 300-500 calories from your TDEE for safe weight loss</li>
+                    <li><strong class="text-indigo-200">Set your macros</strong> — Prioritize protein (1.6g/kg) to preserve muscle mass during weight loss</li>
+                    <li><strong class="text-indigo-200">Track & adjust</strong> — Use our meal log to track daily intake and adjust after 2-3 weeks</li>
+                </ol>
+                <p class="mt-4">Our <a href="/" class="text-indigo-400 hover:text-indigo-300 underline">TDEE Calculator</a> automatically shows your "Cut" calories (-500 kcal), includes a Weight Goal Timeline, and offers 7-Day Calorie Cycling to prevent metabolic adaptation.</p>
+            </div>
+        </section>
+
+        <section class="glass rounded-2xl p-6 glow-border mb-8">
+            <h2 class="text-lg font-semibold text-indigo-200 mb-4">Related Calculators</h2>
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                <a href="/" class="glass rounded-xl p-4 text-center hover:border-indigo-500/30 border border-transparent transition block">
+                    <p class="text-2xl mb-1">🔥</p>
+                    <p class="text-sm font-semibold text-indigo-200">TDEE Calculator</p>
+                    <p class="text-[10px] text-indigo-300/40">Total daily calories</p>
+                </a>
+                <a href="bmi-calculator.html" class="glass rounded-xl p-4 text-center hover:border-indigo-500/30 border border-transparent transition block">
+                    <p class="text-2xl mb-1">⚖️</p>
+                    <p class="text-sm font-semibold text-indigo-200">BMI Calculator</p>
+                    <p class="text-[10px] text-indigo-300/40">Body mass index</p>
+                </a>
+                <a href="how-to-use.html" class="glass rounded-xl p-4 text-center hover:border-indigo-500/30 border border-transparent transition block">
+                    <p class="text-2xl mb-1">📖</p>
+                    <p class="text-sm font-semibold text-indigo-200">Complete Guide</p>
+                    <p class="text-[10px] text-indigo-300/40">Step-by-step help</p>
+                </a>
+            </div>
+        </section>
+    </main>
+
+    <footer class="text-center py-6 text-indigo-300/40 text-xs border-t border-indigo-500/10">
+        <nav class="flex items-center justify-center flex-wrap gap-3 mb-3 text-indigo-300/60">
+            <a href="/" class="hover:text-indigo-300 transition">Home</a> |
+            <a href="about.html" class="hover:text-indigo-300 transition">About</a> |
+            <a href="privacy.html" class="hover:text-indigo-300 transition">Privacy</a> |
+            <a href="terms.html" class="hover:text-indigo-300 transition">Terms</a> |
+            <a href="mailto:taeshinkim11@gmail.com?subject=DailyCalorie%20Feedback" class="hover:text-indigo-300 transition">Suggest Improvement</a>
+        </nav>
+        <p>&copy; 2026 DailyCalorie. Free Calorie Deficit Calculator.</p>
+    </footer>
+</body>
+</html>

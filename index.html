@@ -4,6 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+    <!-- Performance: Preconnect to CDN domains -->
+    <link rel="preconnect" href="https://cdn.tailwindcss.com">
+    <link rel="preconnect" href="https://cdn.jsdelivr.net">
+    <link rel="dns-prefetch" href="https://www.highperformanceformat.com">
+    <link rel="dns-prefetch" href="https://pagead2.googlesyndication.com">
+
     <!-- Search Engine Verification -->
     <meta name="google-site-verification" content="WddgcbVJsL2BGHNAje5m6DK56IcR0Mw5UOqozI2Xtrc">
     <meta name="msvalidate.01" content=""><!-- Bing Webmaster - add verification code from bing.com/webmasters -->
@@ -131,6 +137,23 @@
                 }
             }
         ]
+    }
+    </script>
+
+    <!-- Organization Structured Data -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "Organization",
+        "name": "DailyCalorie",
+        "url": "https://dailycalorie-app.vercel.app/",
+        "logo": "https://dailycalorie-app.vercel.app/og-image.svg",
+        "contactPoint": {
+            "@type": "ContactPoint",
+            "email": "taeshinkim11@gmail.com",
+            "contactType": "customer support"
+        },
+        "sameAs": []
     }
     </script>
 

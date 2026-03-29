@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#0f0a2e"/>
+      <stop offset="50%" style="stop-color:#1a1145"/>
+      <stop offset="100%" style="stop-color:#0f0a2e"/>
+    </linearGradient>
+    <linearGradient id="textGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#818cf8"/>
+      <stop offset="50%" style="stop-color:#a78bfa"/>
+      <stop offset="100%" style="stop-color:#34d399"/>
+    </linearGradient>
+    <linearGradient id="btnGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#6366f1"/>
+      <stop offset="100%" style="stop-color:#8b5cf6"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="630" fill="url(#bg)"/>
+  <!-- Decorative circles -->
+  <circle cx="100" cy="100" r="200" fill="#6366f1" opacity="0.05"/>
+  <circle cx="1100" cy="530" r="250" fill="#10b981" opacity="0.05"/>
+  <circle cx="900" cy="100" r="150" fill="#8b5cf6" opacity="0.05"/>
+  <!-- Fire emoji -->
+  <text x="600" y="180" text-anchor="middle" font-size="80">&#128293;</text>
+  <!-- Title -->
+  <text x="600" y="280" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="64" font-weight="800" fill="url(#textGrad)">TDEE Calculator</text>
+  <!-- Subtitle -->
+  <text x="600" y="340" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="28" fill="#a5b4fc" opacity="0.8">&amp; Macro Dashboard</text>
+  <!-- Features -->
+  <text x="600" y="410" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="20" fill="#6366f1" opacity="0.6">BMR  |  BMI  |  Macro Split  |  Meal Planner  |  Calorie Cycling</text>
+  <!-- CTA Button -->
+  <rect x="420" y="460" width="360" height="56" rx="16" fill="url(#btnGrad)"/>
+  <text x="600" y="497" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="22" font-weight="600" fill="white">Calculate Free - No Signup</text>
+  <!-- URL -->
+  <text x="600" y="580" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="18" fill="#6366f1" opacity="0.5">dailycalorie-app.vercel.app</text>
+</svg>

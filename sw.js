@@ -1,4 +1,4 @@
-var CACHE_NAME = "tdee-v5";
+var CACHE_NAME = "tdee-v6";
 var ASSETS = [
     "./",
     "./index.html",

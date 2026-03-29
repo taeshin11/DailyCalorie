@@ -1223,6 +1223,146 @@ renderMealLog();
     } catch(e) {}
 })();
 
+// ===== Social Share Functions =====
+var SHARE_URL = "https://dailycalorie-app.vercel.app/";
+var SHARE_TITLE = "Free TDEE Calculator & Macro Dashboard";
+var SHARE_TEXT = "Calculate your daily calories and macros for free! Check out this TDEE calculator:";
+
+function shareToTwitter() {
+    window.open("https://twitter.com/intent/tweet?text=" + encodeURIComponent(SHARE_TEXT) + "&url=" + encodeURIComponent(SHARE_URL), "_blank", "width=550,height=420");
+}
+function shareToFacebook() {
+    window.open("https://www.facebook.com/sharer/sharer.php?u=" + encodeURIComponent(SHARE_URL), "_blank", "width=550,height=420");
+}
+function shareToReddit() {
+    window.open("https://reddit.com/submit?url=" + encodeURIComponent(SHARE_URL) + "&title=" + encodeURIComponent(SHARE_TITLE), "_blank", "width=550,height=420");
+}
+function shareToWhatsApp() {
+    window.open("https://wa.me/?text=" + encodeURIComponent(SHARE_TEXT + " " + SHARE_URL), "_blank");
+}
+function shareToKakao() {
+    window.open("https://story.kakao.com/share?url=" + encodeURIComponent(SHARE_URL), "_blank", "width=550,height=420");
+}
+function copyShareLink() {
+    navigator.clipboard.writeText(SHARE_URL).then(function() {
+        var el = document.getElementById("copy-link-text");
+        if (el) { el.textContent = "Copied!"; setTimeout(function() { el.textContent = "Copy Link"; }, 2000); }
+    });
+}
+
+// ===== Feedback Button =====
+function openFeedback() {
+    var subject = encodeURIComponent("DailyCalorie Feedback / Improvement Suggestion");
+    var body = encodeURIComponent("Hi DailyCalorie Team,\n\nI'd like to suggest the following improvement:\n\n[Your suggestion here]\n\n---\nSent from DailyCalorie Calculator");
+    window.location.href = "mailto:taeshinkim11@gmail.com?subject=" + subject + "&body=" + body;
+}
+
+// ===== Language Toggle (EN / KR) =====
+var currentLang = localStorage.getItem("tdee_lang") || "en";
+var TRANSLATIONS = {
+    "kr": {
+        // Header
+        "TDEE Calculator": "TDEE 계산기",
+        "Calculate your Total Daily Energy Expenditure & personalized macro breakdown": "총 일일 에너지 소비량과 맞춤 매크로 분석을 계산하세요",
+        // Form
+        "Your Details": "신체 정보 입력",
+        "Gender": "성별",
+        "Male": "남성",
+        "Female": "여성",
+        "Age": "나이",
+        "Weight (kg)": "체중 (kg)",
+        "Weight (lbs)": "체중 (lbs)",
+        "Height (cm)": "키 (cm)",
+        "Height": "키",
+        "Activity Level": "활동 수준",
+        "Calculate TDEE": "TDEE 계산하기",
+        "Sedentary (little or no exercise)": "비활동적 (운동 거의 없음)",
+        "Lightly Active (1-3 days/week)": "가벼운 활동 (주 1-3일)",
+        "Moderately Active (3-5 days/week)": "보통 활동 (주 3-5일)",
+        "Very Active (6-7 days/week)": "매우 활동적 (주 6-7일)",
+        "Extra Active (intense daily training)": "극도로 활동적 (매일 강도 높은 훈련)",
+        // Results
+        "Your Daily Energy Expenditure": "일일 에너지 소비량",
+        "calories / day": "칼로리 / 일",
+        "Lose Weight": "체중 감량",
+        "Maintain": "유지",
+        "Gain Weight": "체중 증가",
+        "Body Mass Index (BMI)": "체질량지수 (BMI)",
+        "Macronutrient Breakdown": "영양소 비율",
+        "Balanced": "균형",
+        "Low Carb": "저탄수화물",
+        "High Protein": "고단백",
+        "Keto": "키토",
+        "Custom": "맞춤",
+        "Carbs": "탄수화물",
+        "Protein": "단백질",
+        "Fat": "지방",
+        // Sections
+        "TDEE by Activity Level": "활동 수준별 TDEE",
+        "Meal Planner": "식단 플래너",
+        "Daily Recommendations": "일일 권장량",
+        "Weight Goal Timeline": "체중 목표 타임라인",
+        "Body Composition Estimate": "체성분 추정",
+        "7-Day Calorie Cycling": "7일 칼로리 사이클링",
+        "Exercise Calorie Burn": "운동 칼로리 소모",
+        "History": "기록",
+        "Personalized Tips": "맞춤 팁",
+        "Food Lookup": "음식 검색",
+        "Today's Meal Log": "오늘의 식단 기록",
+        "Frequently Asked Questions": "자주 묻는 질문",
+        "Understanding Your TDEE: The Complete Guide": "TDEE 이해하기: 완벽 가이드",
+        "Found this helpful? Share with friends!": "도움이 되셨나요? 친구에게 공유하세요!",
+        "Copy Results": "결과 복사",
+        "Share": "공유",
+        "Export CSV": "CSV 내보내기",
+        "Print": "인쇄",
+        "Copy Link": "링크 복사",
+    }
+};
+
+function toggleLang() {
+    currentLang = currentLang === "en" ? "kr" : "en";
+    localStorage.setItem("tdee_lang", currentLang);
+    applyLanguage();
+}
+
+function applyLanguage() {
+    var btn = document.getElementById("lang-toggle");
+    if (btn) btn.textContent = currentLang === "en" ? "KR" : "EN";
+    document.documentElement.lang = currentLang === "kr" ? "ko" : "en";
+
+    if (currentLang === "en") {
+        // Restore original text - reload is simplest for static site
+        if (localStorage.getItem("tdee_lang_applied") === "kr") {
+            localStorage.setItem("tdee_lang_applied", "en");
+            location.reload();
+        }
+        return;
+    }
+
+    var dict = TRANSLATIONS["kr"];
+    // Translate text nodes that match dictionary keys
+    var walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT, null, false);
+    while (walker.nextNode()) {
+        var node = walker.currentNode;
+        var trimmed = node.textContent.trim();
+        if (dict[trimmed]) {
+            node.textContent = node.textContent.replace(trimmed, dict[trimmed]);
+        }
+    }
+    // Translate placeholders and labels
+    document.querySelectorAll("[placeholder]").forEach(function(el) {
+        var ph = el.getAttribute("placeholder");
+        if (dict[ph]) el.setAttribute("placeholder", dict[ph]);
+    });
+    localStorage.setItem("tdee_lang_applied", "kr");
+}
+
+// Apply saved language on load
+if (currentLang === "kr") {
+    document.addEventListener("DOMContentLoaded", function() { applyLanguage(); });
+}
+
 // Service Worker Registration
 if ("serviceWorker" in navigator) {
     navigator.serviceWorker.register("sw.js").catch(function() {});

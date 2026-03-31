@@ -1786,10 +1786,12 @@ function applyLanguage() {
     if (descMeta && metaDescriptions[currentLang]) descMeta.setAttribute("content", metaDescriptions[currentLang]);
 }
 
-// Apply language on load
-document.addEventListener("DOMContentLoaded", function() {
+// Apply language on load — script is at bottom of body so DOM is already ready
+if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", function() { applyLanguage(); });
+} else {
     applyLanguage();
-});
+}
 
 // Service Worker Registration
 if ("serviceWorker" in navigator) {

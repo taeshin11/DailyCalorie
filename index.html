@@ -12,8 +12,7 @@
 
     <!-- Search Engine Verification -->
     <meta name="google-site-verification" content="WddgcbVJsL2BGHNAje5m6DK56IcR0Mw5UOqozI2Xtrc">
-    <meta name="msvalidate.01" content=""><!-- Bing Webmaster - add verification code from bing.com/webmasters -->
-    <meta name="yandex-verification" content=""><!-- Yandex Webmaster - add verification code from webmaster.yandex.com -->
+    <!-- Bing/Yandex: add verification codes when obtained -->
 
     <!-- Google AdSense (replace data-ad-client after AdSense approval) -->
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7098271335538021" crossorigin="anonymous"></script>
@@ -21,11 +20,21 @@
     <!-- SEO Meta Tags -->
     <title>Free TDEE Calculator & Macro Dashboard 2026 | Calculate Your Daily Calories</title>
     <meta name="description" content="Best free TDEE Calculator 2026. Calculate your Total Daily Energy Expenditure using the Mifflin-St Jeor equation. Get personalized macronutrient breakdown, BMI, meal plans, and calorie goals with interactive charts. No signup required.">
-    <meta name="keywords" content="TDEE Calculator, Macro Calculator, Daily Calorie Calculator, BMR Calculator, Macronutrient Calculator, Weight Loss Calculator, Calorie Counter, Free TDEE, BMI Calculator, how many calories should I eat, calorie deficit calculator, calorie surplus calculator, macro split calculator, TDEE calculator free online, daily energy expenditure, 기초대사량 계산기, TDEE 계산기, 칼로리 계산기, meal plan calculator, body composition calculator, cutting calories calculator, bulking calculator">
+    <meta name="keywords" content="TDEE Calculator, Macro Calculator, Daily Calorie Calculator, BMR Calculator, Macronutrient Calculator, Weight Loss Calculator, Calorie Counter, Free TDEE, BMI Calculator, how many calories should I eat, calorie deficit calculator, calorie surplus calculator, macro split calculator, TDEE calculator free online, daily energy expenditure, meal plan calculator, body composition calculator, cutting calories calculator, bulking calculator, 기초대사량 계산기, TDEE 계산기, 칼로리 계산기, 매크로 계산기, TDEEとは, カロリー計算, 基礎代謝計算, TDEE计算器, 卡路里计算器, 基础代谢率, calculadora TDEE, calculadora de calorías, calculateur TDEE, calculateur calories, TDEE Rechner, Kalorienrechner, calcular calorias diárias">
     <meta name="author" content="DailyCalorie">
     <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
     <link rel="canonical" href="https://dailycalorie-app.vercel.app/">
     <link rel="alternate" hreflang="en" href="https://dailycalorie-app.vercel.app/">
+    <link rel="alternate" hreflang="ko" href="https://dailycalorie-app.vercel.app/?lang=ko">
+    <link rel="alternate" hreflang="ja" href="https://dailycalorie-app.vercel.app/?lang=ja">
+    <link rel="alternate" hreflang="zh" href="https://dailycalorie-app.vercel.app/?lang=zh">
+    <link rel="alternate" hreflang="es" href="https://dailycalorie-app.vercel.app/?lang=es">
+    <link rel="alternate" hreflang="pt" href="https://dailycalorie-app.vercel.app/?lang=pt">
+    <link rel="alternate" hreflang="de" href="https://dailycalorie-app.vercel.app/?lang=de">
+    <link rel="alternate" hreflang="fr" href="https://dailycalorie-app.vercel.app/?lang=fr">
+    <link rel="alternate" hreflang="hi" href="https://dailycalorie-app.vercel.app/?lang=hi">
+    <link rel="alternate" hreflang="vi" href="https://dailycalorie-app.vercel.app/?lang=vi">
+    <link rel="alternate" hreflang="th" href="https://dailycalorie-app.vercel.app/?lang=th">
     <link rel="alternate" hreflang="x-default" href="https://dailycalorie-app.vercel.app/">
 
     <!-- Favicon & PWA -->
@@ -170,7 +179,7 @@
             "email": "taeshinkim11@gmail.com",
             "contactType": "customer support"
         },
-        "sameAs": []
+        "sameAs": ["https://dailycalorie-app.vercel.app/"]
     }
     </script>
 
@@ -181,7 +190,7 @@
         "@type": "BreadcrumbList",
         "itemListElement": [
             { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://dailycalorie-app.vercel.app/" },
-            { "@type": "ListItem", "position": 2, "name": "TDEE Calculator", "item": "https://dailycalorie-app.vercel.app/" }
+            { "@type": "ListItem", "position": 2, "name": "TDEE Calculator", "item": "https://dailycalorie-app.vercel.app/#tdee-form" }
         ]
     }
     </script>
@@ -472,10 +481,28 @@
                 <span class="text-lg">🔥</span> DailyCalorie
             </a>
             <div class="flex items-center gap-1">
-                <a href="about.html" class="text-xs text-indigo-300/60 hover:text-indigo-200 transition px-2 py-1 rounded-lg hover:bg-white/5">About</a>
-                <a href="how-to-use.html" class="text-xs text-indigo-300/60 hover:text-indigo-200 transition px-2 py-1 rounded-lg hover:bg-white/5">Guide</a>
-                <a href="privacy.html" class="text-xs text-indigo-300/60 hover:text-indigo-200 transition px-2 py-1 rounded-lg hover:bg-white/5 hidden sm:inline-block">Privacy</a>
-                <button onclick="toggleLang()" class="ml-1 text-[10px] text-indigo-300/60 hover:text-indigo-200 transition px-1.5 py-1 rounded-lg hover:bg-white/5" id="lang-toggle" title="Switch language" aria-label="Switch language">KR</button>
+                <a href="/about" class="text-xs text-indigo-300/60 hover:text-indigo-200 transition px-2 py-1 rounded-lg hover:bg-white/5">About</a>
+                <a href="/how-to-use" class="text-xs text-indigo-300/60 hover:text-indigo-200 transition px-2 py-1 rounded-lg hover:bg-white/5">Guide</a>
+                <a href="/privacy" class="text-xs text-indigo-300/60 hover:text-indigo-200 transition px-2 py-1 rounded-lg hover:bg-white/5 hidden sm:inline-block">Privacy</a>
+                <div class="relative ml-1">
+                    <button onclick="toggleLangMenu()" class="text-[10px] text-indigo-300/60 hover:text-indigo-200 transition px-1.5 py-1 rounded-lg hover:bg-white/5 flex items-center gap-0.5" id="lang-toggle" title="Switch language" aria-label="Switch language">
+                        <span id="lang-current">EN</span>
+                        <svg class="w-2.5 h-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                    </button>
+                    <div id="lang-menu" class="hidden absolute right-0 top-full mt-1 glass rounded-lg border border-indigo-500/20 py-1 z-50 min-w-[100px] max-h-[240px] overflow-y-auto">
+                        <button onclick="setLang('en')" class="lang-option block w-full text-left text-[10px] text-indigo-300/60 hover:text-white hover:bg-white/5 px-3 py-1.5">English</button>
+                        <button onclick="setLang('ko')" class="lang-option block w-full text-left text-[10px] text-indigo-300/60 hover:text-white hover:bg-white/5 px-3 py-1.5">한국어</button>
+                        <button onclick="setLang('ja')" class="lang-option block w-full text-left text-[10px] text-indigo-300/60 hover:text-white hover:bg-white/5 px-3 py-1.5">日本語</button>
+                        <button onclick="setLang('zh')" class="lang-option block w-full text-left text-[10px] text-indigo-300/60 hover:text-white hover:bg-white/5 px-3 py-1.5">中文</button>
+                        <button onclick="setLang('es')" class="lang-option block w-full text-left text-[10px] text-indigo-300/60 hover:text-white hover:bg-white/5 px-3 py-1.5">Español</button>
+                        <button onclick="setLang('pt')" class="lang-option block w-full text-left text-[10px] text-indigo-300/60 hover:text-white hover:bg-white/5 px-3 py-1.5">Português</button>
+                        <button onclick="setLang('de')" class="lang-option block w-full text-left text-[10px] text-indigo-300/60 hover:text-white hover:bg-white/5 px-3 py-1.5">Deutsch</button>
+                        <button onclick="setLang('fr')" class="lang-option block w-full text-left text-[10px] text-indigo-300/60 hover:text-white hover:bg-white/5 px-3 py-1.5">Français</button>
+                        <button onclick="setLang('hi')" class="lang-option block w-full text-left text-[10px] text-indigo-300/60 hover:text-white hover:bg-white/5 px-3 py-1.5">हिन्दी</button>
+                        <button onclick="setLang('vi')" class="lang-option block w-full text-left text-[10px] text-indigo-300/60 hover:text-white hover:bg-white/5 px-3 py-1.5">Tiếng Việt</button>
+                        <button onclick="setLang('th')" class="lang-option block w-full text-left text-[10px] text-indigo-300/60 hover:text-white hover:bg-white/5 px-3 py-1.5">ไทย</button>
+                    </div>
+                </div>
                 <button onclick="toggleTheme()" class="theme-toggle ml-1 w-8 h-8 rounded-full flex items-center justify-center hover:bg-white/5 transition" title="Toggle theme" aria-label="Toggle light/dark theme">
                     <svg id="theme-icon-dark" class="w-4 h-4 text-indigo-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/></svg>
                     <svg id="theme-icon-light" class="w-4 h-4 text-amber-400 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
@@ -1168,13 +1195,13 @@
 
     <footer class="text-center py-8 text-indigo-300/40 text-xs border-t border-indigo-500/10">
         <nav class="flex items-center justify-center flex-wrap gap-3 mb-4 text-indigo-300/60">
-            <a href="about.html" class="hover:text-indigo-300 transition">About Us</a>
+            <a href="/about" class="hover:text-indigo-300 transition">About Us</a>
             <span>|</span>
-            <a href="how-to-use.html" class="hover:text-indigo-300 transition">How to Use</a>
+            <a href="/how-to-use" class="hover:text-indigo-300 transition">How to Use</a>
             <span>|</span>
-            <a href="privacy.html" class="hover:text-indigo-300 transition">Privacy Policy</a>
+            <a href="/privacy" class="hover:text-indigo-300 transition">Privacy Policy</a>
             <span>|</span>
-            <a href="terms.html" class="hover:text-indigo-300 transition">Terms of Service</a>
+            <a href="/terms" class="hover:text-indigo-300 transition">Terms of Service</a>
             <span>|</span>
             <a href="#" onclick="openFeedback();return false" class="hover:text-indigo-300 transition">Suggest Improvement</a>
         </nav>
@@ -1205,7 +1232,7 @@
         <div class="max-w-5xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-3">
             <p class="text-xs text-indigo-200/70 text-center sm:text-left">
                 We use cookies and collect anonymous usage data to improve this calculator. By continuing, you agree to our
-                <a href="privacy.html" class="text-indigo-300 hover:text-indigo-200 underline">Privacy Policy</a>.
+                <a href="/privacy" class="text-indigo-300 hover:text-indigo-200 underline">Privacy Policy</a>.
             </p>
             <div class="flex gap-2 shrink-0">
                 <button onclick="acceptCookies()" class="btn-glow rounded-lg px-4 py-1.5 text-xs font-medium">Accept</button>

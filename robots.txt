@@ -1,4 +1,9 @@
 User-agent: *
 Allow: /
+Disallow: /.vercel/
 
+# Sitemaps
 Sitemap: https://dailycalorie-app.vercel.app/sitemap.xml
+
+# Crawl-delay (be friendly to search engines)
+Crawl-delay: 1

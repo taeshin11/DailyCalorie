@@ -1339,95 +1339,392 @@ function copyShareLink() {
 
 // ===== Feedback Button =====
 function openFeedback() {
-    var subject = encodeURIComponent("DailyCalorie Feedback / Improvement Suggestion");
-    var body = encodeURIComponent("Hi DailyCalorie Team,\n\nI'd like to suggest the following improvement:\n\n[Your suggestion here]\n\n---\nSent from DailyCalorie Calculator");
+    var lang = (typeof currentLang !== "undefined" && currentLang) || "en";
+    var subjects = {
+        en: "DailyCalorie Feedback / Improvement Suggestion",
+        ko: "DailyCalorie 피드백 / 개선 제안",
+        ja: "DailyCalorie フィードバック / 改善提案",
+        zh: "DailyCalorie 反馈 / 改进建议",
+        es: "DailyCalorie Comentarios / Sugerencia de mejora",
+        pt: "DailyCalorie Feedback / Sugestão de melhoria",
+        de: "DailyCalorie Feedback / Verbesserungsvorschlag",
+        fr: "DailyCalorie Retour / Suggestion d'amélioration",
+        hi: "DailyCalorie प्रतिक्रिया / सुधार सुझाव",
+        vi: "DailyCalorie Phản hồi / Đề xuất cải tiến",
+        th: "DailyCalorie ข้อเสนอแนะ / ข้อเสนอแนะเพื่อการปรับปรุง",
+    };
+    var bodies = {
+        en: "Hi DailyCalorie Team,\n\nI'd like to suggest the following improvement:\n\n[Your suggestion here]\n\n---\nSent from DailyCalorie Calculator",
+        ko: "안녕하세요 DailyCalorie 팀,\n\n다음과 같은 개선을 제안하고 싶습니다:\n\n[여기에 제안 내용을 적어주세요]\n\n---\nDailyCalorie 계산기에서 전송됨",
+        ja: "DailyCalorieチームへ\n\n以下の改善を提案したいです:\n\n[ここに提案を記入してください]\n\n---\nDailyCalorie計算機から送信",
+        zh: "DailyCalorie团队：\n\n我想建议以下改进：\n\n[请在此输入您的建议]\n\n---\n来自DailyCalorie计算器",
+    };
+    var subject = encodeURIComponent(subjects[lang] || subjects.en);
+    var body = encodeURIComponent(bodies[lang] || bodies.en);
     window.location.href = "mailto:taeshinkim11@gmail.com?subject=" + subject + "&body=" + body;
 }
 
-// ===== Language Toggle (EN / KR) =====
-var currentLang = localStorage.getItem("tdee_lang") || "en";
+// ===== Multi-Language System with Auto-Detection =====
+var LANG_NAMES = {
+    en: "English", ko: "한국어", ja: "日本語", zh: "中文", es: "Español",
+    pt: "Português", de: "Deutsch", fr: "Français", hi: "हिन्दी", vi: "Tiếng Việt", th: "ไทย"
+};
+var LANG_HTML = { en: "en", ko: "ko", ja: "ja", zh: "zh", es: "es", pt: "pt", de: "de", fr: "fr", hi: "hi", vi: "vi", th: "th" };
+
 var TRANSLATIONS = {
-    "kr": {
-        // Header
+    ko: {
         "TDEE Calculator": "TDEE 계산기",
         "Calculate your Total Daily Energy Expenditure & personalized macro breakdown": "총 일일 에너지 소비량과 맞춤 매크로 분석을 계산하세요",
-        // Form
-        "Your Details": "신체 정보 입력",
-        "Gender": "성별",
-        "Male": "남성",
-        "Female": "여성",
-        "Age": "나이",
-        "Weight (kg)": "체중 (kg)",
-        "Weight (lbs)": "체중 (lbs)",
-        "Height (cm)": "키 (cm)",
-        "Height": "키",
-        "Activity Level": "활동 수준",
-        "Calculate TDEE": "TDEE 계산하기",
+        "Your Details": "신체 정보 입력", "Gender": "성별", "Male": "남성", "Female": "여성", "Age": "나이",
+        "Weight (kg)": "체중 (kg)", "Weight (lbs)": "체중 (lbs)", "Height (cm)": "키 (cm)", "Height": "키",
+        "Activity Level": "활동 수준", "Calculate TDEE": "TDEE 계산하기",
         "Sedentary (little or no exercise)": "비활동적 (운동 거의 없음)",
         "Lightly Active (1-3 days/week)": "가벼운 활동 (주 1-3일)",
         "Moderately Active (3-5 days/week)": "보통 활동 (주 3-5일)",
         "Very Active (6-7 days/week)": "매우 활동적 (주 6-7일)",
         "Extra Active (intense daily training)": "극도로 활동적 (매일 강도 높은 훈련)",
-        // Results
-        "Your Daily Energy Expenditure": "일일 에너지 소비량",
-        "calories / day": "칼로리 / 일",
-        "Lose Weight": "체중 감량",
-        "Maintain": "유지",
-        "Gain Weight": "체중 증가",
-        "Body Mass Index (BMI)": "체질량지수 (BMI)",
-        "Macronutrient Breakdown": "영양소 비율",
-        "Balanced": "균형",
-        "Low Carb": "저탄수화물",
-        "High Protein": "고단백",
-        "Keto": "키토",
-        "Custom": "맞춤",
-        "Carbs": "탄수화물",
-        "Protein": "단백질",
-        "Fat": "지방",
-        // Sections
-        "TDEE by Activity Level": "활동 수준별 TDEE",
-        "Meal Planner": "식단 플래너",
-        "Daily Recommendations": "일일 권장량",
-        "Weight Goal Timeline": "체중 목표 타임라인",
-        "Body Composition Estimate": "체성분 추정",
-        "7-Day Calorie Cycling": "7일 칼로리 사이클링",
-        "Exercise Calorie Burn": "운동 칼로리 소모",
-        "History": "기록",
-        "Personalized Tips": "맞춤 팁",
-        "Food Lookup": "음식 검색",
-        "Today's Meal Log": "오늘의 식단 기록",
-        "Frequently Asked Questions": "자주 묻는 질문",
+        "Your Daily Energy Expenditure": "일일 에너지 소비량", "calories / day": "칼로리 / 일",
+        "Lose Weight": "체중 감량", "Maintain": "유지", "Gain Weight": "체중 증가",
+        "Body Mass Index (BMI)": "체질량지수 (BMI)", "Macronutrient Breakdown": "영양소 비율",
+        "Balanced": "균형", "Low Carb": "저탄수화물", "High Protein": "고단백", "Keto": "키토", "Custom": "맞춤",
+        "Carbs": "탄수화물", "Protein": "단백질", "Fat": "지방",
+        "TDEE by Activity Level": "활동 수준별 TDEE", "Meal Planner": "식단 플래너",
+        "Daily Recommendations": "일일 권장량", "Weight Goal Timeline": "체중 목표 타임라인",
+        "Body Composition Estimate": "체성분 추정", "7-Day Calorie Cycling": "7일 칼로리 사이클링",
+        "Exercise Calorie Burn": "운동 칼로리 소모", "History": "기록",
+        "Personalized Tips": "맞춤 팁", "Food Lookup": "음식 검색",
+        "Today's Meal Log": "오늘의 식단 기록", "Frequently Asked Questions": "자주 묻는 질문",
         "Understanding Your TDEE: The Complete Guide": "TDEE 이해하기: 완벽 가이드",
         "Found this helpful? Share with friends!": "도움이 되셨나요? 친구에게 공유하세요!",
-        "Copy Results": "결과 복사",
-        "Share": "공유",
-        "Export CSV": "CSV 내보내기",
-        "Print": "인쇄",
-        "Copy Link": "링크 복사",
+        "Copy Results": "결과 복사", "Share": "공유", "Export CSV": "CSV 내보내기", "Print": "인쇄", "Copy Link": "링크 복사",
+        "Feedback": "피드백", "Suggest Improvement": "개선 제안",
+        "About Us": "소개", "How to Use": "사용 방법", "Privacy Policy": "개인정보처리방침", "Terms of Service": "이용약관",
+        "Metric": "미터법", "Imperial": "야드파운드법",
+        "Try Example": "예시 보기", "Optional: Body Fat %": "선택: 체지방률 %",
+        "Show Calculation Math": "계산 수식 보기", "Clear History": "기록 삭제",
+        "Calorie Equivalents": "칼로리 등가물", "Email Results": "결과 이메일 보내기",
+    },
+    ja: {
+        "TDEE Calculator": "TDEE計算機",
+        "Calculate your Total Daily Energy Expenditure & personalized macro breakdown": "1日の総エネルギー消費量とマクロ栄養素の内訳を計算",
+        "Your Details": "あなたの情報", "Gender": "性別", "Male": "男性", "Female": "女性", "Age": "年齢",
+        "Weight (kg)": "体重 (kg)", "Weight (lbs)": "体重 (lbs)", "Height (cm)": "身長 (cm)", "Height": "身長",
+        "Activity Level": "活動レベル", "Calculate TDEE": "TDEEを計算",
+        "Sedentary (little or no exercise)": "座りがち（運動なし）",
+        "Lightly Active (1-3 days/week)": "軽い活動（週1-3日）",
+        "Moderately Active (3-5 days/week)": "適度な活動（週3-5日）",
+        "Very Active (6-7 days/week)": "活発（週6-7日）",
+        "Extra Active (intense daily training)": "非常に活発（毎日激しいトレーニング）",
+        "Your Daily Energy Expenditure": "1日のエネルギー消費量", "calories / day": "カロリー / 日",
+        "Lose Weight": "減量", "Maintain": "維持", "Gain Weight": "増量",
+        "Body Mass Index (BMI)": "ボディマス指数 (BMI)", "Macronutrient Breakdown": "マクロ栄養素の内訳",
+        "Balanced": "バランス", "Low Carb": "低炭水化物", "High Protein": "高タンパク", "Keto": "ケトジェニック", "Custom": "カスタム",
+        "Carbs": "炭水化物", "Protein": "タンパク質", "Fat": "脂質",
+        "TDEE by Activity Level": "活動レベル別TDEE", "Meal Planner": "食事プランナー",
+        "Daily Recommendations": "1日の推奨", "Weight Goal Timeline": "目標体重タイムライン",
+        "Body Composition Estimate": "体組成推定", "7-Day Calorie Cycling": "7日間カロリーサイクリング",
+        "Exercise Calorie Burn": "運動消費カロリー", "History": "履歴",
+        "Personalized Tips": "パーソナルアドバイス", "Food Lookup": "食品検索",
+        "Today's Meal Log": "今日の食事記録", "Frequently Asked Questions": "よくある質問",
+        "Understanding Your TDEE: The Complete Guide": "TDEEを理解する：完全ガイド",
+        "Found this helpful? Share with friends!": "役に立ちましたか？友達にシェアしよう！",
+        "Copy Results": "結果をコピー", "Share": "シェア", "Export CSV": "CSVエクスポート", "Print": "印刷", "Copy Link": "リンクをコピー",
+        "Feedback": "フィードバック", "Suggest Improvement": "改善を提案",
+        "About Us": "サイト紹介", "How to Use": "使い方", "Privacy Policy": "プライバシー", "Terms of Service": "利用規約",
+        "Metric": "メートル法", "Imperial": "ヤード・ポンド法",
+        "Try Example": "例を見る", "Optional: Body Fat %": "任意：体脂肪率 %",
+    },
+    zh: {
+        "TDEE Calculator": "TDEE计算器",
+        "Calculate your Total Daily Energy Expenditure & personalized macro breakdown": "计算您的每日总能量消耗和个性化宏量营养素分配",
+        "Your Details": "您的信息", "Gender": "性别", "Male": "男", "Female": "女", "Age": "年龄",
+        "Weight (kg)": "体重 (kg)", "Weight (lbs)": "体重 (lbs)", "Height (cm)": "身高 (cm)", "Height": "身高",
+        "Activity Level": "活动水平", "Calculate TDEE": "计算TDEE",
+        "Sedentary (little or no exercise)": "久坐（几乎不运动）",
+        "Lightly Active (1-3 days/week)": "轻度活动（每周1-3天）",
+        "Moderately Active (3-5 days/week)": "中度活动（每周3-5天）",
+        "Very Active (6-7 days/week)": "重度活动（每周6-7天）",
+        "Extra Active (intense daily training)": "极度活动（每天高强度训练）",
+        "Your Daily Energy Expenditure": "您的每日能量消耗", "calories / day": "千卡 / 天",
+        "Lose Weight": "减重", "Maintain": "维持", "Gain Weight": "增重",
+        "Body Mass Index (BMI)": "身体质量指数 (BMI)", "Macronutrient Breakdown": "宏量营养素分配",
+        "Balanced": "均衡", "Low Carb": "低碳水", "High Protein": "高蛋白", "Keto": "生酮", "Custom": "自定义",
+        "Carbs": "碳水", "Protein": "蛋白质", "Fat": "脂肪",
+        "TDEE by Activity Level": "按活动水平的TDEE", "Meal Planner": "膳食计划",
+        "Daily Recommendations": "每日建议", "Weight Goal Timeline": "体重目标时间表",
+        "Body Composition Estimate": "身体成分估算", "7-Day Calorie Cycling": "7天热量循环",
+        "Exercise Calorie Burn": "运动消耗卡路里", "History": "历史记录",
+        "Personalized Tips": "个性化建议", "Food Lookup": "食物查询",
+        "Today's Meal Log": "今日饮食记录", "Frequently Asked Questions": "常见问题",
+        "Understanding Your TDEE: The Complete Guide": "了解TDEE：完整指南",
+        "Found this helpful? Share with friends!": "觉得有帮助？分享给朋友！",
+        "Copy Results": "复制结果", "Share": "分享", "Export CSV": "导出CSV", "Print": "打印", "Copy Link": "复制链接",
+        "Feedback": "反馈", "Suggest Improvement": "提出改进建议",
+        "About Us": "关于我们", "How to Use": "使用说明", "Privacy Policy": "隐私政策", "Terms of Service": "服务条款",
+        "Metric": "公制", "Imperial": "英制",
+    },
+    es: {
+        "TDEE Calculator": "Calculadora TDEE",
+        "Calculate your Total Daily Energy Expenditure & personalized macro breakdown": "Calcula tu gasto energético diario total y tu desglose de macronutrientes",
+        "Your Details": "Tus datos", "Gender": "Género", "Male": "Hombre", "Female": "Mujer", "Age": "Edad",
+        "Weight (kg)": "Peso (kg)", "Weight (lbs)": "Peso (lbs)", "Height (cm)": "Altura (cm)", "Height": "Altura",
+        "Activity Level": "Nivel de actividad", "Calculate TDEE": "Calcular TDEE",
+        "Sedentary (little or no exercise)": "Sedentario (poco o ningún ejercicio)",
+        "Lightly Active (1-3 days/week)": "Ligeramente activo (1-3 días/sem)",
+        "Moderately Active (3-5 days/week)": "Moderadamente activo (3-5 días/sem)",
+        "Very Active (6-7 days/week)": "Muy activo (6-7 días/sem)",
+        "Extra Active (intense daily training)": "Extra activo (entrenamiento intenso diario)",
+        "Your Daily Energy Expenditure": "Tu gasto energético diario", "calories / day": "calorías / día",
+        "Lose Weight": "Perder peso", "Maintain": "Mantener", "Gain Weight": "Ganar peso",
+        "Body Mass Index (BMI)": "Índice de masa corporal (IMC)", "Macronutrient Breakdown": "Distribución de macronutrientes",
+        "Balanced": "Equilibrada", "Low Carb": "Baja en carbos", "High Protein": "Alta en proteína", "Keto": "Keto", "Custom": "Personalizada",
+        "Carbs": "Carbos", "Protein": "Proteína", "Fat": "Grasa",
+        "TDEE by Activity Level": "TDEE por nivel de actividad", "Meal Planner": "Planificador de comidas",
+        "Daily Recommendations": "Recomendaciones diarias", "Weight Goal Timeline": "Cronograma de meta de peso",
+        "Body Composition Estimate": "Estimación de composición corporal", "7-Day Calorie Cycling": "Ciclo calórico de 7 días",
+        "Exercise Calorie Burn": "Calorías quemadas con ejercicio", "History": "Historial",
+        "Personalized Tips": "Consejos personalizados", "Food Lookup": "Buscar alimentos",
+        "Today's Meal Log": "Registro de comidas de hoy", "Frequently Asked Questions": "Preguntas frecuentes",
+        "Understanding Your TDEE: The Complete Guide": "Entendiendo tu TDEE: La guía completa",
+        "Found this helpful? Share with friends!": "¿Te fue útil? ¡Comparte con amigos!",
+        "Copy Results": "Copiar resultados", "Share": "Compartir", "Export CSV": "Exportar CSV", "Print": "Imprimir", "Copy Link": "Copiar enlace",
+        "Feedback": "Comentarios", "Suggest Improvement": "Sugerir mejora",
+        "About Us": "Sobre nosotros", "How to Use": "Cómo usar", "Privacy Policy": "Política de privacidad", "Terms of Service": "Términos de servicio",
+        "Metric": "Métrico", "Imperial": "Imperial",
+    },
+    pt: {
+        "TDEE Calculator": "Calculadora TDEE",
+        "Calculate your Total Daily Energy Expenditure & personalized macro breakdown": "Calcule seu gasto energético diário total e a distribuição de macronutrientes",
+        "Your Details": "Seus dados", "Gender": "Gênero", "Male": "Masculino", "Female": "Feminino", "Age": "Idade",
+        "Weight (kg)": "Peso (kg)", "Weight (lbs)": "Peso (lbs)", "Height (cm)": "Altura (cm)", "Height": "Altura",
+        "Activity Level": "Nível de atividade", "Calculate TDEE": "Calcular TDEE",
+        "Sedentary (little or no exercise)": "Sedentário (pouco ou nenhum exercício)",
+        "Lightly Active (1-3 days/week)": "Levemente ativo (1-3 dias/sem)",
+        "Moderately Active (3-5 days/week)": "Moderadamente ativo (3-5 dias/sem)",
+        "Very Active (6-7 days/week)": "Muito ativo (6-7 dias/sem)",
+        "Extra Active (intense daily training)": "Extra ativo (treino intenso diário)",
+        "Your Daily Energy Expenditure": "Seu gasto energético diário", "calories / day": "calorias / dia",
+        "Lose Weight": "Perder peso", "Maintain": "Manter", "Gain Weight": "Ganhar peso",
+        "Body Mass Index (BMI)": "Índice de massa corporal (IMC)", "Macronutrient Breakdown": "Distribuição de macronutrientes",
+        "Balanced": "Equilibrada", "Low Carb": "Low Carb", "High Protein": "Alta proteína", "Keto": "Keto", "Custom": "Personalizada",
+        "Carbs": "Carboidratos", "Protein": "Proteína", "Fat": "Gordura",
+        "Meal Planner": "Planejador de refeições", "History": "Histórico",
+        "Frequently Asked Questions": "Perguntas frequentes",
+        "Found this helpful? Share with friends!": "Achou útil? Compartilhe com amigos!",
+        "Copy Results": "Copiar resultados", "Share": "Compartilhar", "Export CSV": "Exportar CSV", "Print": "Imprimir", "Copy Link": "Copiar link",
+        "Feedback": "Feedback", "Suggest Improvement": "Sugerir melhoria",
+        "About Us": "Sobre nós", "How to Use": "Como usar", "Privacy Policy": "Política de privacidade", "Terms of Service": "Termos de serviço",
+        "Metric": "Métrico", "Imperial": "Imperial",
+    },
+    de: {
+        "TDEE Calculator": "TDEE-Rechner",
+        "Calculate your Total Daily Energy Expenditure & personalized macro breakdown": "Berechnen Sie Ihren täglichen Gesamtenergieverbrauch und individuelle Makronährstoffverteilung",
+        "Your Details": "Ihre Daten", "Gender": "Geschlecht", "Male": "Männlich", "Female": "Weiblich", "Age": "Alter",
+        "Weight (kg)": "Gewicht (kg)", "Weight (lbs)": "Gewicht (lbs)", "Height (cm)": "Größe (cm)", "Height": "Größe",
+        "Activity Level": "Aktivitätslevel", "Calculate TDEE": "TDEE berechnen",
+        "Sedentary (little or no exercise)": "Sitzend (wenig oder kein Sport)",
+        "Lightly Active (1-3 days/week)": "Leicht aktiv (1-3 Tage/Woche)",
+        "Moderately Active (3-5 days/week)": "Mäßig aktiv (3-5 Tage/Woche)",
+        "Very Active (6-7 days/week)": "Sehr aktiv (6-7 Tage/Woche)",
+        "Extra Active (intense daily training)": "Extrem aktiv (tägliches intensives Training)",
+        "Your Daily Energy Expenditure": "Ihr täglicher Energieverbrauch", "calories / day": "Kalorien / Tag",
+        "Lose Weight": "Abnehmen", "Maintain": "Halten", "Gain Weight": "Zunehmen",
+        "Body Mass Index (BMI)": "Body-Mass-Index (BMI)", "Macronutrient Breakdown": "Makronährstoffverteilung",
+        "Balanced": "Ausgewogen", "Low Carb": "Low Carb", "High Protein": "High Protein", "Keto": "Keto", "Custom": "Individuell",
+        "Carbs": "Kohlenhydrate", "Protein": "Eiweiß", "Fat": "Fett",
+        "Meal Planner": "Mahlzeitenplaner", "History": "Verlauf",
+        "Frequently Asked Questions": "Häufig gestellte Fragen",
+        "Found this helpful? Share with friends!": "War das hilfreich? Teile es mit Freunden!",
+        "Copy Results": "Ergebnisse kopieren", "Share": "Teilen", "Export CSV": "CSV exportieren", "Print": "Drucken", "Copy Link": "Link kopieren",
+        "Feedback": "Feedback", "Suggest Improvement": "Verbesserung vorschlagen",
+        "About Us": "Über uns", "How to Use": "Anleitung", "Privacy Policy": "Datenschutz", "Terms of Service": "Nutzungsbedingungen",
+        "Metric": "Metrisch", "Imperial": "Imperial",
+    },
+    fr: {
+        "TDEE Calculator": "Calculateur TDEE",
+        "Calculate your Total Daily Energy Expenditure & personalized macro breakdown": "Calculez votre dépense énergétique quotidienne totale et votre répartition en macronutriments",
+        "Your Details": "Vos informations", "Gender": "Genre", "Male": "Homme", "Female": "Femme", "Age": "Âge",
+        "Weight (kg)": "Poids (kg)", "Weight (lbs)": "Poids (lbs)", "Height (cm)": "Taille (cm)", "Height": "Taille",
+        "Activity Level": "Niveau d'activité", "Calculate TDEE": "Calculer le TDEE",
+        "Sedentary (little or no exercise)": "Sédentaire (peu ou pas d'exercice)",
+        "Lightly Active (1-3 days/week)": "Légèrement actif (1-3 jours/sem)",
+        "Moderately Active (3-5 days/week)": "Modérément actif (3-5 jours/sem)",
+        "Very Active (6-7 days/week)": "Très actif (6-7 jours/sem)",
+        "Extra Active (intense daily training)": "Extrêmement actif (entraînement intensif quotidien)",
+        "Your Daily Energy Expenditure": "Votre dépense énergétique quotidienne", "calories / day": "calories / jour",
+        "Lose Weight": "Perdre du poids", "Maintain": "Maintenir", "Gain Weight": "Prendre du poids",
+        "Body Mass Index (BMI)": "Indice de masse corporelle (IMC)", "Macronutrient Breakdown": "Répartition des macronutriments",
+        "Balanced": "Équilibré", "Low Carb": "Faible en glucides", "High Protein": "Riche en protéines", "Keto": "Keto", "Custom": "Personnalisé",
+        "Carbs": "Glucides", "Protein": "Protéines", "Fat": "Lipides",
+        "Meal Planner": "Planificateur de repas", "History": "Historique",
+        "Frequently Asked Questions": "Questions fréquentes",
+        "Found this helpful? Share with friends!": "Utile ? Partagez avec vos amis !",
+        "Copy Results": "Copier les résultats", "Share": "Partager", "Export CSV": "Exporter CSV", "Print": "Imprimer", "Copy Link": "Copier le lien",
+        "Feedback": "Retour", "Suggest Improvement": "Suggérer une amélioration",
+        "About Us": "À propos", "How to Use": "Comment utiliser", "Privacy Policy": "Confidentialité", "Terms of Service": "Conditions d'utilisation",
+        "Metric": "Métrique", "Imperial": "Impérial",
+    },
+    hi: {
+        "TDEE Calculator": "TDEE कैलकुलेटर",
+        "Calculate your Total Daily Energy Expenditure & personalized macro breakdown": "अपने कुल दैनिक ऊर्जा व्यय और मैक्रोन्यूट्रिएंट विभाजन की गणना करें",
+        "Your Details": "आपकी जानकारी", "Gender": "लिंग", "Male": "पुरुष", "Female": "महिला", "Age": "आयु",
+        "Weight (kg)": "वज़न (kg)", "Weight (lbs)": "वज़न (lbs)", "Height (cm)": "ऊंचाई (cm)", "Height": "ऊंचाई",
+        "Activity Level": "गतिविधि स्तर", "Calculate TDEE": "TDEE गणना करें",
+        "Sedentary (little or no exercise)": "गतिहीन (कम या कोई व्यायाम नहीं)",
+        "Lightly Active (1-3 days/week)": "हल्का सक्रिय (सप्ताह में 1-3 दिन)",
+        "Moderately Active (3-5 days/week)": "मध्यम सक्रिय (सप्ताह में 3-5 दिन)",
+        "Very Active (6-7 days/week)": "बहुत सक्रिय (सप्ताह में 6-7 दिन)",
+        "Extra Active (intense daily training)": "अति सक्रिय (दैनिक गहन प्रशिक्षण)",
+        "Your Daily Energy Expenditure": "आपका दैनिक ऊर्जा व्यय", "calories / day": "कैलोरी / दिन",
+        "Lose Weight": "वज़न कम करें", "Maintain": "बनाए रखें", "Gain Weight": "वज़न बढ़ाएं",
+        "Body Mass Index (BMI)": "बॉडी मास इंडेक्स (BMI)", "Macronutrient Breakdown": "मैक्रोन्यूट्रिएंट विभाजन",
+        "Balanced": "संतुलित", "Low Carb": "कम कार्ब", "High Protein": "उच्च प्रोटीन", "Keto": "कीटो", "Custom": "कस्टम",
+        "Carbs": "कार्ब्स", "Protein": "प्रोटीन", "Fat": "वसा",
+        "Meal Planner": "भोजन योजना", "History": "इतिहास",
+        "Frequently Asked Questions": "अक्सर पूछे जाने वाले प्रश्न",
+        "Found this helpful? Share with friends!": "क्या यह मददगार था? दोस्तों के साथ साझा करें!",
+        "Feedback": "प्रतिक्रिया", "Suggest Improvement": "सुधार सुझाएं",
+        "About Us": "हमारे बारे में", "How to Use": "कैसे उपयोग करें", "Privacy Policy": "गोपनीयता नीति", "Terms of Service": "सेवा की शर्तें",
+        "Metric": "मीट्रिक", "Imperial": "इम्पीरियल",
+    },
+    vi: {
+        "TDEE Calculator": "Máy tính TDEE",
+        "Calculate your Total Daily Energy Expenditure & personalized macro breakdown": "Tính tổng năng lượng tiêu hao hàng ngày và phân bổ dinh dưỡng đa lượng",
+        "Your Details": "Thông tin của bạn", "Gender": "Giới tính", "Male": "Nam", "Female": "Nữ", "Age": "Tuổi",
+        "Weight (kg)": "Cân nặng (kg)", "Weight (lbs)": "Cân nặng (lbs)", "Height (cm)": "Chiều cao (cm)", "Height": "Chiều cao",
+        "Activity Level": "Mức độ hoạt động", "Calculate TDEE": "Tính TDEE",
+        "Sedentary (little or no exercise)": "Ít vận động (ít hoặc không tập)",
+        "Lightly Active (1-3 days/week)": "Hơi năng động (1-3 ngày/tuần)",
+        "Moderately Active (3-5 days/week)": "Năng động vừa (3-5 ngày/tuần)",
+        "Very Active (6-7 days/week)": "Rất năng động (6-7 ngày/tuần)",
+        "Extra Active (intense daily training)": "Cực kỳ năng động (tập luyện cường độ cao mỗi ngày)",
+        "Your Daily Energy Expenditure": "Năng lượng tiêu hao hàng ngày", "calories / day": "calo / ngày",
+        "Lose Weight": "Giảm cân", "Maintain": "Duy trì", "Gain Weight": "Tăng cân",
+        "Balanced": "Cân bằng", "Low Carb": "Ít tinh bột", "High Protein": "Giàu đạm", "Keto": "Keto", "Custom": "Tùy chỉnh",
+        "Carbs": "Tinh bột", "Protein": "Đạm", "Fat": "Chất béo",
+        "Frequently Asked Questions": "Câu hỏi thường gặp",
+        "Found this helpful? Share with friends!": "Hữu ích? Chia sẻ với bạn bè!",
+        "Feedback": "Phản hồi", "Suggest Improvement": "Đề xuất cải tiến",
+        "About Us": "Về chúng tôi", "How to Use": "Hướng dẫn", "Privacy Policy": "Chính sách bảo mật", "Terms of Service": "Điều khoản dịch vụ",
+    },
+    th: {
+        "TDEE Calculator": "เครื่องคำนวณ TDEE",
+        "Calculate your Total Daily Energy Expenditure & personalized macro breakdown": "คำนวณพลังงานที่ใช้ต่อวันและสัดส่วนสารอาหารเฉพาะบุคคล",
+        "Your Details": "ข้อมูลของคุณ", "Gender": "เพศ", "Male": "ชาย", "Female": "หญิง", "Age": "อายุ",
+        "Weight (kg)": "น้ำหนัก (kg)", "Weight (lbs)": "น้ำหนัก (lbs)", "Height (cm)": "ส่วนสูง (cm)", "Height": "ส่วนสูง",
+        "Activity Level": "ระดับกิจกรรม", "Calculate TDEE": "คำนวณ TDEE",
+        "Sedentary (little or no exercise)": "นั่งทำงาน (ออกกำลังกายน้อยหรือไม่ออก)",
+        "Lightly Active (1-3 days/week)": "ออกกำลังกายเบา (1-3 วัน/สัปดาห์)",
+        "Moderately Active (3-5 days/week)": "ออกกำลังกายปานกลาง (3-5 วัน/สัปดาห์)",
+        "Very Active (6-7 days/week)": "ออกกำลังกายหนัก (6-7 วัน/สัปดาห์)",
+        "Extra Active (intense daily training)": "ออกกำลังกายหนักมาก (ฝึกหนักทุกวัน)",
+        "Your Daily Energy Expenditure": "พลังงานที่ใช้ต่อวัน", "calories / day": "แคลอรี / วัน",
+        "Lose Weight": "ลดน้ำหนัก", "Maintain": "รักษาน้ำหนัก", "Gain Weight": "เพิ่มน้ำหนัก",
+        "Balanced": "สมดุล", "Low Carb": "คาร์บต่ำ", "High Protein": "โปรตีนสูง", "Keto": "คีโต", "Custom": "กำหนดเอง",
+        "Carbs": "คาร์บ", "Protein": "โปรตีน", "Fat": "ไขมัน",
+        "Frequently Asked Questions": "คำถามที่พบบ่อย",
+        "Found this helpful? Share with friends!": "เป็นประโยชน์ไหม? แชร์ให้เพื่อน!",
+        "Feedback": "ข้อเสนอแนะ", "Suggest Improvement": "แนะนำการปรับปรุง",
+        "About Us": "เกี่ยวกับเรา", "How to Use": "วิธีใช้", "Privacy Policy": "นโยบายความเป็นส่วนตัว", "Terms of Service": "เงื่อนไขการใช้งาน",
     }
 };
 
-function toggleLang() {
-    currentLang = currentLang === "en" ? "kr" : "en";
-    localStorage.setItem("tdee_lang", currentLang);
+// Detect language: URL param > localStorage > browser language > default English
+function detectLanguage() {
+    // 1. Check URL parameter ?lang=xx
+    var params = new URLSearchParams(window.location.search);
+    var urlLang = params.get("lang");
+    if (urlLang && LANG_NAMES[urlLang]) return urlLang;
+
+    // 2. Check localStorage (user's previous choice)
+    var saved = localStorage.getItem("tdee_lang");
+    if (saved && LANG_NAMES[saved]) return saved;
+
+    // 3. Auto-detect from browser language
+    var browserLang = (navigator.language || navigator.userLanguage || "en").toLowerCase();
+    // Map browser language codes to our supported languages
+    var langMap = {
+        "ko": "ko", "kr": "ko",
+        "ja": "ja", "jp": "ja",
+        "zh": "zh", "zh-cn": "zh", "zh-tw": "zh", "zh-hk": "zh",
+        "es": "es", "es-mx": "es", "es-ar": "es",
+        "pt": "pt", "pt-br": "pt",
+        "de": "de", "de-at": "de", "de-ch": "de",
+        "fr": "fr", "fr-ca": "fr",
+        "hi": "hi",
+        "vi": "vi",
+        "th": "th",
+    };
+    // Try exact match first, then prefix
+    if (langMap[browserLang]) return langMap[browserLang];
+    var prefix = browserLang.split("-")[0];
+    if (langMap[prefix]) return langMap[prefix];
+
+    return "en";
+}
+
+var currentLang = detectLanguage();
+
+function toggleLangMenu() {
+    var menu = document.getElementById("lang-menu");
+    if (menu) menu.classList.toggle("hidden");
+}
+
+// Close lang menu when clicking outside
+document.addEventListener("click", function(e) {
+    var menu = document.getElementById("lang-menu");
+    var btn = document.getElementById("lang-toggle");
+    if (menu && btn && !btn.contains(e.target) && !menu.contains(e.target)) {
+        menu.classList.add("hidden");
+    }
+});
+
+function setLang(lang) {
+    currentLang = lang;
+    localStorage.setItem("tdee_lang", lang);
+    // Update URL parameter without reload
+    var url = new URL(window.location);
+    if (lang === "en") {
+        url.searchParams.delete("lang");
+    } else {
+        url.searchParams.set("lang", lang);
+    }
+    history.replaceState(null, "", url);
+    // Close menu and apply
+    var menu = document.getElementById("lang-menu");
+    if (menu) menu.classList.add("hidden");
     applyLanguage();
 }
 
+// Legacy support: migrate "kr" to "ko"
+(function() {
+    var saved = localStorage.getItem("tdee_lang");
+    if (saved === "kr") { localStorage.setItem("tdee_lang", "ko"); currentLang = "ko"; }
+})();
+
 function applyLanguage() {
-    var btn = document.getElementById("lang-toggle");
-    if (btn) btn.textContent = currentLang === "en" ? "KR" : "EN";
-    document.documentElement.lang = currentLang === "kr" ? "ko" : "en";
+    // Update toggle button text
+    var currentLabel = document.getElementById("lang-current");
+    if (currentLabel) currentLabel.textContent = (LANG_NAMES[currentLang] || "English").substring(0, 6);
+    document.documentElement.lang = LANG_HTML[currentLang] || "en";
+
+    // Highlight active language in menu
+    document.querySelectorAll(".lang-option").forEach(function(el) {
+        el.classList.remove("text-white", "bg-white/10");
+    });
 
     if (currentLang === "en") {
-        // Restore original text - reload is simplest for static site
-        if (localStorage.getItem("tdee_lang_applied") === "kr") {
+        // Restore original — reload is simplest for static site
+        if (localStorage.getItem("tdee_lang_applied") && localStorage.getItem("tdee_lang_applied") !== "en") {
             localStorage.setItem("tdee_lang_applied", "en");
             location.reload();
         }
         return;
     }
 
-    var dict = TRANSLATIONS["kr"];
+    var dict = TRANSLATIONS[currentLang];
+    if (!dict) return;
+
     // Translate text nodes that match dictionary keys
     var walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT, null, false);
     while (walker.nextNode()) {
@@ -1442,13 +1739,57 @@ function applyLanguage() {
         var ph = el.getAttribute("placeholder");
         if (dict[ph]) el.setAttribute("placeholder", dict[ph]);
     });
-    localStorage.setItem("tdee_lang_applied", "kr");
+    // Translate select options
+    document.querySelectorAll("select option").forEach(function(el) {
+        var txt = el.textContent.trim();
+        if (dict[txt]) el.textContent = dict[txt];
+    });
+    // Translate aria-labels
+    document.querySelectorAll("[aria-label]").forEach(function(el) {
+        var al = el.getAttribute("aria-label");
+        if (dict[al]) el.setAttribute("aria-label", dict[al]);
+    });
+    // Translate title attributes
+    document.querySelectorAll("[title]").forEach(function(el) {
+        var t = el.getAttribute("title");
+        if (dict[t]) el.setAttribute("title", dict[t]);
+    });
+    localStorage.setItem("tdee_lang_applied", currentLang);
+
+    // Update meta tags for international SEO
+    var metaDescriptions = {
+        ko: "최고의 무료 TDEE 계산기 2026. Mifflin-St Jeor 공식으로 기초대사량을 계산하세요. 매크로, BMI, 식단 플랜 제공. 회원가입 불필요.",
+        ja: "最高の無料TDEEカロリー計算機2026。基礎代謝量を計算し、マクロ栄養素、BMI、食事プランを取得。登録不要。",
+        zh: "最佳免费TDEE计算器2026。使用Mifflin-St Jeor公式计算基础代谢率。获取宏量营养素、BMI、膳食计划。无需注册。",
+        es: "La mejor calculadora TDEE gratuita 2026. Calcula tu gasto energético diario con la ecuación Mifflin-St Jeor. Macros, IMC y planes de comidas. Sin registro.",
+        pt: "Melhor calculadora TDEE gratuita 2026. Calcule seu gasto energético diário com a equação Mifflin-St Jeor. Macros, IMC e planos de refeição. Sem cadastro.",
+        de: "Bester kostenloser TDEE-Rechner 2026. Berechnen Sie Ihren täglichen Energieverbrauch mit der Mifflin-St Jeor-Gleichung. Makros, BMI und Mahlzeitenpläne. Keine Anmeldung.",
+        fr: "Meilleur calculateur TDEE gratuit 2026. Calculez votre dépense énergétique quotidienne avec l'équation Mifflin-St Jeor. Macros, IMC et plans repas. Sans inscription.",
+        hi: "सर्वश्रेष्ठ मुफ्त TDEE कैलकुलेटर 2026। Mifflin-St Jeor समीकरण से अपना दैनिक ऊर्जा व्यय गणना करें। मैक्रो, BMI और भोजन योजना। साइनअप की आवश्यकता नहीं।",
+        vi: "Máy tính TDEE miễn phí tốt nhất 2026. Tính tổng năng lượng tiêu hao hàng ngày bằng công thức Mifflin-St Jeor. Macro, BMI và kế hoạch bữa ăn. Không cần đăng ký.",
+        th: "เครื่องคำนวณ TDEE ฟรีดีที่สุด 2026 คำนวณพลังงานที่ใช้ต่อวันด้วยสมการ Mifflin-St Jeor รับมาโคร BMI และแผนอาหาร ไม่ต้องสมัครสมาชิก",
+    };
+    var metaTitles = {
+        ko: "무료 TDEE 계산기 & 매크로 대시보드 2026 | 일일 칼로리 계산",
+        ja: "無料TDEE計算機＆マクロダッシュボード2026 | 1日のカロリーを計算",
+        zh: "免费TDEE计算器和宏量营养素仪表板2026 | 计算每日卡路里",
+        es: "Calculadora TDEE Gratis y Panel de Macros 2026 | Calcula Tus Calorías Diarias",
+        pt: "Calculadora TDEE Grátis e Painel de Macros 2026 | Calcule Suas Calorias Diárias",
+        de: "Kostenloser TDEE-Rechner & Makro-Dashboard 2026 | Berechne Deine Täglichen Kalorien",
+        fr: "Calculateur TDEE Gratuit & Tableau de Macros 2026 | Calculez Vos Calories Quotidiennes",
+        hi: "मुफ्त TDEE कैलकुलेटर और मैक्रो डैशबोर्ड 2026 | अपनी दैनिक कैलोरी गणना करें",
+        vi: "Máy Tính TDEE Miễn Phí & Bảng Macro 2026 | Tính Calo Hàng Ngày",
+        th: "เครื่องคำนวณ TDEE ฟรี & แดชบอร์ดมาโคร 2026 | คำนวณแคลอรีประจำวัน",
+    };
+    if (metaTitles[currentLang]) document.title = metaTitles[currentLang];
+    var descMeta = document.querySelector('meta[name="description"]');
+    if (descMeta && metaDescriptions[currentLang]) descMeta.setAttribute("content", metaDescriptions[currentLang]);
 }
 
-// Apply saved language on load
-if (currentLang === "kr") {
-    document.addEventListener("DOMContentLoaded", function() { applyLanguage(); });
-}
+// Apply language on load
+document.addEventListener("DOMContentLoaded", function() {
+    applyLanguage();
+});
 
 // Service Worker Registration
 if ("serviceWorker" in navigator) {

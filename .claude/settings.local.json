@@ -1,0 +1,15 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(git push:*)",
+      "Bash(vercel --prod --yes)",
+      "WebFetch(domain:dailycalorie.site)",
+      "WebFetch(domain:www.dailycalorie.site)",
+      "Bash(find /c/MakingApps/DailyCalorie -type d ! -path */.git/* ! -path */.claude/* ! -path */.vercel/*)",
+      "WebFetch(domain:dailycalorie-app.vercel.app)",
+      "Bash(node -c app.js)"
+    ]
+  }
+}
